@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:servenow_mobile/screens/add_service.dart';
 import 'package:servenow_mobile/screens/home.dart';
+import 'package:servenow_mobile/screens/manage_service.dart';
 import 'package:servenow_mobile/screens/my_profile.dart';
 import 'package:servenow_mobile/screens/settings.dart';
 import 'package:servenow_mobile/screens/services.dart';
@@ -22,6 +23,7 @@ Future<void> main() async {
       '/my_profile': (context) => const MyProfile(),
       '/services': (context) => const Services(),
       '/add_service': (context) => const AddService(),
+      '/manage_service': (context) => const ManageService(),
     }
   ));
 }

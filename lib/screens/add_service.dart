@@ -182,22 +182,30 @@ class _AddServiceState extends State<AddService> {
                   children: [
                     SizedBox(width: 12.5),
                     Text(
-                      'Service type',
+                      'Service Type',
                       style: TextStyle(
-                          color: Colors.grey[600],
+                          color: Colors.grey[800],
                           fontFamily: 'Inter',
+                          fontWeight: FontWeight.bold,
                           fontSize: 12),
                     ),
                   ],
                 ),
                 const SizedBox(height: 2.5),
-               CustomDropdownMenu(
+                CustomDropdownMenu(
                   titleValue: serviceTypeTitle,
-                  items: serviceType.map((serviceTypeName) => serviceTypeName['servicetype_name'].toString()).toList(),
+                  titleSelect: 'Service Type',
+                  items: serviceType
+                      .map((serviceTypeName) =>
+                          serviceTypeName['servicetype_name'].toString())
+                      .toList(),
                   onSelected: (selectedValue) {
                     setState(() {
-                      selectedServiceTypeId = serviceType.firstWhere((service) => service['servicetype_name'] == selectedValue)['id'];  // Get the ID based on selected name
-                      serviceTypeTitle = selectedValue;  // Update the title
+                      selectedServiceTypeId = serviceType.firstWhere(
+                              (service) =>
+                                  service['servicetype_name'] == selectedValue)[
+                          'id']; // Get the ID based on selected name
+                      serviceTypeTitle = selectedValue; // Update the title
                     });
                   },
                 ),
@@ -214,8 +222,9 @@ class _AddServiceState extends State<AddService> {
                               Text(
                                 'Rate',
                                 style: TextStyle(
-                                    color: Colors.grey[600],
+                                    color: Colors.grey[800],
                                     fontFamily: 'Inter',
+                                    fontWeight: FontWeight.bold,
                                     fontSize: 12),
                               ),
                             ],
@@ -247,14 +256,16 @@ class _AddServiceState extends State<AddService> {
                             Text(
                               'Rate Type',
                               style: TextStyle(
-                                  color: Colors.grey[600],
+                                  color: Colors.grey[800],
                                   fontFamily: 'Inter',
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 12),
                             ),
                           ],
                         ),
                         const SizedBox(height: 2.5),
                         CustomDropdownMenu(
+                          titleSelect: 'Rate Type',
                           items: rateType,
                           titleValue: rateTypeTitle,
                           onSelected: (selectedValue) {
@@ -276,7 +287,8 @@ class _AddServiceState extends State<AddService> {
                     Text(
                       'Service Description',
                       style: TextStyle(
-                          color: Colors.grey[600],
+                          color: Colors.grey[800],
+                          fontWeight: FontWeight.bold,
                           fontFamily: 'Inter',
                           fontSize: 12),
                     ),

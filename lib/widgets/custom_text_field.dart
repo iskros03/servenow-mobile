@@ -39,13 +39,15 @@ class CustomTextField extends StatelessWidget {
         floatingLabelBehavior: FloatingLabelBehavior.always,
         hintStyle: TextStyle(
             fontFamily: 'Inter', fontSize: 14, color: Colors.grey[600]),
-        enabledBorder: const OutlineInputBorder(
+        enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          borderSide: BorderSide(color: Colors.white, width: 1),
+          borderSide:
+              BorderSide(color: Colors.grey[300] ?? Colors.grey, width: 1),
         ),
-        focusedBorder: const OutlineInputBorder(
+        focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          borderSide: BorderSide(color: Colors.white, width: 1),
+          borderSide:
+              BorderSide(color: Colors.grey[300] ?? Colors.grey, width: 1),
         ),
         prefixText: prefixText,
         prefixStyle: TextStyle(

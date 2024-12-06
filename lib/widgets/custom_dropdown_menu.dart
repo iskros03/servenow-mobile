@@ -37,16 +37,10 @@ class CustomDropdownMenu extends StatelessWidget {
                   fontFamily: 'Inter',
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey[600],
+                  color: Colors.grey[500],
                 ),
               ),
-              SizedBox(
-                height: 25,
-                child: Divider(
-                  color: Colors.grey[300],
-                  thickness: 0.5,
-                ),
-              ),
+  
               Expanded(
                 child: ListView.builder(
                   itemCount: items.length,
@@ -57,7 +51,8 @@ class CustomDropdownMenu extends StatelessWidget {
                         style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 14,
-                            color: Colors.grey[600]),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[800]),
                       ),
                       onTap: () {
                         onSelected(items[index]);
@@ -85,6 +80,10 @@ class CustomDropdownMenu extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.grey[100],
           borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            width: 1, // Use the borderWidth parameter
+            color: isEnabled ? Colors.grey[300]! : Colors.grey[300]!, // Change color if disabled
+          ),
         ),
         child: Row(
           children: [

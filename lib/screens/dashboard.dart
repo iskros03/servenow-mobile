@@ -108,10 +108,10 @@ class _DashboardState extends State<Dashboard> {
                                               Text('RM 129.00',
                                                   style: TextStyle(
                                                       fontFamily: 'Inter',
-                                                      fontSize: 30,
+                                                      fontSize: 25,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      color: Colors.grey[800])),
+                                                      color: Colors.grey[600])),
                                             ],
                                           ),
                                           Text(
@@ -161,10 +161,10 @@ class _DashboardState extends State<Dashboard> {
                                               Text('6',
                                                   style: TextStyle(
                                                       fontFamily: 'Inter',
-                                                      fontSize: 30,
+                                                      fontSize: 25,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      color: Colors.grey[800])),
+                                                      color: Colors.grey[600])),
                                             ],
                                           ),
                                           Text(

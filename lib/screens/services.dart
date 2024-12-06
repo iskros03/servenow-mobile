@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:servenow_mobile/services/tasker_service.dart';
 import 'package:servenow_mobile/widgets/custom_card.dart';
-import 'package:servenow_mobile/widgets/custom_ele_button.dart';
 import 'package:servenow_mobile/widgets/custom_text_field.dart';
 
 class Services extends StatefulWidget {
@@ -101,12 +100,17 @@ class _ServicesState extends State<Services> {
             indicatorColor: Colors.transparent,
             labelColor: Colors.white,
             unselectedLabelColor: Colors.grey,
-            labelStyle: TextStyle(fontFamily: 'Inter', fontSize: 13.0),
-            unselectedLabelStyle:
-                TextStyle(fontSize: 13.0, fontFamily: 'Inter'),
+            labelStyle: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 13.0,
+                fontWeight: FontWeight.bold),
+            unselectedLabelStyle: TextStyle(
+                fontSize: 13.0,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.bold),
             tabs: [
               Tab(text: 'Service Management'),
-              Tab(text: 'Lorem Ipsum'),
+              Tab(text: 'Task Management'),
             ],
           ),
         ),
@@ -154,44 +158,45 @@ class _ServicesState extends State<Services> {
                   ),
                   CustomTextField(
                     controller: searchController,
-                    labelText: 'Search',
+                    labelText: 'Search...',
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                          padding: EdgeInsets.all(15),
-                          child: Row(
-                            children: [
-                              Text(
-                                'Service : ',
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[800]),
-                              ),
-                              Text(
-                                '13',
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[800]),
-                              ),
-                            ],
-                          )),
-                      CustomEleButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/add_service');
-                        },
-                        text: 'Add Service',
-                        bgColor: Color.fromRGBO(24, 52, 92, 1),
-                        fgColor: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ],
+                  Container(
+                    padding: EdgeInsets.all(15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Service : ',
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[600]),
+                            ),
+                            Text(
+                              '13',
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[800]),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/add_service');
+                          },
+                          icon: Icon(
+                            Icons.add_circle,
+                            size: 30,
+                            color: Color.fromRGBO(24, 52, 92, 1),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   Column(
                     children: services.map((service) {
@@ -241,19 +246,13 @@ class _ServicesState extends State<Services> {
                                     ),
                                   ),
                                 ),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      icon: FaIcon(FontAwesomeIcons.pen,
-                                          color: Colors.grey[400], size: 16),
-                                      onPressed: () {},
-                                    ),
-                                    IconButton(
-                                      icon: FaIcon(FontAwesomeIcons.trash,
-                                          color: Colors.red[400], size: 16),
-                                      onPressed: () {},
-                                    ),
-                                  ],
+                                IconButton(
+                                  icon: FaIcon(FontAwesomeIcons.chevronRight,
+                                      color: Colors.grey[400], size: 16),
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                        context, '/manage_service');
+                                  },
                                 ),
                               ],
                             )

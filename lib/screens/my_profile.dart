@@ -287,13 +287,13 @@ class _MyProfileState extends State<MyProfile> {
             labelColor: Colors.white,
             unselectedLabelColor: Colors.grey[500],
             labelStyle: const TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 13.0,
-            ),
+                fontFamily: 'Inter',
+                fontSize: 13.0,
+                fontWeight: FontWeight.bold),
             unselectedLabelStyle: const TextStyle(
-              fontSize: 13.0,
-              fontFamily: 'Inter',
-            ),
+                fontSize: 13.0,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.bold),
             tabs: const [
               Tab(text: 'Personal Info'),
               Tab(text: 'Password'),
@@ -398,13 +398,18 @@ class _MyProfileState extends State<MyProfile> {
                             ),
                           ),
                           SizedBox(height: 10),
-                          _buildTextField('First Name', firstnameController),
-                          _buildTextField('Last Name', lastnameController),
+                          _buildTextField(
+                            'First Name',
+                            firstnameController,
+                            'Enter first name',
+                          ),
+                          _buildTextField('Last Name', lastnameController,
+                              'Enter last name'),
                           Row(children: [
                             Expanded(
                                 flex: 3,
-                                child:
-                                    _buildTextField('IC Number', icController)),
+                                child: _buildTextField('IC Number',
+                                    icController, 'Enter ic number')),
                             const SizedBox(width: 15),
                             Expanded(
                               flex: 2,
@@ -417,8 +422,9 @@ class _MyProfileState extends State<MyProfile> {
                                       Text(
                                         'Birthdate',
                                         style: TextStyle(
-                                            color: Colors.grey[600],
-                                            fontSize: 12),
+                                            color: Colors.grey[800],
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ],
                                   ),
@@ -479,9 +485,15 @@ class _MyProfileState extends State<MyProfile> {
                           _buildTextField(
                             'Email',
                             emailController,
+                            'Enter your email',
                           ),
-                          _buildTextField('Mobile', mobileController),
-                          _buildTextField('Bio', bioController, maxLines: 3),
+                          _buildTextField(
+                            'Mobile',
+                            mobileController,
+                            'Enter your mobile',
+                          ),
+                          _buildTextField('Bio', bioController, 'Enter bio',
+                              maxLines: 3),
                           SizedBox(height: 50),
                           Center(
                             child: Row(
@@ -516,9 +528,15 @@ class _MyProfileState extends State<MyProfile> {
                           ),
                           SizedBox(height: 10),
                           _buildTextField(
-                              'Address Line 1', addressLineOneController),
+                            'Address Line 1',
+                            addressLineOneController,
+                            'Enter Address Line 1',
+                          ),
                           _buildTextField(
-                              'Address Line 2', addressLineTwoController),
+                            'Address Line 2',
+                            addressLineTwoController,
+                            'Enter Address Line 2',
+                          ),
                           Row(
                             children: [
                               Expanded(
@@ -559,7 +577,10 @@ class _MyProfileState extends State<MyProfile> {
                               Expanded(
                                 flex: 2,
                                 child: _buildTextField(
-                                    'Postal Code', addressPostalCodeController),
+                                  'Postal Code',
+                                  addressPostalCodeController,
+                                  'Enter Postal Code',
+                                ),
                               )
                             ],
                           ),
@@ -643,11 +664,15 @@ class _MyProfileState extends State<MyProfile> {
                             ),
                           ),
                           _buildTextField('Old Password', oldPasswordController,
+                              'Enter old password',
                               obscureText: true),
                           _buildTextField('New Password', newPasswordController,
+                              'Enter new password',
                               obscureText: true),
                           _buildTextField(
-                              'Confirm Password', confirmPasswordController,
+                              'Confirm Password',
+                              confirmPasswordController,
+                              'Enter confirm password',
                               obscureText: true),
                         ],
                       ),
@@ -662,7 +687,8 @@ class _MyProfileState extends State<MyProfile> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller,
+  Widget _buildTextField(
+      String label, TextEditingController controller, String hintText,
       {bool obscureText = false, int maxLines = 1}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -673,12 +699,16 @@ class _MyProfileState extends State<MyProfile> {
             Text(
               label,
               style: TextStyle(
-                  color: Colors.grey[600], fontFamily: 'Inter', fontSize: 12),
+                  color: Colors.grey[800],
+                  fontFamily: 'Inter',
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold),
             ),
           ],
         ),
         const SizedBox(height: 2.5),
         CustomTextField(
+          labelText: hintText,
           maxLines: maxLines,
           controller: controller,
           obscureText: obscureText,

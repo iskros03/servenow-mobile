@@ -57,7 +57,7 @@ class TaskerUser {
         'Accept': 'application/json',
       });
 
-      if (response.statusCode == 201 && response.body.isNotEmpty) {
+      if (response.statusCode == 200 && response.body.isNotEmpty) {
         final data = jsonDecode(response.body);
         return List<String>.from(data);
       } else {
