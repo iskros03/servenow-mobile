@@ -26,6 +26,48 @@ class TaskerUser {
     }
   }
 
+  Future<List<String>> getState() async {
+    try {
+      final url = Uri.parse('${dotenv.env['DOMAIN']}/api/get-state');
+      final response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      });
+
+      if (response.statusCode == 201 && response.body.isNotEmpty) {
+        final data = jsonDecode(response.body);
+        final states = data['state']['states'] as List;
+        final stateNames =
+            states.map((state) => state['name'] as String).toList();
+
+        return stateNames;
+      } else {
+        throw Exception('Failed to fetch state names: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception("Failed to fetch API: $e");
+    }
+  }
+
+  Future<List<String>> getArea(String state) async {
+    try {
+      final url = Uri.parse('${dotenv.env['DOMAIN']}/api/get-area-$state');
+      final response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      });
+
+      if (response.statusCode == 201 && response.body.isNotEmpty) {
+        final data = jsonDecode(response.body);
+        return List<String>.from(data);
+      } else {
+        throw Exception('Failed to fetch area names: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception("Failed to fetch API: $e");
+    }
+  }
+
   Future<Map<String, dynamic>> updateTaskerData(
       String id, Map<String, dynamic> updatedData) async {
     final TaskerAuth taskerAuth = TaskerAuth();

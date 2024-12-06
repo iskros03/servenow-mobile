@@ -1,6 +1,6 @@
 {
     "files.exclude": {
-        "**/README.md": true,
+        // "**/README.md": true,
 
         // "**/.gitignore": true,
         "**/.metadata": true,
@@ -24,10 +24,10 @@
         "**/.flutter-plugins": true,
         "**/.flutter-plugins-dependencies": true,
 
-        // "**/android": true,
+        "**/android": true,
         "**/fonts": true,
-        // "**/pubspec.yaml": true,
+        "**/pubspec.yaml": true,
     },
-    "java.compile.nullAnalysis.mode": "automatic",
+    "java.compile.nullAnalysis.mode": "disabled",
     // "git.decorations.enabled": false,
 }

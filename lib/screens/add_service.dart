@@ -19,29 +19,41 @@ class _AddServiceState extends State<AddService> {
       TextEditingController();
 
   dynamic selectedRateType;
-  dynamic selectedType;
+  int? selectedServiceTypeId;
   String rateTypeTitle = 'Select Rate Type';
   String serviceTypeTitle = 'Select Service Type';
-
-  // List of service types for the dropdown
-  final List<String> serviceTypes = [
-    'Consulting',
-    'Repair',
-    'Delivery',
-    'Cleaning',
-    'Installation'
-  ];
 
   final List<String> rateType = [
     'Per Job',
     'Per Hour',
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    fetchServiceTypeName();
+  }
+
+  List<Map<String, dynamic>> serviceType = [];
+
+  void fetchServiceTypeName() async {
+    TaskerService taskerService = TaskerService();
+    try {
+      final listServiceType = await taskerService.getTaskerServiceType();
+      setState(() {
+        serviceType = listServiceType;
+      });
+      print(serviceType);
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   void _createService() async {
     final createService = {
       'service_rate': serviceRateController.text,
       'service_desc': serviceDescriptionController.text,
-      'service_type_id': 2,
+      'service_type_id': selectedServiceTypeId,
       'service_rate_type': selectedRateType,
     };
     try {
@@ -179,15 +191,16 @@ class _AddServiceState extends State<AddService> {
                   ],
                 ),
                 const SizedBox(height: 2.5),
-                CustomDropdownMenu(
-                    titleSelect: serviceTypeTitle,
-                    items: serviceTypes,
-                    onSelected: (selectedValue) {
-                      setState(() {
-                        selectedType = selectedValue;
-                        serviceTypeTitle = selectedValue;
-                      });
-                    }),
+               CustomDropdownMenu(
+                  titleValue: serviceTypeTitle,
+                  items: serviceType.map((serviceTypeName) => serviceTypeName['servicetype_name'].toString()).toList(),
+                  onSelected: (selectedValue) {
+                    setState(() {
+                      selectedServiceTypeId = serviceType.firstWhere((service) => service['servicetype_name'] == selectedValue)['id'];  // Get the ID based on selected name
+                      serviceTypeTitle = selectedValue;  // Update the title
+                    });
+                  },
+                ),
                 const SizedBox(height: 15),
                 Row(children: [
                   Expanded(
@@ -242,14 +255,16 @@ class _AddServiceState extends State<AddService> {
                         ),
                         const SizedBox(height: 2.5),
                         CustomDropdownMenu(
-                            items: rateType,
-                            titleSelect: rateTypeTitle,
-                            onSelected: (selectedValue) {
-                              setState(() {
-                                selectedRateType = selectedValue;
-                                rateTypeTitle = selectedValue;
-                              });
-                            }),
+                          items: rateType,
+                          titleValue: rateTypeTitle,
+                          onSelected: (selectedValue) {
+                            setState(() {
+                              selectedRateType = selectedValue;
+                              rateTypeTitle = selectedValue;
+                            });
+                          },
+                          // isEnabled: selectedServiceTypeId?.isNotEmpty ?? false,
+                        ),
                         const SizedBox(height: 15),
                       ],
                     ),

@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class TaskerService {
-  Future<List<dynamic>> getTaskerServiceType() async {
+  Future<List<Map<String, dynamic>>> getTaskerServiceType() async {
     final TaskerAuth taskerAuth = TaskerAuth();
     try {
       final token = await taskerAuth.getToken();
@@ -15,12 +15,16 @@ class TaskerService {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       });
-
-      print(response.body);
-
       if (response.body.isNotEmpty) {
         final data = jsonDecode(response.body)['servicetype'];
-        return data;
+
+        final serviceList = (data as List).map((service) {
+          return {
+            'id': service['id'],
+            'servicetype_name': service['servicetype_name'],
+          };
+        }).toList();
+        return serviceList;
       } else {
         throw Exception('Failed to get tasker data');
       }

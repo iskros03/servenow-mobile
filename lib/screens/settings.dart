@@ -236,43 +236,6 @@ class _SettingsState extends State<Settings> {
                                     ),
                                     const SizedBox(width: 15),
                                     Text(
-                                      'My Address',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Inter',
-                                        fontSize: 12,
-                                        color: Colors.grey[800],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.pushNamed(context, '/my_address');
-                                    },
-                                    icon: FaIcon(
-                                      FontAwesomeIcons.chevronRight,
-                                      size: 12,
-                                    ))
-                              ],
-                            ),
-                          ),
-                          CustomCard(
-                            cardColor: Colors.grey.shade100,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.home_repair_service,
-                                      size: 20,
-                                      color: Color.fromRGBO(24, 52, 92, 1),
-                                    ),
-                                    const SizedBox(width: 15),
-                                    Text(
                                       'Bank Accounts / Cards',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,

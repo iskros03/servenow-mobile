@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class CustomEleButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
-  final Color bgColor;
-  final Color fgColor;
+  final Color? bgColor;
+  final Color? fgColor;
   final double borderRadius;
   final Color borderColor;
   final double borderWidth;

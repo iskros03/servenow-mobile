@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
   final Widget child;
-  final Color cardColor;
+  final Color? cardColor;
   final double elevation;
   final EdgeInsetsGeometry padding;
 

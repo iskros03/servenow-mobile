@@ -3,16 +3,22 @@ import 'package:flutter/material.dart';
 class CustomDropdownMenu extends StatelessWidget {
   final List<String> items;
   final ValueChanged<String> onSelected;
-  final String titleSelect;
+  final String? titleSelect;
+  final String? titleValue;
+  final bool isEnabled; // New parameter to control enabling/disabling
 
   const CustomDropdownMenu({
     super.key,
     required this.items,
     required this.onSelected,
-    this.titleSelect = '',
+    this.titleSelect,
+    this.titleValue,
+    this.isEnabled = true, // Default to enabled
   });
 
   void _showBottomSheet(BuildContext context) {
+    if (!isEnabled) return; // Do nothing if not enabled
+
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -26,7 +32,7 @@ class CustomDropdownMenu extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                titleSelect,
+                '$titleSelect',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 16,
@@ -71,7 +77,9 @@ class CustomDropdownMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _showBottomSheet(context), // Open bottom sheet on tap
+      onTap: isEnabled
+          ? () => _showBottomSheet(context)
+          : null, // Open bottom sheet only if enabled
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
@@ -80,11 +88,13 @@ class CustomDropdownMenu extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Text(titleSelect,
+            Text('$titleValue',
                 style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'Inter',
-                    color: Colors.grey[600])),
+                    color: isEnabled
+                        ? Colors.grey[600]
+                        : Colors.grey[400])), // Change text color if disabled
             Spacer(),
             Icon(Icons.arrow_drop_down),
           ],

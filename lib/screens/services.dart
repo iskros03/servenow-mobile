@@ -1,9 +1,8 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:servenow_mobile/services/tasker_service.dart';
 import 'package:servenow_mobile/widgets/custom_card.dart';
+import 'package:servenow_mobile/widgets/custom_ele_button.dart';
 import 'package:servenow_mobile/widgets/custom_text_field.dart';
 
 class Services extends StatefulWidget {
@@ -14,27 +13,20 @@ class Services extends StatefulWidget {
 }
 
 class _ServicesState extends State<Services> {
-  List<dynamic> services = [];
-  List<dynamic> serviceType = [];
-  final TextEditingController serachController = TextEditingController();
-  dynamic taskerServiceType;
-  dynamic taskerServiceRate;
-  dynamic taskerServiceRateType;
-  dynamic taskerServiceDescription;
-
-  dynamic serviceTypeId;
+  List<dynamic> services = []; // List service from specific tasker
+  List<dynamic> serviceType = []; // List service type
+  final TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
+    super.initState();
     _loadTaskerServiceList();
     _loadTaskerServiceType();
-    super.initState();
   }
 
   void _loadTaskerServiceType() async {
-    TaskerService taskerServiceType = TaskerService();
     try {
-      var data = await taskerServiceType.getTaskerServiceType();
+      var data = await TaskerService().getTaskerServiceType();
       setState(() {
         serviceType = data;
       });
@@ -44,11 +36,11 @@ class _ServicesState extends State<Services> {
   }
 
   void _loadTaskerServiceList() async {
-    TaskerService taskerServiceList = TaskerService();
     try {
-      var data = await taskerServiceList.getTaskerServiceList();
+      var data = await TaskerService().getTaskerServiceList();
       setState(() {
         services = data;
+        print('Services: $services');
       });
     } catch (e) {
       print('Error occurred: $e');
@@ -56,11 +48,11 @@ class _ServicesState extends State<Services> {
   }
 
   String getServiceTypeName(int serviceTypeId) {
-    final match = serviceType.firstWhere(
-      (type) => type['id'] == serviceTypeId,
-      orElse: () => null,
+    final serviceTypeName = serviceType.firstWhere(
+      (serviceType) => serviceType['id'] == serviceTypeId,
+      orElse: () => {'servicetype_name': 'Unknown'},
     );
-    return match != null ? match['servicetype_name'] : 'Unknown';
+    return serviceTypeName['servicetype_name'];
   }
 
   Map<String, dynamic> getServiceStatus(int status) {
@@ -100,28 +92,19 @@ class _ServicesState extends State<Services> {
             ),
           ),
           leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
-          bottom: TabBar(
-            overlayColor: WidgetStateProperty.all(Colors.transparent),
+          bottom: const TabBar(
             indicatorColor: Colors.transparent,
             labelColor: Colors.white,
-            unselectedLabelColor: Colors.grey[500],
-            labelStyle: const TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 13.0,
-            ),
-            unselectedLabelStyle: const TextStyle(
-              fontSize: 13.0,
-              fontFamily: 'Inter',
-            ),
-            tabs: const [
+            unselectedLabelColor: Colors.grey,
+            labelStyle: TextStyle(fontFamily: 'Inter', fontSize: 13.0),
+            unselectedLabelStyle:
+                TextStyle(fontSize: 13.0, fontFamily: 'Inter'),
+            tabs: [
               Tab(text: 'Service Management'),
               Tab(text: 'Lorem Ipsum'),
             ],
@@ -130,7 +113,7 @@ class _ServicesState extends State<Services> {
         body: TabBarView(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               child: Column(
                 children: [
                   CustomCard(
@@ -147,12 +130,13 @@ class _ServicesState extends State<Services> {
                             ),
                             const SizedBox(width: 7.5),
                             Text(
-                              '$serviceTypeId',
+                              'Note',
                               style: TextStyle(
-                                  color: Colors.blue[600],
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12),
+                                color: Colors.blue[600],
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
                             ),
                           ],
                         ),
@@ -168,140 +152,120 @@ class _ServicesState extends State<Services> {
                       ],
                     ),
                   ),
+                  CustomTextField(
+                    controller: searchController,
+                    labelText: 'Search',
+                  ),
+                  const SizedBox(height: 10),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                          child: CustomTextField(
-                        controller: serachController,
-                        labelText: 'Search',
-                      )),
-                      const SizedBox(width: 15),
-                      IconButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/add_service');
-                          },
-                          icon: FaIcon(
-                            FontAwesomeIcons.circlePlus,
-                            color: Color.fromRGBO(24, 52, 92, 1),
-                          ))
-                    ],
-                  ),
-                  SizedBox(height: 15),
-                  Container(
-                    padding: EdgeInsets.all(12.5),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        color: Colors.white),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'No',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Inter',
-                                    fontSize: 12,
-                                  ),
-                                )),
-                            Expanded(
-                                flex: 10,
-                                child: Text(
-                                  'Service Name',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Inter',
-                                    fontSize: 12,
-                                  ),
-                                )),
-                            Expanded(
-                                flex: 3,
-                                child: Text(
-                                  'Status',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Inter',
-                                    fontSize: 12,
-                                  ),
-                                )),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(12.5),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        color: Colors.grey[100]),
-                    child: Column(
-                      children: [
-                        for (var i = 0; i < services.length; i++)
-                          Column(
+                      Container(
+                          padding: EdgeInsets.all(15),
+                          child: Row(
                             children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        (i + 1).toString(),
-                                        style: TextStyle(
-                                          fontFamily: 'Inter',
-                                          fontSize: 12,
-                                        ),
-                                      )),
-                                  Expanded(
-                                      flex: 10,
-                                      child: Text(
-                                        getServiceTypeName(
-                                            services[i]['service_type_id']),
-                                        style: TextStyle(
-                                          fontFamily: 'Inter',
-                                          fontSize: 12,
-                                        ),
-                                      )),
-                                  Expanded(
-                                      flex: 3,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(7.5)),
-                                          color: Colors.orange,
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 5, vertical: 3),
-                                        child: Text(
-                                          textAlign: TextAlign.center,
-                                          getServiceStatus(services[i]
-                                              ['service_status'])['text'],
-                                          style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 10,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      )),
-                                ],
+                              Text(
+                                'Service : ',
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[800]),
                               ),
-                              SizedBox(
-                                height: 25,
-                                child: Divider(
-                                  color: Colors.grey[500],
-                                  thickness: 0.5,
-                                ),
+                              Text(
+                                '13',
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[800]),
                               ),
                             ],
-                          ),
-                      ],
-                    ),
-                  )
+                          )),
+                      CustomEleButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/add_service');
+                        },
+                        text: 'Add Service',
+                        bgColor: Color.fromRGBO(24, 52, 92, 1),
+                        fgColor: Colors.white,
+                        fontSize: 12,
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: services.map((service) {
+                      int status = service['service_status'];
+                      return CustomCard(
+                        cardColor: Colors.grey[100],
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              getServiceTypeName(service['service_type_id']),
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[800]),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 12,
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(5)),
+                                    color: getServiceStatus(status)['color'],
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 5, vertical: 3),
+                                  child: Text(
+                                    textAlign: TextAlign.center,
+                                    getServiceStatus(status)['text'],
+                                    style: const TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: FaIcon(FontAwesomeIcons.pen,
+                                          color: Colors.grey[400], size: 16),
+                                      onPressed: () {},
+                                    ),
+                                    IconButton(
+                                      icon: FaIcon(FontAwesomeIcons.trash,
+                                          color: Colors.red[400], size: 16),
+                                      onPressed: () {},
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ],
               ),
             ),
-            Center(child: Text('Lorem Ipsum Content')),
+            const Center(child: Text('Lorem Ipsum Content')),
           ],
         ),
       ),

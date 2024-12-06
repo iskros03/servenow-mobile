@@ -1,16 +1,14 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:servenow_mobile/services/tasker_auth.dart';
 import 'package:servenow_mobile/services/tasker_user.dart';
 import 'package:servenow_mobile/widgets/custom_card.dart';
+import 'package:servenow_mobile/widgets/custom_dropdown_menu.dart';
 import 'package:servenow_mobile/widgets/custom_text_field.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key});
-
   @override
   State<MyProfile> createState() => _MyProfileState();
 }
@@ -19,27 +17,66 @@ class _MyProfileState extends State<MyProfile> {
   late Future<Map<String, String>> taskerDataFuture;
   late Map<String, String> initialTaskerData;
 
-  final TextEditingController firstnameController = TextEditingController();
-  final TextEditingController lastnameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController mobileController = TextEditingController();
-  final TextEditingController bioController = TextEditingController();
-  final TextEditingController oldPasswordController = TextEditingController();
-  final TextEditingController newPasswordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
-  final TextEditingController icController = TextEditingController();
+  List<String> states = [];
+  List<String> areas = [];
+  String? selectedState;
+  String? selectedArea;
+  int _selectedTabIndex = 0;
 
-  DateTime? selectedDate;
-
-  String selectedGender = 'Male';
-  String birthdate = '';
-  String photo = '';
+  TextEditingController firstnameController = TextEditingController();
+  TextEditingController lastnameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
+  TextEditingController bioController = TextEditingController();
+  TextEditingController oldPasswordController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController icController = TextEditingController();
+  String? birthdate; // Birthdate
+  String? photo; // Photo
+  // Address
+  TextEditingController addressLineOneController = TextEditingController();
+  TextEditingController addressLineTwoController = TextEditingController();
+  TextEditingController addressPostalCodeController = TextEditingController();
+  String? addressState;
+  String? addressArea;
+  // Working Area
+  String? workingLocState;
+  String? workingLocArea;
 
   @override
   void initState() {
     super.initState();
     taskerDataFuture = _loadTaskerData();
+    fetchStateNames();
+  }
+
+  void fetchStateNames() async {
+    TaskerUser getState = TaskerUser();
+    try {
+      final stateNames = await getState.getState();
+      setState(() {
+        states = stateNames;
+      });
+      final taskerData = await taskerDataFuture;
+      if (taskerData['tasker_address_state'] != null) {
+        fetchAreaNames(taskerData['tasker_address_state']!);
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  void fetchAreaNames(String selectedState) async {
+    TaskerUser getArea = TaskerUser();
+    try {
+      final areaNames = await getArea.getArea(selectedState);
+      setState(() {
+        areas = areaNames;
+      });
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 
   Future<Map<String, String>> _loadTaskerData() async {
@@ -47,24 +84,43 @@ class _MyProfileState extends State<MyProfile> {
     try {
       await Future.delayed(const Duration(seconds: 1));
       var data = await taskerUser.getTaskerData();
-      firstnameController.text = data[0]['tasker_firstname'] ?? '';
-      lastnameController.text = data[0]['tasker_lastname'] ?? '';
-      mobileController.text = data[0]['tasker_phoneno'] ?? '';
-      photo = data[0]['tasker_photo'] ?? '';
-      emailController.text = data[0]['email'] ?? '';
-      bioController.text = data[0]['tasker_bio'] ?? '';
-      icController.text = data[0]['tasker_icno'] ?? '';
-      birthdate = data[0]['tasker_dob'] ?? '';
+
+      firstnameController.text = data[0]['tasker_firstname'];
+      lastnameController.text = data[0]['tasker_lastname'];
+      mobileController.text = data[0]['tasker_phoneno'];
+      photo = data[0]['tasker_photo'];
+      emailController.text = data[0]['email'];
+      bioController.text = data[0]['tasker_bio'];
+      icController.text = data[0]['tasker_icno'];
+      birthdate = data[0]['tasker_dob'];
+      // Address
+      addressLineOneController.text = data[0]['tasker_address_one'];
+      addressLineTwoController.text = data[0]['tasker_address_two'];
+      addressPostalCodeController.text = data[0]['tasker_address_poscode'];
+      addressState = data[0]['tasker_address_state'];
+      addressArea = data[0]['tasker_address_area'];
+      // Working Address
+      workingLocState = data[0]['tasker_workingloc_state'];
+      workingLocArea = data[0]['tasker_workingloc_area'];
 
       initialTaskerData = {
-        'tasker_firstname': data[0]['tasker_firstname'] ?? '',
-        'tasker_lastname': data[0]['tasker_lastname'] ?? '',
-        'tasker_email': data[0]['email'] ?? '',
-        'tasker_mobile': data[0]['tasker_phoneno'] ?? '',
-        'tasker_photo': 'images.jpg',
-        'tasker_bio': data[0]['tasker_bio'] ?? '',
-        'tasker_icno': data[0]['tasker_icno'] ?? '',
-        'tasker_dob': data[0]['tasker_dob'] ?? '',
+        'tasker_firstname': data[0]['tasker_firstname'],
+        'tasker_lastname': data[0]['tasker_lastname'],
+        'tasker_email': data[0]['email'],
+        'tasker_mobile': data[0]['tasker_phoneno'],
+        'tasker_photo': data[0]['tasker_photo'],
+        'tasker_bio': data[0]['tasker_bio'],
+        'tasker_icno': data[0]['tasker_icno'],
+        'tasker_dob': data[0]['tasker_dob'],
+        // Address
+        'tasker_address_one': data[0]['tasker_address_one'],
+        'tasker_address_two': data[0]['tasker_address_two'],
+        'tasker_address_poscode': data[0]['tasker_address_poscode'],
+        'tasker_address_state': data[0]['tasker_address_state'],
+        'tasker_address_area': data[0]['tasker_address_area'],
+        // Working Address
+        'tasker_workingloc_state': data[0]['tasker_workingloc_state'],
+        'tasker_workingloc_area': data[0]['tasker_workingloc_area'],
       };
       return initialTaskerData;
     } catch (e) {
@@ -83,20 +139,20 @@ class _MyProfileState extends State<MyProfile> {
       'tasker_bio': bioController.text,
       'tasker_icno': icController.text.trim(),
       'tasker_dob': birthdate,
-      'tasker_address_one': '*',
-      'tasker_address_two': '*',
-      'tasker_address_poscode': '*',
-      'tasker_address_state': '*',
-      'tasker_address_area': '*',
-      'tasker_workingloc_state': '*',
-      'tasker_workingloc_area': '*',
+      'tasker_address_one': addressLineOneController.text,
+      'tasker_address_two': addressLineTwoController.text,
+      'tasker_address_poscode': addressPostalCodeController.text.trim(),
+      'tasker_address_state': addressState,
+      'tasker_address_area': addressArea,
+      'tasker_workingloc_state': workingLocState,
+      'tasker_workingloc_area': workingLocArea,
     };
 
     try {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Saving profile...'),
-          duration: Duration(seconds: 2),
+          duration: Duration(seconds: 1),
         ),
       );
 
@@ -185,10 +241,13 @@ class _MyProfileState extends State<MyProfile> {
     oldPasswordController.dispose();
     newPasswordController.dispose();
     confirmPasswordController.dispose();
+
+    // Address
+    addressLineOneController.dispose();
+    addressLineTwoController.dispose();
+    addressPostalCodeController.dispose();
     super.dispose();
   }
-
-  int _selectedTabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -261,6 +320,7 @@ class _MyProfileState extends State<MyProfile> {
         body: FutureBuilder<Map<String, String>>(
           future: taskerDataFuture,
           builder: (context, snapshot) {
+            // Waiting for request
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                   child: Column(
@@ -276,10 +336,7 @@ class _MyProfileState extends State<MyProfile> {
               ));
             } else if (snapshot.hasError) {
               return const Center(child: Text('Error loading profile data.'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(child: Text('No profile data available.'));
             } else {
-              final data = snapshot.data!;
               return TabBarView(
                 children: [
                   // Personal Info Tab
@@ -304,19 +361,53 @@ class _MyProfileState extends State<MyProfile> {
                                 child: CircleAvatar(
                                   radius: 45,
                                   backgroundImage: NetworkImage(
-                                      'https://servenow.com.my/storage/${data['taskerProfilePhoto']}'),
+                                      'https://servenow.com.my/storage/$photo'),
                                 ),
                               ),
                             ),
                           ),
+                          Center(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(
+                                    thickness: 0.5,
+                                    color: Colors.grey[300],
+                                    endIndent:
+                                        8, // Adds spacing between line and text
+                                  ),
+                                ),
+                                Text(
+                                  'Biodata',
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Divider(
+                                    thickness: 0.5,
+                                    color: Colors.grey[300],
+                                    indent:
+                                        8, // Adds spacing between text and line
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10),
                           _buildTextField('First Name', firstnameController),
                           _buildTextField('Last Name', lastnameController),
                           Row(children: [
                             Expanded(
+                                flex: 3,
                                 child:
                                     _buildTextField('IC Number', icController)),
                             const SizedBox(width: 15),
                             Expanded(
+                              flex: 2,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -341,7 +432,7 @@ class _MyProfileState extends State<MyProfile> {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Text(
-                                        birthdate,
+                                        '$birthdate',
                                         style: TextStyle(
                                             fontFamily: 'Inter',
                                             fontSize: 14,
@@ -352,12 +443,158 @@ class _MyProfileState extends State<MyProfile> {
                               ),
                             )
                           ]),
+                          SizedBox(height: 50),
+                          Center(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(
+                                    thickness: 0.5,
+                                    color: Colors.grey[300],
+                                    endIndent:
+                                        8, // Adds spacing between line and text
+                                  ),
+                                ),
+                                Text(
+                                  'Contact',
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Divider(
+                                    thickness: 0.5,
+                                    color: Colors.grey[300],
+                                    indent:
+                                        8, // Adds spacing between text and line
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10),
                           _buildTextField(
                             'Email',
                             emailController,
                           ),
                           _buildTextField('Mobile', mobileController),
                           _buildTextField('Bio', bioController, maxLines: 3),
+                          SizedBox(height: 50),
+                          Center(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(
+                                    thickness: 1,
+                                    color: Colors.grey[300],
+                                    endIndent:
+                                        8, // Adds spacing between line and text
+                                  ),
+                                ),
+                                Text(
+                                  'Address',
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Divider(
+                                    thickness: 1,
+                                    color: Colors.grey[300],
+                                    indent:
+                                        8, // Adds spacing between text and line
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          _buildTextField(
+                              'Address Line 1', addressLineOneController),
+                          _buildTextField(
+                              'Address Line 2', addressLineTwoController),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(width: 12.5),
+                                        Text(
+                                          'State',
+                                          style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontFamily: 'Inter',
+                                              fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 2.5),
+                                    CustomDropdownMenu(
+                                      items: states,
+                                      titleSelect: 'Select State',
+                                      titleValue: addressState,
+                                      onSelected: (selectedValue) {
+                                        setState(() {
+                                          addressState = selectedValue;
+                                          addressArea = '';
+                                        });
+                                        fetchAreaNames(selectedValue);
+                                      },
+                                    ),
+                                    const SizedBox(height: 15),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 15),
+                              Expanded(
+                                flex: 2,
+                                child: _buildTextField(
+                                    'Postal Code', addressPostalCodeController),
+                              )
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  SizedBox(width: 12.5),
+                                  Text(
+                                    'Area',
+                                    style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontFamily: 'Inter',
+                                        fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 2.5),
+                              CustomDropdownMenu(
+                                items: areas,
+                                titleSelect: 'Select Area',
+                                titleValue: addressArea == ''
+                                    ? 'Select Area'
+                                    : addressArea,
+                                onSelected: (selectedValue) {
+                                  setState(() {
+                                    addressArea = selectedValue;
+                                  });
+                                },
+                                isEnabled: states.isNotEmpty,
+                              ),
+                              const SizedBox(height: 15),
+                            ],
+                          ),
                         ],
                       ),
                     ),
