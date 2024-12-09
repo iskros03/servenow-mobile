@@ -115,7 +115,7 @@ class _AddServiceState extends State<AddService> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context,true);
           },
         ),
         actions: [

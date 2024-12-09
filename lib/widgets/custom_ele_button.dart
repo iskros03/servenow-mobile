@@ -6,7 +6,7 @@ class CustomEleButton extends StatelessWidget {
   final Color? bgColor;
   final Color? fgColor;
   final double borderRadius;
-  final Color borderColor;
+  final Color? borderColor;
   final double borderWidth;
   final double fontSize;
 
@@ -36,7 +36,7 @@ class CustomEleButton extends StatelessWidget {
               BorderRadius.circular(borderRadius), // Apply borderRadius
         ),
         side: BorderSide(
-          color: borderColor,
+          color: borderColor ?? Color.fromRGBO(24, 52, 92, 1),
           width: borderWidth,
         ),
       ),

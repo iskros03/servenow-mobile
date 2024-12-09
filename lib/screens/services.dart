@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:servenow_mobile/screens/manage_service.dart';
 import 'package:servenow_mobile/services/tasker_service.dart';
 import 'package:servenow_mobile/widgets/custom_card.dart';
 import 'package:servenow_mobile/widgets/custom_text_field.dart';
@@ -216,7 +217,8 @@ class _ServicesState extends State<Services> {
                             ),
                             SizedBox(height: 5),
                             Text(
-                              "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                              service['service_desc'] ??
+                                  'No description available',
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 12,
@@ -250,8 +252,28 @@ class _ServicesState extends State<Services> {
                                   icon: FaIcon(FontAwesomeIcons.chevronRight,
                                       color: Colors.grey[400], size: 16),
                                   onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, '/manage_service');
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ManageService(
+                                          serviceIdSingle: service['id'],
+                                          serviceTypeSingle: getServiceTypeName(
+                                              service['service_type_id']),
+                                          serviceRateSingle:
+                                              service['service_rate'],
+                                          serviceStatusSingle:
+                                              service['service_status'],
+                                          serviceDescSingle:
+                                              service['service_desc'],
+                                          serviceRateTypeSingle:
+                                              service['service_rate_type'],
+                                        ),
+                                      ),
+                                    ).then((result) {
+                                      if (result == true) {
+                                        _loadTaskerServiceList();
+                                      }
+                                    });
                                   },
                                 ),
                               ],

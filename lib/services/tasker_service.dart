@@ -83,4 +83,60 @@ class TaskerService {
       throw Exception("Failed to fetch API: $e");
     }
   }
+
+  Future<Map<String, dynamic>> updateTaskerService(
+      String id, Map<String, dynamic> createService) async {
+    final TaskerAuth taskerAuth = TaskerAuth();
+    try {
+      final token = await taskerAuth.getToken();
+      final url = Uri.parse('${dotenv.env['DOMAIN']}/api/update-service-$id');
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(createService),
+      );
+      if (response.body.isNotEmpty) {
+        final responseData = jsonDecode(response.body);
+        return {
+          'statusCode': response.statusCode,
+          'data': responseData,
+        };
+      } else {
+        throw Exception('No response body received');
+      }
+    } catch (e) {
+      throw Exception("Failed to fetch API: $e");
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteTaskerService(String id) async {
+    final TaskerAuth taskerAuth = TaskerAuth();
+    try {
+      final token = await taskerAuth.getToken();
+      final url = Uri.parse('${dotenv.env['DOMAIN']}/api/delete-service-$id');
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+      if (response.body.isNotEmpty) {
+        final responseData = jsonDecode(response.body);
+        return {
+          'statusCode': response.statusCode,
+          'data': responseData,
+        };
+      } else {
+        throw Exception('No response body received');
+      }
+    } catch (e) {
+      throw Exception("Failed to fetch API: $e");
+    }
+  }
 }
