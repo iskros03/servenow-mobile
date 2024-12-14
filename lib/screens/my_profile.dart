@@ -6,6 +6,7 @@ import 'package:servenow_mobile/widgets/custom_card.dart';
 import 'package:servenow_mobile/widgets/custom_dropdown_menu.dart';
 import 'package:servenow_mobile/widgets/custom_text_field.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key});
@@ -19,8 +20,10 @@ class _MyProfileState extends State<MyProfile> {
 
   List<String> states = [];
   List<String> areas = [];
-  String? selectedState;
-  String? selectedArea;
+
+  // String? selectedState;
+  // String? selectedArea;
+
   int _selectedTabIndex = 0;
 
   TextEditingController firstnameController = TextEditingController();
@@ -32,7 +35,7 @@ class _MyProfileState extends State<MyProfile> {
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController icController = TextEditingController();
-  String? birthdate; // Birthdate
+  String? birthdate;
   String? photo; // Photo
   // Address
   TextEditingController addressLineOneController = TextEditingController();
@@ -40,9 +43,6 @@ class _MyProfileState extends State<MyProfile> {
   TextEditingController addressPostalCodeController = TextEditingController();
   String? addressState;
   String? addressArea;
-  // Working Area
-  String? workingLocState;
-  String? workingLocArea;
 
   @override
   void initState() {
@@ -67,10 +67,10 @@ class _MyProfileState extends State<MyProfile> {
     }
   }
 
-  void fetchAreaNames(String selectedState) async {
+  void fetchAreaNames(String selectedArea) async {
     TaskerUser getArea = TaskerUser();
     try {
-      final areaNames = await getArea.getArea(selectedState);
+      final areaNames = await getArea.getArea(selectedArea);
       setState(() {
         areas = areaNames;
       });
@@ -99,9 +99,6 @@ class _MyProfileState extends State<MyProfile> {
       addressPostalCodeController.text = data[0]['tasker_address_poscode'];
       addressState = data[0]['tasker_address_state'];
       addressArea = data[0]['tasker_address_area'];
-      // Working Address
-      workingLocState = data[0]['tasker_workingloc_state'];
-      workingLocArea = data[0]['tasker_workingloc_area'];
 
       initialTaskerData = {
         'tasker_firstname': data[0]['tasker_firstname'],
@@ -118,9 +115,6 @@ class _MyProfileState extends State<MyProfile> {
         'tasker_address_poscode': data[0]['tasker_address_poscode'],
         'tasker_address_state': data[0]['tasker_address_state'],
         'tasker_address_area': data[0]['tasker_address_area'],
-        // Working Address
-        'tasker_workingloc_state': data[0]['tasker_workingloc_state'],
-        'tasker_workingloc_area': data[0]['tasker_workingloc_area'],
       };
       return initialTaskerData;
     } catch (e) {
@@ -144,8 +138,8 @@ class _MyProfileState extends State<MyProfile> {
       'tasker_address_poscode': addressPostalCodeController.text.trim(),
       'tasker_address_state': addressState,
       'tasker_address_area': addressArea,
-      'tasker_workingloc_state': workingLocState,
-      'tasker_workingloc_area': workingLocArea,
+      // 'tasker_workingloc_state': workingLocState,
+      // 'tasker_workingloc_area': workingLocArea,
     };
 
     try {
@@ -409,7 +403,7 @@ class _MyProfileState extends State<MyProfile> {
                             Expanded(
                                 flex: 3,
                                 child: _buildTextField('IC Number',
-                                    icController, 'Enter ic number')),
+                                    icController, 'Enter IC Number')),
                             const SizedBox(width: 15),
                             Expanded(
                               flex: 2,
@@ -560,11 +554,12 @@ class _MyProfileState extends State<MyProfile> {
                                     CustomDropdownMenu(
                                       items: states,
                                       titleSelect: 'Select State',
-                                      titleValue: addressState,
+                                      titleValue:
+                                          addressState ?? 'Select State',
                                       onSelected: (selectedValue) {
                                         setState(() {
                                           addressState = selectedValue;
-                                          addressArea = '';
+                                          addressArea = null;
                                         });
                                         fetchAreaNames(selectedValue);
                                       },
@@ -593,9 +588,10 @@ class _MyProfileState extends State<MyProfile> {
                                   Text(
                                     'Area',
                                     style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontFamily: 'Inter',
-                                        fontSize: 12),
+                                      color: Colors.grey[600],
+                                      fontFamily: 'Inter',
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -603,9 +599,7 @@ class _MyProfileState extends State<MyProfile> {
                               CustomDropdownMenu(
                                 items: areas,
                                 titleSelect: 'Select Area',
-                                titleValue: addressArea == ''
-                                    ? 'Select Area'
-                                    : addressArea,
+                                titleValue: addressArea ?? 'Select Area',
                                 onSelected: (selectedValue) {
                                   setState(() {
                                     addressArea = selectedValue;

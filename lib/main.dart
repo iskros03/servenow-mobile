@@ -8,6 +8,7 @@ import 'package:servenow_mobile/screens/settings.dart';
 import 'package:servenow_mobile/screens/services.dart';
 import 'package:servenow_mobile/screens/sign_in.dart';
 import 'package:servenow_mobile/screens/sign_up.dart';
+import 'package:servenow_mobile/screens/task_preferences.dart';
 
 Future<void> main() async {
   await dotenv.load(); 
@@ -24,6 +25,8 @@ Future<void> main() async {
       '/services': (context) => const Services(),
       '/add_service': (context) => const AddService(),
       '/manage_service': (context) => const ManageService(),
+
+      '/task_prefences': (context) => const TaskPreferences(),
     }
   ));
 }

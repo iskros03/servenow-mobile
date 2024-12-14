@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:servenow_mobile/screens/services.dart';
 import 'package:servenow_mobile/services/tasker_service.dart';
 import 'package:servenow_mobile/widgets/custom_card.dart';
 import 'package:servenow_mobile/widgets/custom_dropdown_menu.dart';
@@ -17,6 +14,7 @@ class ManageService extends StatefulWidget {
   final dynamic serviceRateTypeSingle;
   final dynamic serviceRateSingle;
   final dynamic serviceIdSingle;
+  final dynamic serviceTypeId;
   const ManageService(
       {super.key,
       this.serviceTypeSingle,
@@ -24,7 +22,8 @@ class ManageService extends StatefulWidget {
       this.serviceDescSingle,
       this.serviceRateTypeSingle,
       this.serviceRateSingle,
-      this.serviceIdSingle});
+      this.serviceIdSingle,
+      this.serviceTypeId});
 
   @override
   State<ManageService> createState() => _ManageServiceState();
@@ -50,13 +49,10 @@ class _ManageServiceState extends State<ManageService> {
   void initState() {
     super.initState();
     serviceId = '${widget.serviceIdSingle}';
-    selectedServiceTypeId = 3;
+    selectedServiceTypeId = '${widget.serviceTypeId}';
     selectedServiceTypeName = widget.serviceTypeSingle;
     serviceStatus = '${widget.serviceStatusSingle}';
-    selectedRateType = '${widget.serviceRateTypeSingle}'
-        .split(' ')
-        .map((str) => str[0].toUpperCase() + str.substring(1).toLowerCase())
-        .join(' ');
+    selectedRateType = '${widget.serviceRateTypeSingle}';
     serviceDescriptionController.text = widget.serviceDescSingle ?? '';
     serviceRateController.text = '${widget.serviceRateSingle}';
     fetchServiceTypeName();
@@ -242,7 +238,7 @@ class _ManageServiceState extends State<ManageService> {
                       ),
                       const SizedBox(width: 7.5),
                       Text(
-                        '$serviceStatus',
+                        '$selectedServiceTypeId',
                         style: TextStyle(
                           color: Colors.blue[600],
                           fontFamily: 'Inter',

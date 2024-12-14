@@ -139,4 +139,35 @@ class TaskerService {
       throw Exception("Failed to fetch API: $e");
     }
   }
+
+  Future<Map<String, dynamic>> updateTaskerLocation(
+      Map<String, dynamic> updatedLocation) async {
+    final TaskerAuth taskerAuth = TaskerAuth();
+    try {
+      final token = await taskerAuth.getToken();
+      final url =
+          Uri.parse('${dotenv.env['DOMAIN']}/api/update-tasker-location');
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(updatedLocation),
+      );
+
+      if (response.body.isNotEmpty) {
+        final responseData = jsonDecode(response.body);
+        return {
+          'data': responseData,
+          'statusCode': response.statusCode,
+        };
+      } else {
+        throw Exception('Failed to update location: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch API: $e');
+    }
+  }
 }

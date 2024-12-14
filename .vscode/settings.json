@@ -26,7 +26,7 @@
 
         "**/android": true,
         "**/fonts": true,
-        "**/pubspec.yaml": true,
+        // "**/pubspec.yaml": true,
     },
     "java.compile.nullAnalysis.mode": "disabled",
     // "git.decorations.enabled": false,

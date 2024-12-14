@@ -322,7 +322,9 @@ class _DashboardState extends State<Dashboard> {
                                   ],
                                 ),
                                 IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, '/task_prefences');
+                                    },
                                     icon: FaIcon(
                                       FontAwesomeIcons.chevronRight,
                                       size: 12,

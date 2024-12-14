@@ -83,7 +83,7 @@ class _ServicesState extends State<Services> {
           centerTitle: true,
           elevation: 0,
           title: const Text(
-            'Service',
+            'Services',
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'Inter',
@@ -98,20 +98,16 @@ class _ServicesState extends State<Services> {
             },
           ),
           bottom: const TabBar(
-            indicatorColor: Colors.transparent,
+            indicatorColor: Colors.white,
             labelColor: Colors.white,
             unselectedLabelColor: Colors.grey,
             labelStyle: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 13.0,
                 fontWeight: FontWeight.bold),
-            unselectedLabelStyle: TextStyle(
-                fontSize: 13.0,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.bold),
             tabs: [
-              Tab(text: 'Service Management'),
               Tab(text: 'Task Management'),
+              Tab(text: 'Lorem Ipsum'),
             ],
           ),
         ),
@@ -145,7 +141,7 @@ class _ServicesState extends State<Services> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 5),
                         const Text(
                           'Change will take up to 5 minutes',
                           style: TextStyle(
@@ -257,6 +253,7 @@ class _ServicesState extends State<Services> {
                                       MaterialPageRoute(
                                         builder: (context) => ManageService(
                                           serviceIdSingle: service['id'],
+                                          serviceTypeId: service['service_type_id'],
                                           serviceTypeSingle: getServiceTypeName(
                                               service['service_type_id']),
                                           serviceRateSingle:
