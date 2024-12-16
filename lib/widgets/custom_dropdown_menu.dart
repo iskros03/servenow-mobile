@@ -78,7 +78,7 @@ class CustomDropdownMenu extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.grey[100],
+          color: Colors.white,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             width: 1, // Use the borderWidth parameter
@@ -92,7 +92,7 @@ class CustomDropdownMenu extends StatelessWidget {
                     fontSize: 14,
                     fontFamily: 'Inter',
                     color: isEnabled
-                        ? Colors.grey[600]
+                        ? Colors.grey[800]
                         : Colors.grey[400])), // Change text color if disabled
             Spacer(),
             Icon(Icons.arrow_drop_down),

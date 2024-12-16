@@ -6,7 +6,6 @@ import 'package:servenow_mobile/widgets/custom_card.dart';
 import 'package:servenow_mobile/widgets/custom_dropdown_menu.dart';
 import 'package:servenow_mobile/widgets/custom_text_field.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:intl/intl.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key});

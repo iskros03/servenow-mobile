@@ -27,13 +27,13 @@ class CustomEleButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 17.5, vertical: 12.5),
+        padding: const EdgeInsets.symmetric(horizontal: 17.5, vertical: 10),
         backgroundColor: bgColor,
         foregroundColor: fgColor,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius:
-              BorderRadius.circular(borderRadius), // Apply borderRadius
+              BorderRadius.circular(borderRadius), 
         ),
         side: BorderSide(
           color: borderColor ?? Color.fromRGBO(24, 52, 92, 1),
