@@ -170,4 +170,36 @@ class TaskerService {
       throw Exception('Failed to fetch API: $e');
     }
   }
+
+  Future<Map<String, dynamic>> createTimeSlot(String date) async {
+    final TaskerAuth taskerAuth = TaskerAuth();
+    try {
+      final token = await taskerAuth.getToken();
+      final url = Uri.parse('${dotenv.env['DOMAIN']}/api/create-time-slot-$date');
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+      if (response.body.isNotEmpty) {
+        final responseData = jsonDecode(response.body);
+        return {
+          'statusCode': response.statusCode,
+          'data': responseData,
+        };
+      } else {
+        throw Exception('No response body received');
+      }
+    } catch (e) {
+      print('$e');
+      throw Exception("Failed to fetch API: $e");
+    }
+  }
+
+  void saveWorkingTime() async{
+    
+  }
 }

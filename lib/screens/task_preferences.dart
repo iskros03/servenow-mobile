@@ -20,6 +20,8 @@ class _TaskPreferencesState extends State<TaskPreferences> {
 
   bool isPublic = true;
 
+  String? selectedDate;
+
   List<String> states = [];
   List<String> areas = [];
   final List<String> workingType = [
@@ -126,6 +128,16 @@ class _TaskPreferencesState extends State<TaskPreferences> {
           duration: const Duration(seconds: 3),
         ),
       );
+    }
+  }
+
+  void _createTimeSlot() async {
+    try {
+      TaskerService taskerService = TaskerService();
+      final response = await taskerService.createTimeSlot('$selectedDate');
+      print(response);
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
@@ -387,7 +399,13 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                         color: Colors.grey[800]),
                   ),
                   SizedBox(height: 5),
-                  WeekButtons(),
+                  WeekButtons(
+                    onDateSelected: (date) {
+                      setState(() {
+                        selectedDate = date;
+                      });
+                    },
+                  ),
                   SizedBox(height: 25),
                   Text(
                     'Preferred Working Type',
@@ -437,115 +455,115 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                     ),
                   ),
                   SizedBox(height: 25),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.grey[100],
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 100,
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: Colors.pinkAccent[400],
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Unavailable',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Text(
-                                  '11:30:00',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      color: Colors.grey[800]),
-                                ),
-                              ),
-                              Spacer(),
-                              IconButton(
-                                onPressed: () {},
-                                icon: FaIcon(
-                                  FontAwesomeIcons.pen,
-                                  size: 15,
-                                  color: Colors.grey,
-                                ))
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.grey[100],
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 100,
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: Colors.green,
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Available',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Text(
-                                  '12:00:00',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      color: Colors.grey[800]),
-                                ),
-                              ),
-                              Spacer(),
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: FaIcon(
-                                    FontAwesomeIcons.pen,
-                                    size: 15,
-                                    color: Colors.grey,
-                                  ))
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.all(Radius.circular(10)),
+                  //     color: Colors.grey[100],
+                  //   ),
+                  //   child: Row(
+                  //     children: [
+                  //       Container(
+                  //         width: 100,
+                  //         padding: EdgeInsets.all(12),
+                  //         decoration: BoxDecoration(
+                  //           borderRadius: BorderRadius.all(Radius.circular(10)),
+                  //           color: Colors.pinkAccent[400],
+                  //         ),
+                  //         child: Center(
+                  //           child: Text(
+                  //             'Unavailable',
+                  //             style: TextStyle(
+                  //                 fontFamily: 'Inter',
+                  //                 fontWeight: FontWeight.bold,
+                  //                 fontSize: 12,
+                  //                 color: Colors.white),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       Expanded(
+                  //         child: Row(
+                  //           children: [
+                  //             Padding(
+                  //               padding: const EdgeInsets.all(12.0),
+                  //               child: Text(
+                  //                 '11:30:00',
+                  //                 style: TextStyle(
+                  //                     fontFamily: 'Inter',
+                  //                     color: Colors.grey[800]),
+                  //               ),
+                  //             ),
+                  //             Spacer(),
+                  //             IconButton(
+                  //               onPressed: () {},
+                  //               icon: FaIcon(
+                  //                 FontAwesomeIcons.pen,
+                  //                 size: 15,
+                  //                 color: Colors.grey,
+                  //               ))
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  // SizedBox(height: 5),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.all(Radius.circular(10)),
+                  //     color: Colors.grey[100],
+                  //   ),
+                  //   child: Row(
+                  //     children: [
+                  //       Container(
+                  //         width: 100,
+                  //         padding: EdgeInsets.all(12),
+                  //         decoration: BoxDecoration(
+                  //           borderRadius: BorderRadius.all(Radius.circular(10)),
+                  //           color: Colors.green,
+                  //         ),
+                  //         child: Center(
+                  //           child: Text(
+                  //             'Available',
+                  //             style: TextStyle(
+                  //                 fontFamily: 'Inter',
+                  //                 fontWeight: FontWeight.bold,
+                  //                 fontSize: 12,
+                  //                 color: Colors.white),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       Expanded(
+                  //         child: Row(
+                  //           children: [
+                  //             Padding(
+                  //               padding: const EdgeInsets.all(12.0),
+                  //               child: Text(
+                  //                 '12:00:00',
+                  //                 style: TextStyle(
+                  //                     fontFamily: 'Inter',
+                  //                     color: Colors.grey[800]),
+                  //               ),
+                  //             ),
+                  //             Spacer(),
+                  //             IconButton(
+                  //                 onPressed: () {},
+                  //                 icon: FaIcon(
+                  //                   FontAwesomeIcons.pen,
+                  //                   size: 15,
+                  //                   color: Colors.grey,
+                  //                 ))
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   Spacer(),
                   SizedBox(
                     width: double.infinity,
                     child: CustomEleButton(
                         text: 'Generate',
-                        onPressed: () {},
+                        onPressed: _createTimeSlot,
                         bgColor: Color.fromRGBO(24, 52, 92, 1),
                         fgColor: Colors.white),
                   )
@@ -560,31 +578,29 @@ class _TaskPreferencesState extends State<TaskPreferences> {
 }
 
 class WeekButtons extends StatefulWidget {
-  const WeekButtons({super.key});
+  final Function(String) onDateSelected; // Callback to notify parent
+
+  const WeekButtons({super.key, required this.onDateSelected});
 
   @override
-  _WeekButtonsState createState() => _WeekButtonsState();
+  WeekButtonsState createState() => WeekButtonsState();
 }
 
-class _WeekButtonsState extends State<WeekButtons> {
-  // Store the selected date (initially null)
+class WeekButtonsState extends State<WeekButtons> {
   String? selectedDate;
 
   @override
   Widget build(BuildContext context) {
-    // Generate dates for the next 7 days
     List<DateTime> weekDates =
         List.generate(7, (index) => DateTime.now().add(Duration(days: index)));
 
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal, // Make it horizontal
+      scrollDirection: Axis.horizontal,
       child: Row(
         children: weekDates.map((date) {
           String dayMonthYearLabel = DateFormat('d MMMM yyyy').format(date);
           String dayNameLabel = DateFormat('EEEE').format(date);
           String formattedDate = DateFormat('yyyy-MM-dd').format(date);
-
-          // Check if the current date is the selected one
           bool isSelected = formattedDate == selectedDate;
 
           return Padding(
@@ -599,8 +615,7 @@ class _WeekButtonsState extends State<WeekButtons> {
                     side: BorderSide(
                       color: isSelected
                           ? Color.fromRGBO(24, 52, 92, 1)
-                          : Colors
-                              .grey.shade300, // Change border color if selected
+                          : Colors.grey.shade300,
                       width: 1,
                     ),
                   ),
@@ -609,8 +624,9 @@ class _WeekButtonsState extends State<WeekButtons> {
                 ),
                 onPressed: () {
                   setState(() {
-                    selectedDate = formattedDate; // Update selected date
+                    selectedDate = formattedDate;
                   });
+                  widget.onDateSelected(formattedDate); // Notify parent
                   print('Selected date: $formattedDate');
                 },
                 child: Column(
