@@ -33,12 +33,23 @@ class _TaskPreferencesState extends State<TaskPreferences> {
   String? workingLocArea;
 
   String? selectedWorkingType;
+  int? selectedWorkingTypeValue;
+
+  Map<String, int> workingTypeMap = {
+    'Full Time': 1,
+    'Part Time': 2,
+  };
 
   @override
   void initState() {
     super.initState();
+
     taskerDataFuture = _loadTaskerData();
     fetchStateNames();
+
+    DateTime firstDate = DateTime.now(); // Today
+    selectedDate = DateFormat('yyyy-MM-dd').format(firstDate);
+    _getTimeSlot('$selectedDate');
   }
 
   void fetchStateNames() async {
@@ -131,6 +142,22 @@ class _TaskPreferencesState extends State<TaskPreferences> {
     }
   }
 
+  void _saveWorkingType() async {
+    try {
+      TaskerService taskerService = TaskerService();
+      final response =
+          await taskerService.saveWorkingType(selectedWorkingTypeValue!);
+
+      if (response['statusCode'] == 200) {
+        print("Working type updated successfully.");
+      } else {
+        print("Failed to update working type.");
+      }
+    } catch (e) {
+      print("$e");
+    }
+  }
+
   void _createTimeSlot() async {
     try {
       TaskerService taskerService = TaskerService();
@@ -138,6 +165,22 @@ class _TaskPreferencesState extends State<TaskPreferences> {
       print(response);
     } catch (e) {
       print('Error: $e');
+    }
+  }
+
+  List<Map<String, dynamic>> timeSlots = [];
+
+  void _getTimeSlot(String date) async {
+    try {
+      TaskerService taskerService = TaskerService();
+      final result = await taskerService.getTimeSlot(date);
+      setState(() {
+        timeSlots = result;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error fetching time slots: $e')),
+      );
     }
   }
 
@@ -405,6 +448,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                         selectedDate = date;
                       });
                     },
+                    onGetTimeSlot: (date) {},
                   ),
                   SizedBox(height: 25),
                   Text(
@@ -440,20 +484,85 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                           ),
                         ),
                         CustomDropdownMenu(
-                          items: workingType,
+                          items: workingTypeMap.keys
+                              .toList(), // This will be the list of items from the map keys
                           titleSelect: 'Select Working Type',
                           titleValue:
                               selectedWorkingType ?? 'Select Working Type',
                           onSelected: (selectedValue) {
                             setState(() {
                               selectedWorkingType = selectedValue;
+                              selectedWorkingTypeValue =
+                                  workingTypeMap[selectedValue];
+                              print(
+                                  'Working type: $selectedWorkingType, Value: $selectedWorkingTypeValue');
                             });
-                            fetchAreaNames(selectedValue);
+
+                            _saveWorkingType();
                           },
                         ),
                       ],
                     ),
                   ),
+                  timeSlots.isNotEmpty
+                      ? ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: timeSlots.length,
+                          itemBuilder: (context, index) {
+                            final timeSlot = timeSlots[index];
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 4,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Time Slot: ${timeSlot['time'] ?? 'N/A'}', // Replace with actual key from your map
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      'Slot Date: ${timeSlot['slot_date'] ?? 'No details available'}', // Replace with actual key from your map
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 12),
+                          child: Text(
+                            'No time slots available',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ),
                   SizedBox(height: 25),
                   // Container(
                   //   decoration: BoxDecoration(
@@ -578,9 +687,14 @@ class _TaskPreferencesState extends State<TaskPreferences> {
 }
 
 class WeekButtons extends StatefulWidget {
-  final Function(String) onDateSelected; // Callback to notify parent
+  final Function(String) onDateSelected;
+  final Function(String) onGetTimeSlot;
 
-  const WeekButtons({super.key, required this.onDateSelected});
+  const WeekButtons({
+    super.key,
+    required this.onDateSelected,
+    required this.onGetTimeSlot,
+  });
 
   @override
   WeekButtonsState createState() => WeekButtonsState();
@@ -588,6 +702,13 @@ class WeekButtons extends StatefulWidget {
 
 class WeekButtonsState extends State<WeekButtons> {
   String? selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    DateTime firstDate = DateTime.now(); // Today
+    selectedDate = DateFormat('yyyy-MM-dd').format(firstDate);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -627,6 +748,7 @@ class WeekButtonsState extends State<WeekButtons> {
                     selectedDate = formattedDate;
                   });
                   widget.onDateSelected(formattedDate); // Notify parent
+                  widget.onGetTimeSlot(formattedDate); // Call to get time slot
                   print('Selected date: $formattedDate');
                 },
                 child: Column(
