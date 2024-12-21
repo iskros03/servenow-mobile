@@ -34,7 +34,7 @@ class CustomTextField extends StatelessWidget {
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.all(12.5),
         filled: true,
-        fillColor: Colors.grey[100],
+        fillColor: Colors.white,
         hintText: labelText,
         floatingLabelBehavior: FloatingLabelBehavior.always,
         hintStyle: TextStyle(

@@ -73,7 +73,6 @@ class _DashboardState extends State<Dashboard> {
                             ),
                           ],
                         ),
-                        
                       ],
                     ),
                   ),
@@ -86,7 +85,7 @@ class _DashboardState extends State<Dashboard> {
                             children: [
                               Expanded(
                                 child: CustomCard(
-                                  cardColor: Colors.white,
+                                  cardColor: Colors.grey[50],
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -101,6 +100,7 @@ class _DashboardState extends State<Dashboard> {
                                             children: [
                                               Text('Total Earning',
                                                   style: TextStyle(
+                                                      fontSize: 14,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontFamily: 'Inter',
@@ -126,8 +126,9 @@ class _DashboardState extends State<Dashboard> {
                                       ),
                                       SizedBox(
                                           width: 75,
-                                          child: FaIcon(FontAwesomeIcons.coins   ,
-                                              color: Colors.orange.shade700, size: 50.0))
+                                          child: FaIcon(FontAwesomeIcons.coins,
+                                              color: Colors.orange.shade700,
+                                              size: 50.0))
                                     ],
                                   ),
                                 ),
@@ -139,7 +140,7 @@ class _DashboardState extends State<Dashboard> {
                             children: [
                               Expanded(
                                 child: CustomCard(
-                                  cardColor: Colors.white,
+                                  cardColor: Colors.grey[50],
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -154,6 +155,7 @@ class _DashboardState extends State<Dashboard> {
                                             children: [
                                               Text('Total Upcoming Job',
                                                   style: TextStyle(
+                                                      fontSize: 14,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontFamily: 'Inter',
@@ -201,67 +203,56 @@ class _DashboardState extends State<Dashboard> {
               child: Container(
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.grey[50],
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
-                  ), // Border radius
+                  ),
                 ),
                 child: Column(
                   children: [
                     CustomCard(
-                      cardColor: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      cardColor: Colors.grey[50],
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              Row(
-                                children: [
-                                  const FaIcon(
-                                    FontAwesomeIcons.bell,
-                                    color: Colors.orange,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(width: 7.5),
-                                  Text(
-                                    'Notification',
-                                    style: TextStyle(
-                                        color: Colors.grey[700],
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12),
-                                  ),
-                                ],
+                              const FaIcon(
+                                FontAwesomeIcons.bell,
+                                color: Colors.orange,
+                                size: 20,
                               ),
-                              const SizedBox(height: 4),
-                              const Text(
-                                'Change will take up to 5 minutes',
+                              const SizedBox(width: 7.5),
+                              Text(
+                                'Notification',
                                 style: TextStyle(
-                                  color: Colors.red,
-                                  fontFamily: 'Inter',
-                                  fontSize: 12,
-                                ),
+                                    color: Colors.grey[600],
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12),
                               ),
                             ],
                           ),
-                          IconButton(
-                              onPressed: () {},
-                              icon: FaIcon(
-                                FontAwesomeIcons.chevronRight,
-                                size: 12,
-                              ))
+                          const SizedBox(height: 4),
+                          const Text(
+                            'Change will take up to 5 minutes',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontFamily: 'Inter',
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
                     Expanded(
                       child: Column(
                         children: [
                           CustomCard(
-                            padding: EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-                            cardColor: Colors.grey.shade100,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 5),
+                            cardColor: Colors.white,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -278,7 +269,7 @@ class _DashboardState extends State<Dashboard> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Inter',
-                                        fontSize: 12,
+                                        fontSize: 13,
                                         color: Colors.grey[800],
                                       ),
                                     ),
@@ -290,15 +281,16 @@ class _DashboardState extends State<Dashboard> {
                                     },
                                     icon: FaIcon(
                                       FontAwesomeIcons.chevronRight,
-                                      size: 12,
+                                      color: Colors.grey[600],
+                                      size: 16,
                                     ))
                               ],
                             ),
                           ),
-
                           CustomCard(
-                            cardColor: Colors.grey.shade100,
-                            padding: EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                            cardColor: Colors.white,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 5),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -315,7 +307,7 @@ class _DashboardState extends State<Dashboard> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Inter',
-                                        fontSize: 12,
+                                        fontSize: 13,
                                         color: Colors.grey[800],
                                       ),
                                     ),
@@ -323,11 +315,13 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                                 IconButton(
                                     onPressed: () {
-                                      Navigator.pushNamed(context, '/task_prefences');
+                                      Navigator.pushNamed(
+                                          context, '/task_prefences');
                                     },
                                     icon: FaIcon(
                                       FontAwesomeIcons.chevronRight,
-                                      size: 12,
+                                      color: Colors.grey[600],
+                                      size: 16,
                                     ))
                               ],
                             ),

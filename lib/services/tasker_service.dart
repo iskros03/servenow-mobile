@@ -247,7 +247,6 @@ class TaskerService {
       );
       if (response.statusCode == 200 && response.body.isNotEmpty) {
         final Map<String, dynamic> data = jsonDecode(response.body);
-        print(data);
         if (data['data'] is List) {
           return List<Map<String, dynamic>>.from(data['data']);
         } else {

@@ -14,7 +14,9 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   String taskerFirstName = '';
+  String taskerLastName = '';
   String taskerSettingsPhoto = '';
+  String taskerCode = '';
 
   @override
   void initState() {
@@ -28,7 +30,9 @@ class _SettingsState extends State<Settings> {
       var data = await taskerUser.getTaskerData();
       setState(() {
         taskerFirstName = data[0]['tasker_firstname'];
+        taskerLastName = data[0]['tasker_lastname'];
         taskerSettingsPhoto = data[0]['tasker_photo'];
+        taskerCode = data[0]['tasker_code'];
       });
       print('Fetched Data: $data');
     } catch (e) {
@@ -59,7 +63,7 @@ class _SettingsState extends State<Settings> {
             Expanded(
               flex: 1,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,32 +78,46 @@ class _SettingsState extends State<Settings> {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white)),
                         Text(
-                          'Rosmi',
+                          taskerLastName,
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Inter',
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(height: 15),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
-                            color: Colors.green,
-                          ),
-                          padding: EdgeInsets.symmetric(
-                                      horizontal: 15, vertical:2.5),
-                          child: Text(
-                            'Active',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Inter',
-                              fontSize: 10,
+                        SizedBox(height: 7.5),
+                        Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  color: Colors.greenAccent),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 25, vertical: 5),
+                              child: Text(
+                                'Active',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
-                          ),
-                        )
+                            SizedBox(width: 15),
+                            Text(
+                              taskerCode,
+                              style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
+                        ),
                       ],
                     ),
                     Container(
@@ -125,7 +143,7 @@ class _SettingsState extends State<Settings> {
               child: Container(
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.grey[50],
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
@@ -134,59 +152,47 @@ class _SettingsState extends State<Settings> {
                 child: Column(
                   children: [
                     CustomCard(
-                      cardColor: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      cardColor: Colors.grey[50],
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              Row(
-                                children: [
-                                  const FaIcon(
-                                    FontAwesomeIcons.bell,
-                                    color: Colors.orange,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(width: 7.5),
-                                  Text(
-                                    'Notification',
-                                    style: TextStyle(
-                                        color: Colors.grey[700],
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12),
-                                  ),
-                                ],
+                              const FaIcon(
+                                FontAwesomeIcons.bell,
+                                color: Colors.orange,
+                                size: 20,
                               ),
-                              const SizedBox(height: 4),
-                              const Text(
-                                'Change will take up to 5 minutes',
+                              const SizedBox(width: 7.5),
+                              Text(
+                                'Notification',
                                 style: TextStyle(
-                                  color: Colors.red,
-                                  fontFamily: 'Inter',
-                                  fontSize: 12,
-                                ),
+                                    color: Colors.grey[700],
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12),
                               ),
                             ],
                           ),
-                          IconButton(
-                              onPressed: () {},
-                              icon: FaIcon(
-                                FontAwesomeIcons.chevronRight,
-                                size: 12,
-                              ))
+                          const SizedBox(height: 4),
+                          const Text(
+                            'Change will take up to 5 minutes',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontFamily: 'Inter',
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
                     Expanded(
                       child: Column(
                         children: [
                           CustomCard(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 5),
-                            cardColor: Colors.grey.shade100,
+                            cardColor: Colors.white,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -211,7 +217,8 @@ class _SettingsState extends State<Settings> {
                                 ),
                                 IconButton(
                                     onPressed: () {
-                                      Navigator.pushNamed(context, '/my_profile');
+                                      Navigator.pushNamed(
+                                          context, '/my_profile');
                                     },
                                     icon: FaIcon(
                                       FontAwesomeIcons.chevronRight,
@@ -221,7 +228,7 @@ class _SettingsState extends State<Settings> {
                             ),
                           ),
                           CustomCard(
-                            cardColor: Colors.grey.shade100,
+                            cardColor: Colors.white,
                             padding: EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 5),
                             child: Row(

@@ -139,8 +139,9 @@ class _ManageServiceState extends State<ManageService> {
           ),
         );
         Navigator.of(context).pop();
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
+        Navigator.pop(context, true);
+
+        // Navigator.pushReplacementNamed(context, '/services');
       } else if (response['statusCode'] == 301) {
         throw Exception(response['data']['message']);
       } else {
@@ -216,6 +217,7 @@ class _ManageServiceState extends State<ManageService> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
+            // Navigator.pushReplacementNamed(context, '/services');
             Navigator.pop(context, true);
           },
         ),

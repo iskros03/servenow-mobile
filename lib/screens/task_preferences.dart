@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:servenow_mobile/services/tasker_service.dart';
 import 'package:servenow_mobile/services/tasker_user.dart';
-import 'package:servenow_mobile/widgets/custom_card.dart';
 import 'package:servenow_mobile/widgets/custom_dropdown_menu.dart';
 import 'package:intl/intl.dart';
 import 'package:servenow_mobile/widgets/custom_ele_button.dart';
@@ -24,10 +23,6 @@ class _TaskPreferencesState extends State<TaskPreferences> {
 
   List<String> states = [];
   List<String> areas = [];
-  final List<String> workingType = [
-    'Full Time',
-    'Part Time',
-  ];
 
   String? workingLocState;
   String? workingLocArea;
@@ -35,10 +30,15 @@ class _TaskPreferencesState extends State<TaskPreferences> {
   String? selectedWorkingType;
   int? selectedWorkingTypeValue;
 
+  List<Map<String, dynamic>> timeSlots = [];
+  bool isLoadingTimeSlots = false;
+
   Map<String, int> workingTypeMap = {
     'Full Time': 1,
     'Part Time': 2,
   };
+
+  int _selectedTabIndex = 0;
 
   @override
   void initState() {
@@ -86,17 +86,23 @@ class _TaskPreferencesState extends State<TaskPreferences> {
       await Future.delayed(const Duration(seconds: 1));
       var data = await taskerUser.getTaskerData();
 
+      if (data.isEmpty) {
+        throw Exception('No data found');
+      }
+
       workingLocState = data[0]['tasker_workingloc_state'];
       workingLocArea = data[0]['tasker_workingloc_area'];
+      selectedWorkingTypeValue = data[0]['tasker_worktype'];
 
       initialTaskerData = {
         'tasker_workingloc_state': data[0]['tasker_workingloc_state'],
         'tasker_workingloc_area': data[0]['tasker_workingloc_area'],
+        'tasker_worktype': data[0]['tasker_worktype'].toString(),
       };
       return initialTaskerData;
     } catch (e) {
       print('Error occurred: $e');
-      return {};
+      return {'error': 'Failed to load tasker data'};
     }
   }
 
@@ -108,8 +114,16 @@ class _TaskPreferencesState extends State<TaskPreferences> {
 
     try {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Saving...'),
+        SnackBar(
+          backgroundColor: Colors.grey[600],
+          content: Text(
+            'Saving...',
+            style: TextStyle(
+                fontFamily: 'Inter',
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.bold),
+          ),
           duration: Duration(seconds: 1),
         ),
       );
@@ -123,8 +137,17 @@ class _TaskPreferencesState extends State<TaskPreferences> {
       if (response['statusCode'] == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(responseData['message']),
             backgroundColor: Colors.green,
+            content: Center(
+              child: Text(
+                responseData['message'],
+                style: TextStyle(
+                    fontFamily: 'Inter',
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
             duration: Duration(seconds: 3),
           ),
         );
@@ -154,7 +177,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
         print("Failed to update working type.");
       }
     } catch (e) {
-      print("$e");
+      print("Error: $e");
     }
   }
 
@@ -162,25 +185,43 @@ class _TaskPreferencesState extends State<TaskPreferences> {
     try {
       TaskerService taskerService = TaskerService();
       final response = await taskerService.createTimeSlot('$selectedDate');
-      print(response);
+
+      if (response['statusCode'] == 201) {
+        _getTimeSlot(selectedDate!);
+      } else {
+        throw response['message'];
+      }
     } catch (e) {
-      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error generating time slots: $e'),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+        ),
+      );
     }
   }
 
-  List<Map<String, dynamic>> timeSlots = [];
-
   void _getTimeSlot(String date) async {
+    setState(() {
+      isLoadingTimeSlots = true;
+    });
+
     try {
       TaskerService taskerService = TaskerService();
-      final result = await taskerService.getTimeSlot(date);
+      final data = await taskerService.getTimeSlot(date);
       setState(() {
-        timeSlots = result;
+        timeSlots = data;
+        selectedDate = date;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error fetching time slots: $e')),
       );
+    } finally {
+      setState(() {
+        isLoadingTimeSlots = false;
+      });
     }
   }
 
@@ -208,7 +249,12 @@ class _TaskPreferencesState extends State<TaskPreferences> {
               Navigator.pop(context);
             },
           ),
-          bottom: const TabBar(
+          bottom: TabBar(
+            onTap: (index) {
+              setState(() {
+                _selectedTabIndex = index;
+              });
+            },
             indicatorColor: Colors.white,
             labelColor: Colors.white,
             unselectedLabelColor: Colors.grey,
@@ -217,8 +263,8 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                 fontSize: 13.0,
                 fontWeight: FontWeight.bold),
             tabs: [
-              Tab(text: 'Visibility & Location'),
               Tab(text: 'Time Slot'),
+              Tab(text: 'Visibility & Location'),
             ],
           ),
           actions: [
@@ -226,174 +272,25 @@ class _TaskPreferencesState extends State<TaskPreferences> {
               style: const ButtonStyle(
                 splashFactory: NoSplash.splashFactory,
               ),
-              onPressed: _saveWorkingPreferredLocation,
-              child: Text(
-                'Save',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  color: Colors.orange[300],
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
+              onPressed: _selectedTabIndex == 0
+                  ? () {}
+                  : _saveWorkingPreferredLocation,
+              child: _selectedTabIndex == 0
+                  ? SizedBox.shrink()
+                  : Text(
+                      'Save',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        color: Colors.orange[300],
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
             ),
           ],
         ),
         body: TabBarView(
           children: [
-            // Visibility & Location
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomCard(
-                    cardColor: Colors.white,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            FaIcon(
-                              FontAwesomeIcons.circleInfo,
-                              color: Colors.blue[600],
-                              size: 20,
-                            ),
-                            const SizedBox(width: 7.5),
-                            Text(
-                              'Note',
-                              style: TextStyle(
-                                color: Colors.blue[600],
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 5),
-                        const Text(
-                          'Change will take up to 5 minutes',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontFamily: 'Inter',
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Profile Visibility',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontFamily: 'Inter',
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        Spacer(),
-                        Transform.scale(
-                          scale:
-                              0.85, // Reduce the size of the Switch if needed
-                          child: Switch(
-                            value: isPublic,
-                            onChanged: (value) {
-                              setState(() {
-                                isPublic = value;
-                              });
-                            },
-                            activeColor: Colors.green,
-                            inactiveThumbColor: Colors.grey,
-                            activeTrackColor: Colors.greenAccent,
-                            inactiveTrackColor: Colors.grey.shade300,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 50),
-                  Visibility(
-                    visible: isPublic, // Show only if Public is selected
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Working Preferred Location',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Inter',
-                              color: Colors.grey[800]),
-                        ),
-                        const SizedBox(height: 15),
-                        Row(
-                          children: [
-                            SizedBox(width: 12.5),
-                            Text(
-                              'State',
-                              style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 2.5),
-                        CustomDropdownMenu(
-                          items: states,
-                          titleSelect: 'Select State',
-                          titleValue: workingLocState ?? 'Select State',
-                          onSelected: (selectedValue) {
-                            setState(() {
-                              workingLocState = selectedValue;
-                              workingLocArea = null;
-                            });
-                            fetchAreaNames(selectedValue);
-                          },
-                        ),
-                        const SizedBox(height: 15),
-                        Row(
-                          children: [
-                            SizedBox(width: 12.5),
-                            Text(
-                              'Area',
-                              style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Inter',
-                                  fontSize: 12),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 2.5),
-                        CustomDropdownMenu(
-                          items: areas,
-                          titleSelect: 'Select Area',
-                          titleValue: workingLocArea ?? 'Select Area',
-                          onSelected: (selectedValue) {
-                            setState(() {
-                              workingLocArea = selectedValue;
-                            });
-                          },
-                          isEnabled: states.isNotEmpty,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Time Slot
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Column(
@@ -434,24 +331,6 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                   ),
                   SizedBox(height: 25),
                   Text(
-                    'Date',
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Inter',
-                        color: Colors.grey[800]),
-                  ),
-                  SizedBox(height: 5),
-                  WeekButtons(
-                    onDateSelected: (date) {
-                      setState(() {
-                        selectedDate = date;
-                      });
-                    },
-                    onGetTimeSlot: (date) {},
-                  ),
-                  SizedBox(height: 25),
-                  Text(
                     'Preferred Working Type',
                     style: TextStyle(
                         fontSize: 14,
@@ -475,207 +354,404 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                               Text(
                                 'Full time - (7:30 AM to 7:30 PM), Part time - (2:30 PM to 7:30 PM)',
                                 style: TextStyle(
-                                    fontSize: 11,
+                                    fontSize: 12,
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey[500]),
+                                    color: Colors.grey[600]),
                               ),
                             ],
                           ),
                         ),
                         CustomDropdownMenu(
-                          items: workingTypeMap.keys
-                              .toList(), // This will be the list of items from the map keys
+                          items: workingTypeMap.keys.toList(),
                           titleSelect: 'Select Working Type',
-                          titleValue:
-                              selectedWorkingType ?? 'Select Working Type',
+                          titleValue: selectedWorkingTypeValue != null
+                              ? workingTypeMap.keys.firstWhere(
+                                  (key) =>
+                                      workingTypeMap[key] ==
+                                      selectedWorkingTypeValue,
+                                )
+                              : 'Select Working Type',
                           onSelected: (selectedValue) {
                             setState(() {
                               selectedWorkingType = selectedValue;
                               selectedWorkingTypeValue =
                                   workingTypeMap[selectedValue];
-                              print(
-                                  'Working type: $selectedWorkingType, Value: $selectedWorkingTypeValue');
                             });
-
                             _saveWorkingType();
                           },
                         ),
                       ],
                     ),
                   ),
-                  timeSlots.isNotEmpty
-                      ? ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: timeSlots.length,
-                          itemBuilder: (context, index) {
-                            final timeSlot = timeSlots[index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black26,
-                                      blurRadius: 4,
-                                      offset: Offset(0, 2),
+                  SizedBox(height: 25),
+                  Text(
+                    'Date',
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                        color: Colors.grey[800]),
+                  ),
+                  SizedBox(height: 5),
+                  WeekButtons(
+                    initialDate: selectedDate!,
+                    onDateSelected: (date) {
+                      setState(() {
+                        selectedDate = date;
+                      });
+                    },
+                    onGetTimeSlot: _getTimeSlot,
+                  ),
+                  SizedBox(height: 25),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Time Slot',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Inter',
+                            color: Colors.grey[800]),
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.green,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            'Available',
+                            style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 12,
+                                color: Colors.grey[800]),
+                          ),
+                          SizedBox(width: 16),
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.red,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            'Unavailable',
+                            style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 12,
+                                color: Colors.grey[800]),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 5),
+                  Expanded(
+                    child: isLoadingTimeSlots
+                        ? Center(
+                            child: Text(
+                            'Loading...',
+                            style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 14,
+                                color: Colors.grey[600]),
+                          ))
+                        : timeSlots.isNotEmpty
+                            ? Stack(
+                                children: [
+                                  Scrollbar(
+                                    thumbVisibility: true,
+                                    child: ListView.builder(
+                                      itemCount: timeSlots.length,
+                                      itemBuilder: (context, index) {
+                                        final timeSlot = timeSlots[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 2.5),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10)),
+                                              color: Colors.grey[100],
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                SizedBox(width: 15),
+                                                Container(
+                                                  padding: EdgeInsets.all(8),
+                                                  decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: timeSlot[
+                                                                  'slot_status'] ==
+                                                              1
+                                                          ? Colors.green
+                                                          : Colors.red),
+                                                ),
+                                                Expanded(
+                                                  child: Row(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(12.0),
+                                                        child: Text(
+                                                          '${timeSlot['time'] ?? 'N/A'}',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Inter',
+                                                              color: Colors
+                                                                  .grey[800]),
+                                                        ),
+                                                      ),
+                                                      Spacer(),
+                                                      IconButton(
+                                                          onPressed: () {},
+                                                          icon: FaIcon(
+                                                            FontAwesomeIcons
+                                                                .pen,
+                                                            size: 15,
+                                                            color: Colors.grey,
+                                                          ))
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  ],
+                                  ),
+                                  Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    child: Container(
+                                      height: 25,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Colors.grey.shade50.withOpacity(0),
+                                            Colors.grey.shade50.withOpacity(1),
+                                          ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  color: Colors.grey[100],
                                 ),
+                                width: double.infinity,
+                                padding: EdgeInsets.all(12),
+                                child: Text(
+                                  'No time slots available. Please generate.',
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ),
+                  ),
+                  SizedBox(height: 15),
+                  timeSlots.isEmpty
+                      ? SizedBox(
+                          width: double.infinity,
+                          child: CustomEleButton(
+                            text: 'Generate',
+                            onPressed: () {
+                              _createTimeSlot();
+                            },
+                            bgColor: Color.fromRGBO(24, 52, 92, 1),
+                            fgColor: Colors.white,
+                          ),
+                        )
+                      : SizedBox(),
+                  SizedBox(height: 45),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      FaIcon(
+                        FontAwesomeIcons.circleInfo,
+                        color: Colors.blue[600],
+                        size: 20,
+                      ),
+                      const SizedBox(width: 7.5),
+                      Text(
+                        'Note',
+                        style: TextStyle(
+                          color: Colors.blue[600],
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  const Text(
+                    'Change will take up to 5 minutes',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontFamily: 'Inter',
+                      fontSize: 12,
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(width: 1, color: Colors.grey.shade300),
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Profile Visibility',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[800],
+                          ),
+                        ),
+                        Spacer(),
+                        Transform.scale(
+                          scale: 0.85,
+                          child: Switch(
+                            value: isPublic,
+                            onChanged: (value) {
+                              setState(() {
+                                isPublic = value;
+                              });
+                            },
+                            activeColor: Colors.white,
+                            inactiveThumbColor: Colors.grey,
+                            activeTrackColor: Colors.grey,
+                            inactiveTrackColor: Colors.grey.shade300,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 25),
+                  Visibility(
+                    visible: isPublic,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Working Preferred Location',
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Inter',
+                              color: Colors.grey[800]),
+                        ),
+                        const SizedBox(height: 5),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(12),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Time Slot: ${timeSlot['time'] ?? 'N/A'}', // Replace with actual key from your map
+                                      'State',
                                       style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      'Slot Date: ${timeSlot['slot_date'] ?? 'No details available'}', // Replace with actual key from your map
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey[700],
-                                      ),
+                                          fontSize: 12,
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[600]),
                                     ),
                                   ],
                                 ),
                               ),
-                            );
-                          },
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 12),
-                          child: Text(
-                            'No time slots available',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
+                              CustomDropdownMenu(
+                                items: states,
+                                titleSelect: 'Select State',
+                                titleValue: workingLocState ?? 'Select State',
+                                onSelected: (selectedValue) {
+                                  setState(() {
+                                    workingLocState = selectedValue;
+                                    workingLocArea = null;
+                                  });
+                                  fetchAreaNames(selectedValue);
+                                },
+                              ),
+                            ],
                           ),
                         ),
-                  SizedBox(height: 25),
-                  // Container(
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.all(Radius.circular(10)),
-                  //     color: Colors.grey[100],
-                  //   ),
-                  //   child: Row(
-                  //     children: [
-                  //       Container(
-                  //         width: 100,
-                  //         padding: EdgeInsets.all(12),
-                  //         decoration: BoxDecoration(
-                  //           borderRadius: BorderRadius.all(Radius.circular(10)),
-                  //           color: Colors.pinkAccent[400],
-                  //         ),
-                  //         child: Center(
-                  //           child: Text(
-                  //             'Unavailable',
-                  //             style: TextStyle(
-                  //                 fontFamily: 'Inter',
-                  //                 fontWeight: FontWeight.bold,
-                  //                 fontSize: 12,
-                  //                 color: Colors.white),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       Expanded(
-                  //         child: Row(
-                  //           children: [
-                  //             Padding(
-                  //               padding: const EdgeInsets.all(12.0),
-                  //               child: Text(
-                  //                 '11:30:00',
-                  //                 style: TextStyle(
-                  //                     fontFamily: 'Inter',
-                  //                     color: Colors.grey[800]),
-                  //               ),
-                  //             ),
-                  //             Spacer(),
-                  //             IconButton(
-                  //               onPressed: () {},
-                  //               icon: FaIcon(
-                  //                 FontAwesomeIcons.pen,
-                  //                 size: 15,
-                  //                 color: Colors.grey,
-                  //               ))
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // SizedBox(height: 5),
-                  // Container(
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.all(Radius.circular(10)),
-                  //     color: Colors.grey[100],
-                  //   ),
-                  //   child: Row(
-                  //     children: [
-                  //       Container(
-                  //         width: 100,
-                  //         padding: EdgeInsets.all(12),
-                  //         decoration: BoxDecoration(
-                  //           borderRadius: BorderRadius.all(Radius.circular(10)),
-                  //           color: Colors.green,
-                  //         ),
-                  //         child: Center(
-                  //           child: Text(
-                  //             'Available',
-                  //             style: TextStyle(
-                  //                 fontFamily: 'Inter',
-                  //                 fontWeight: FontWeight.bold,
-                  //                 fontSize: 12,
-                  //                 color: Colors.white),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       Expanded(
-                  //         child: Row(
-                  //           children: [
-                  //             Padding(
-                  //               padding: const EdgeInsets.all(12.0),
-                  //               child: Text(
-                  //                 '12:00:00',
-                  //                 style: TextStyle(
-                  //                     fontFamily: 'Inter',
-                  //                     color: Colors.grey[800]),
-                  //               ),
-                  //             ),
-                  //             Spacer(),
-                  //             IconButton(
-                  //                 onPressed: () {},
-                  //                 icon: FaIcon(
-                  //                   FontAwesomeIcons.pen,
-                  //                   size: 15,
-                  //                   color: Colors.grey,
-                  //                 ))
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  Spacer(),
-                  SizedBox(
-                    width: double.infinity,
-                    child: CustomEleButton(
-                        text: 'Generate',
-                        onPressed: _createTimeSlot,
-                        bgColor: Color.fromRGBO(24, 52, 92, 1),
-                        fgColor: Colors.white),
-                  )
+                        SizedBox(height: 15),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Area',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[600]),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              CustomDropdownMenu(
+                                items: areas,
+                                titleSelect: 'Select Area',
+                                titleValue: workingLocArea ?? 'Select Area',
+                                onSelected: (selectedValue) {
+                                  setState(() {
+                                    workingLocArea = selectedValue;
+                                  });
+                                },
+                                isEnabled: states.isNotEmpty,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -689,11 +765,13 @@ class _TaskPreferencesState extends State<TaskPreferences> {
 class WeekButtons extends StatefulWidget {
   final Function(String) onDateSelected;
   final Function(String) onGetTimeSlot;
+  final String initialDate; // New parameter
 
   const WeekButtons({
     super.key,
     required this.onDateSelected,
     required this.onGetTimeSlot,
+    required this.initialDate, // Accept initial date
   });
 
   @override
@@ -701,13 +779,12 @@ class WeekButtons extends StatefulWidget {
 }
 
 class WeekButtonsState extends State<WeekButtons> {
-  String? selectedDate;
+  late String selectedDate; // Use late initialization
 
   @override
   void initState() {
     super.initState();
-    DateTime firstDate = DateTime.now(); // Today
-    selectedDate = DateFormat('yyyy-MM-dd').format(firstDate);
+    selectedDate = widget.initialDate; // Set initial date from the parameter
   }
 
   @override
@@ -749,7 +826,6 @@ class WeekButtonsState extends State<WeekButtons> {
                   });
                   widget.onDateSelected(formattedDate); // Notify parent
                   widget.onGetTimeSlot(formattedDate); // Call to get time slot
-                  print('Selected date: $formattedDate');
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
