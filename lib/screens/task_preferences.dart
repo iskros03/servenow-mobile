@@ -346,20 +346,15 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
+                        Padding(
                           padding: EdgeInsets.all(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Full time - (7:30 AM to 7:30 PM), Part time - (2:30 PM to 7:30 PM)',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[600]),
-                              ),
-                            ],
+                          child: Text(
+                            'Full time - (7:30 AM to 7:30 PM), Part time - (2:30 PM to 7:30 PM)',
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[600]),
                           ),
                         ),
                         CustomDropdownMenu(

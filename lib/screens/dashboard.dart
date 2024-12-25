@@ -326,6 +326,45 @@ class _DashboardState extends State<Dashboard> {
                               ],
                             ),
                           ),
+                          CustomCard(
+                            cardColor: Colors.white,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.home_repair_service,
+                                      size: 20,
+                                      color: Color.fromRGBO(24, 52, 92, 1),
+                                    ),
+                                    const SizedBox(width: 15),
+                                    Text(
+                                      'My Booking',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        color: Colors.grey[800],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                          context, '/drag_drop_booking');
+                                    },
+                                    icon: FaIcon(
+                                      FontAwesomeIcons.chevronRight,
+                                      color: Colors.grey[600],
+                                      size: 16,
+                                    ))
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
