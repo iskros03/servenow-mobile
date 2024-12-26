@@ -18,163 +18,104 @@ class _DragDropState extends State<DragDrop> {
     for (int hour = 7; hour <= 19; hour++) {
       timeSlots.add('${hour.toString().padLeft(2, '0')}:00');
     }
-    startTimeSlot = timeSlots[3]; // 10:00
-    endTimeSlot = timeSlots[5]; // 12:00
+    startTimeSlot = timeSlots[3];
+    endTimeSlot = timeSlots[5];
+  }
+
+  bool _isInRange(int index) {
+    if (startTimeSlot == null || endTimeSlot == null) return false;
+    int startIndex = timeSlots.indexOf(startTimeSlot!);
+    int endIndex = timeSlots.indexOf(endTimeSlot!);
+    return index >= startIndex && index <= endIndex;
+  }
+
+  void _updateTimeSlots(String data, int index) {
+    setState(() {
+      int startIndex = timeSlots.indexOf(startTimeSlot!);
+      int endIndex = timeSlots.indexOf(endTimeSlot!);
+
+      if (data == 'range') {
+        // Move the entire range
+        startTimeSlot = timeSlots[index];
+        endTimeSlot = timeSlots[index + (endIndex - startIndex)];
+      } else {
+        // Move individual time slots
+        if (data == startTimeSlot && index < endIndex) {
+          startTimeSlot = timeSlots[index];
+        } else if (data == endTimeSlot && index > startIndex) {
+          endTimeSlot = timeSlots[index];
+        }
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Drag and Drop Time Slots')),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            color: Colors.blueAccent.withOpacity(0.1),
-            child: Text(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text('Drag Drop'),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Text(
               'Selected Time: ${startTimeSlot ?? '-'} to ${endTimeSlot ?? '-'}',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: timeSlots.length,
-              itemBuilder: (context, index) {
-                return DragTarget<String>(
-                  onAcceptWithDetails: (data) {
-                    setState(() {
-                      int startIndex = timeSlots.indexOf(startTimeSlot!);
-                      int endIndex = timeSlots.indexOf(endTimeSlot!);
-                      // Check if dragging the entire range
-                      if (data.data == 'range') {
-                        // Move the entire range
-                        startTimeSlot = timeSlots[index];
-                        endTimeSlot =
-                            timeSlots[index + (endIndex - startIndex)];
-                      } else {
-                        // Move individual time slots
-                        if (data.data == startTimeSlot) {
-                          if (index < endIndex) {
-                            startTimeSlot = timeSlots[index];
-                          }
-                        } else if (data.data == endTimeSlot) {
-                          if (index > startIndex) {
-                            endTimeSlot = timeSlots[index];
-                          }
-                        }
-                      }
-                    });
-                  },
-                  builder: (context, candidateData, rejectedData) {
-                    bool isInRange = false;
-                    if (startTimeSlot != null && endTimeSlot != null) {
-                      int startIndex = timeSlots.indexOf(startTimeSlot!);
-                      int endIndex = timeSlots.indexOf(endTimeSlot!);
-                      isInRange = index >= startIndex && index <= endIndex;
-                    }
-
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 4.0),
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: isInRange
-                            ? Colors.blueAccent.withOpacity(0.7)
-                            : Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8.0),
-                        boxShadow: [
-                          if (candidateData.isNotEmpty)
-                            const BoxShadow(
-                                color: Colors.blue, blurRadius: 6.0),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            timeSlots[index],
-                            style: const TextStyle(fontSize: 18),
+            Expanded(
+              child: ListView.builder(
+                itemCount: timeSlots.length,
+                itemBuilder: (context, index) {
+                  return DragTarget<String>(
+                    onAcceptWithDetails: (details) =>
+                        _updateTimeSlots(details.data, index),
+                    builder: (context, candidateData, rejectedData) {
+                      bool isInRange = _isInRange(index);
+                      return Draggable<String>(
+                        data: (startTimeSlot == timeSlots[index] ||
+                                endTimeSlot == timeSlots[index])
+                            ? timeSlots[index]
+                            : 'range',
+                        feedback: const Material(color: Colors.transparent),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: isInRange
+                                ? Colors.blueAccent.withOpacity(0.7)
+                                : Colors.grey[100],
+                            border: candidateData.isNotEmpty
+                                ? Border.all(color: Colors.blue, width: 2)
+                                : null,
+                            boxShadow: [
+                              if (candidateData.isNotEmpty)
+                                const BoxShadow(color: Colors.blue, blurRadius: 0),
+                            ],
                           ),
-                          if (startTimeSlot != null &&
-                              endTimeSlot != null &&
-                              index == timeSlots.indexOf(startTimeSlot!))
-                            Draggable<String>(
-                              data: 'range',
-                              feedback: Material(
-                                elevation: 4.0,
-                                color: Colors.transparent,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12.0, vertical: 6.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(4.0),
-                                  ),
-                                  child: const Text(
-                                    'Drag Range',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              childWhenDragging:
-                                  Container(), // Hide the original widget
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0, vertical: 6.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.circular(4.0),
-                                ),
-                                child: const Text(
-                                  'Drag Range',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          if (startTimeSlot == timeSlots[index] ||
-                              endTimeSlot == timeSlots[index])
-                            Draggable<String>(
-                              data: timeSlots[index],
-                              feedback: Material(
-                                elevation: 4.0,
-                                color: Colors.transparent,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12.0, vertical: 6.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue,
-                                    borderRadius: BorderRadius.circular(4.0),
-                                  ),
-                                  child: Text(
-                                    timeSlots[index],
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              childWhenDragging:
-                                  Container(), // Hide the original widget
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0, vertical: 6.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.circular(4.0),
-                                ),
-                                child: Text(
+                          child: Padding(
+                            padding: const EdgeInsets.all(7.5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
                                   timeSlots[index],
-                                  style: const TextStyle(color: Colors.white),
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal),
                                 ),
-                              ),
+                              ],
                             ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
