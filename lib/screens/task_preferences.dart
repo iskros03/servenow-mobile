@@ -212,7 +212,6 @@ class _TaskPreferencesState extends State<TaskPreferences> {
       final data = await taskerService.getTimeSlot(date);
       setState(() {
         timeSlots = data;
-        selectedDate = date;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -413,7 +412,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                       Row(
                         children: [
                           Container(
-                            padding: EdgeInsets.all(8),
+                            padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.green,
@@ -429,7 +428,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                           ),
                           SizedBox(width: 16),
                           Container(
-                            padding: EdgeInsets.all(8),
+                            padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.red,
@@ -480,7 +479,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                                               children: [
                                                 SizedBox(width: 15),
                                                 Container(
-                                                  padding: EdgeInsets.all(8),
+                                                  padding: EdgeInsets.all(5),
                                                   decoration: BoxDecoration(
                                                       shape: BoxShape.circle,
                                                       color: timeSlot[

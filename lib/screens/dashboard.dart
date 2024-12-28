@@ -355,7 +355,7 @@ class _DashboardState extends State<Dashboard> {
                                 IconButton(
                                     onPressed: () {
                                       Navigator.pushNamed(
-                                          context, '/drag_drop_booking');
+                                          context, '/my_booking');
                                     },
                                     icon: FaIcon(
                                       FontAwesomeIcons.chevronRight,
