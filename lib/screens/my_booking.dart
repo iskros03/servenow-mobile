@@ -18,13 +18,17 @@ class _MyBookingState extends State<MyBooking> {
   String selectedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   final List<String> timeSlots = [];
-  String? startTimeSlot;
-  String? endTimeSlot;
+  List<String> startTime = [];
+  List<String> endTime = [];
   int? hoverStartIndex;
 
   List<dynamic> bookingsList = [];
   List<dynamic> filteredBookings = [];
   bool isLoadingBookingList = false;
+
+  List<List<String>> startTimeSlots = [];
+  List<List<String>> endTimeSlots = [];
+  List<Map<String, String>> bookingRanges = [];
 
   @override
   void initState() {
@@ -34,7 +38,6 @@ class _MyBookingState extends State<MyBooking> {
     for (int hour = 7; hour <= 19; hour++) {
       timeSlots.add('${hour.toString().padLeft(2, '0')}:00:00');
     }
-
   }
 
   void _loadTaskerBookingDetails(String targetDate) async {
@@ -50,11 +53,14 @@ class _MyBookingState extends State<MyBooking> {
       }).toList();
 
       if (filteredBookings.isNotEmpty) {
+        startTimeSlots.clear();
+        endTimeSlots.clear();
         for (var booking in filteredBookings) {
-          print(booking);
-          startTimeSlot = booking['startTime'];
-          endTimeSlot = booking['endTime'];
+          startTimeSlots.add([booking['startTime']]);
+          endTimeSlots.add([booking['endTime']]);
         }
+        print('Start Time Slots: $startTimeSlots');
+        print('End Time Slots: $endTimeSlots');
       } else {
         print('No bookings found for $targetDate.');
       }
@@ -68,277 +74,228 @@ class _MyBookingState extends State<MyBooking> {
   }
 
   bool _isInRange(int index) {
-    if (startTimeSlot == null || endTimeSlot == null) return false;
-    int startIndex = timeSlots.indexOf(startTimeSlot!);
-    int endIndex = timeSlots.indexOf(endTimeSlot!);
-    return index >= startIndex && index <= endIndex;
+    if (startTimeSlots.isEmpty || endTimeSlots.isEmpty) return false;
+
+    for (int i = 0; i < startTimeSlots.length; i++) {
+      int startIndex = timeSlots.indexOf(startTimeSlots[i][0]);
+      int endIndex = timeSlots.indexOf(endTimeSlots[i][0]);
+
+      // Check if startIndex and endIndex are valid
+      if (startIndex != -1 &&
+          endIndex != -1 &&
+          index >= startIndex &&
+          index <= endIndex) {
+        return true;
+      }
+    }
+    return false;
   }
 
   void _updateTimeSlots(String data, int index) {
     setState(() {
-      int startIndex = timeSlots.indexOf(startTimeSlot!);
-      int endIndex = timeSlots.indexOf(endTimeSlot!);
-
-      if (data == 'range') {
-        if (index + (endIndex - startIndex) < timeSlots.length) {
-          startTimeSlot = timeSlots[index];
-          endTimeSlot = timeSlots[index + (endIndex - startIndex)];
+      if (data.startsWith('start-')) {
+        // Handling the start time drag
+        String draggedStartTime = data.split('-')[1];
+        for (int i = 0; i < startTimeSlots.length; i++) {
+          if (startTimeSlots[i][0] == draggedStartTime) {
+            startTimeSlots[i][0] = timeSlots[index];
+          }
         }
-      } else {
-        if (data == startTimeSlot && index < endIndex) {
-          startTimeSlot = timeSlots[index];
-        } else if (data == endTimeSlot && index > startIndex) {
-          endTimeSlot = timeSlots[index];
+      } else if (data.startsWith('end-')) {
+        // Handling the end time drag
+        String draggedEndTime = data.split('-')[1];
+        for (int i = 0; i < endTimeSlots.length; i++) {
+          if (endTimeSlots[i][0] == draggedEndTime) {
+            endTimeSlots[i][0] = timeSlots[index];
+          }
         }
       }
     });
-    print('Start Time Slot: $startTimeSlot');
-    print('End Time Slot: $endTimeSlot');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(24, 52, 92, 1),
-        centerTitle: true,
-        title: const Text(
-          'My Booking',
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'Inter',
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+        backgroundColor: Colors.grey[50],
+        appBar: AppBar(
+          backgroundColor: const Color.fromRGBO(24, 52, 92, 1),
+          centerTitle: true,
+          title: const Text(
+            'My Booking',
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Inter',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    FaIcon(
-                      FontAwesomeIcons.circleInfo,
-                      color: Colors.blue[600],
-                      size: 20,
-                    ),
-                    const SizedBox(width: 7.5),
-                    Text(
-                      'Note',
-                      style: TextStyle(
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      FaIcon(
+                        FontAwesomeIcons.circleInfo,
                         color: Colors.blue[600],
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                        size: 20,
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                const Text(
-                  'Change will take up to 5 minutes',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontFamily: 'Inter',
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 25),
-            _buildDateSelector(),
-            const SizedBox(height: 25),
-            Text(
-              'Date',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
-                color: Colors.grey[800],
-              ),
-            ),
-            const SizedBox(height: 5),
-            WeekButtons(
-              initialDate: selectedDate,
-              onDateSelected: (date) {
-                setState(() {
-                  selectedDate = date;
-                });
-                _loadTaskerBookingDetails(date);
-              },
-            ),
-            const SizedBox(height: 25),
-            Draggable<String>(
-              data: 'range',
-              feedback: SizedBox.shrink(),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      textAlign: TextAlign.center,
-                      '${startTimeSlot?.substring(0, 5) ?? '-'} - ${endTimeSlot?.substring(0, 5) ?? '-'}',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontSize: 14,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      textAlign: TextAlign.center,
-                      'Iskandar - Flooring',
-                      style: TextStyle(
-                          color: Colors.green,
+                      const SizedBox(width: 7.5),
+                      Text(
+                        'Note',
+                        style: TextStyle(
+                          color: Colors.blue[600],
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.bold,
                           fontSize: 12,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  const Text(
+                    'Change will take up to 5 minutes',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontFamily: 'Inter',
+                      fontSize: 12,
                     ),
-                  ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 25),
+              _buildDateSelector(),
+              const SizedBox(height: 25),
+              Text(
+                'Date',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Inter',
+                  color: Colors.grey[800],
                 ),
               ),
-            ),
-            const SizedBox(height: 25),
-            Expanded(
-              child: isLoadingBookingList
-                  ? Center(
-                      child: Text(
-                      'Loading...',
-                      style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          color: Colors.grey[600]),
-                    ))
-                  : filteredBookings.isNotEmpty
-                      ? ListView.builder(
-                          itemCount: timeSlots.length,
-                          itemBuilder: (context, index) {
-                            return DragTarget<String>(
-                              onAcceptWithDetails: (details) {
-                                _updateTimeSlots(details.data, index);
-                                hoverStartIndex = null;
-                              },
-                              onMove: (details) {
-                                if (details.data == 'range') {
-                                  setState(() {
-                                    hoverStartIndex = index;
-                                  });
-                                }
-                              },
-                              onLeave: (data) {
-                                if (data == 'range') {
-                                  setState(() {
-                                    hoverStartIndex = null;
-                                  });
-                                }
-                              },
-                              builder: (context, candidateData, rejectedData) {
-                                int rangeSize =
-                                    timeSlots.indexOf(endTimeSlot!) -
-                                        timeSlots.indexOf(startTimeSlot!);
-                                bool isInRange = _isInRange(index);
-                                bool isHovered = hoverStartIndex != null &&
-                                    index >= hoverStartIndex! &&
-                                    index <= hoverStartIndex! + rangeSize;
+              const SizedBox(height: 5),
+              WeekButtons(
+                initialDate: selectedDate,
+                onDateSelected: (date) {
+                  setState(() {
+                    selectedDate = date;
+                  });
+                  _loadTaskerBookingDetails(date);
+                },
+              ),
+              const SizedBox(height: 25),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: timeSlots.length,
+                  itemBuilder: (context, index) {
+                    return DragTarget<String>(
+                      onAcceptWithDetails: (details) {
+                        // Handle dragging logic based on whether it's start or end
+                        _updateTimeSlots(details.data, index);
+                        hoverStartIndex = null;
+                      },
+                      onMove: (details) {
+                        if (details.data == 'range') {
+                          setState(() {
+                            hoverStartIndex = index;
+                          });
+                        }
+                      },
+                      onLeave: (data) {
+                        if (data == 'range') {
+                          setState(() {
+                            hoverStartIndex = null;
+                          });
+                        }
+                      },
+                      builder: (context, candidateData, rejectedData) {
+                        bool isInRange = _isInRange(index);
+                        bool isHovered = hoverStartIndex != null &&
+                            index >= hoverStartIndex! &&
+                            index <=
+                                hoverStartIndex! +
+                                    (timeSlots.indexOf(endTimeSlots[0][0]) -
+                                        timeSlots
+                                            .indexOf(startTimeSlots[0][0]));
 
-                                return Draggable<String>(
-                                  data: (startTimeSlot == timeSlots[index] ||
-                                          endTimeSlot == timeSlots[index])
-                                      ? timeSlots[index]
-                                      : 'range',
-                                  feedback: SizedBox.shrink(),
-                                  child: Container(
-                                    height: 25,
-                                    margin:
-                                        const EdgeInsets.symmetric(vertical: 1),
-                                    decoration: BoxDecoration(
-                                      color: isHovered
-                                          ? Colors.green.withOpacity(0.5)
-                                          : isInRange
-                                              ? Colors.green
-                                              : Colors.white,
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                        color: isHovered
-                                            ? Colors.transparent
-                                            : isInRange ||
-                                                    candidateData.isNotEmpty
-                                                ? Colors.green
-                                                : Colors.transparent,
-                                        width: 1.5,
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 50,
-                                          child: Text(
-                                            textAlign: TextAlign.right,
-                                            timeSlots[index].substring(0, 5),
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontFamily: 'Inter',
-                                              color: isInRange || isHovered
-                                                  ? Colors.white
-                                                  : Colors.grey[800],
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                        ),
-                                        if (timeSlots[index] == startTimeSlot)
-                                          Expanded(
-                                            child: Icon(Icons.drag_handle,
-                                                size: 16, color: Colors.white),
-                                          ),
-                                        if (timeSlots[index] == endTimeSlot)
-                                          Expanded(
-                                            child: Icon(Icons.drag_handle,
-                                                size: 16, color: Colors.white),
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        )
-                      : Container(
+                        return Container(
+                          height: 25,
+                          margin: const EdgeInsets.symmetric(vertical: 1),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: Colors.grey[100],
-                          ),
-                          width: double.infinity,
-                          padding: EdgeInsets.all(12),
-                          child: Text(
-                            'No Booking found.',
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 14,
-                              color: Colors.grey[600],
+                            color: isHovered
+                                ? Colors.green.withOpacity(0.5)
+                                : isInRange
+                                    ? Colors.green
+                                    : Colors.white,
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(
+                              color: isHovered
+                                  ? Colors.transparent
+                                  : isInRange || candidateData.isNotEmpty
+                                      ? Colors.green
+                                      : Colors.transparent,
+                              width: 1.5,
                             ),
                           ),
-                        ),
-            ),
-          ],
-        ),
-      ),
-    );
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 50,
+                                child: Text(
+                                  textAlign: TextAlign.right,
+                                  timeSlots[index].substring(0, 5),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: 'Inter',
+                                    color: isInRange || isHovered
+                                        ? Colors.white
+                                        : Colors.grey[800],
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ),
+                              for (int i = 0; i < startTimeSlots.length; i++)
+                                if (timeSlots[index] == startTimeSlots[i][0])
+                                  Draggable<String>(
+                                    data:
+                                        'start-${timeSlots[index]}', // Tag it as start
+                                    feedback: SizedBox.shrink(),
+                                    childWhenDragging: SizedBox.shrink(),
+                                    child: Icon(Icons.drag_handle,
+                                        size: 16, color: Colors.white),
+                                  ),
+                              for (int i = 0; i < endTimeSlots.length; i++)
+                                if (timeSlots[index] == endTimeSlots[i][0])
+                                  Draggable<String>(
+                                    data:
+                                        'end-${timeSlots[index]}', // Tag it as end
+                                    feedback: SizedBox.shrink(),
+                                    childWhenDragging: SizedBox.shrink(),
+                                    child: Icon(Icons.drag_handle,
+                                        size: 16, color: Colors.red),
+                                  ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              )
+            ],
+          ),
+        ));
   }
 
   Widget _buildDateSelector() {
