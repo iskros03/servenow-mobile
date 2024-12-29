@@ -11,6 +11,8 @@ import 'package:servenow_mobile/screens/sign_in.dart';
 import 'package:servenow_mobile/screens/sign_up.dart';
 import 'package:servenow_mobile/screens/task_preferences.dart';
 
+
+
 Future<void> main() async {
   await dotenv.load(); 
   
