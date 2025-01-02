@@ -118,40 +118,7 @@ class _ServicesState extends State<Services> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          FaIcon(
-                            FontAwesomeIcons.circleInfo,
-                            color: Colors.blue[600],
-                            size: 20,
-                          ),
-                          const SizedBox(width: 7.5),
-                          Text(
-                            'Note',
-                            style: TextStyle(
-                              color: Colors.blue[600],
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      const Text(
-                        'Change will take up to 5 minutes',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontFamily: 'Inter',
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 25),
+                  
                   Container(
                     decoration: BoxDecoration(
                         color: Colors.grey[100],
