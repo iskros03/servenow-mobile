@@ -6,16 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TaskerAuth {
-  void showBottomMessage(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Center(child: Text(message)),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 3),
-      ),
-    );
-  }
-
   Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('auth_token', token);
@@ -39,20 +29,17 @@ class TaskerAuth {
         body: jsonEncode({'email': email, 'password': password}),
       );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        var token = data['token'];
-        print('Token: $token');
-        await saveToken(token);
-        Navigator.pushReplacementNamed(context, '/home');
-      } else {
+      if (response.body.isNotEmpty) {
         final responseData = jsonDecode(response.body);
-        final errorMessage = responseData['error'];
-        showBottomMessage(context, '$errorMessage');
-        print('Error: $errorMessage');
+        return {
+          'statusCode': response.statusCode,
+          'data': responseData,
+        };
+      } else {
+        throw Exception('No response body received');
       }
     } catch (e) {
-      throw Exception('Failed to authenticate tasker: $e');
+      throw Exception('Failed to fetch API: $e');
     }
   }
 

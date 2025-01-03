@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:servenow_mobile/services/tasker_service.dart';
 import 'package:servenow_mobile/widgets/custom_dropdown_menu.dart';
 import 'package:servenow_mobile/widgets/custom_text_field.dart';
@@ -139,39 +138,6 @@ class _AddServiceState extends State<AddService> {
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    FaIcon(
-                      FontAwesomeIcons.circleInfo,
-                      color: Colors.blue[600],
-                      size: 20,
-                    ),
-                    const SizedBox(width: 7.5),
-                    Text(
-                      'Note',
-                      style: TextStyle(
-                          color: Colors.blue[600],
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Change will take up to 5 minutes',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontFamily: 'Inter',
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 25),
             Container(
               decoration: BoxDecoration(
                   color: Colors.grey[100],
@@ -195,8 +161,8 @@ class _AddServiceState extends State<AddService> {
                                 style: TextStyle(
                                     fontSize: 12,
                                     fontFamily: 'Inter',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[600]),
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.grey[800]),
                               ),
                             ],
                           ),
@@ -247,8 +213,8 @@ class _AddServiceState extends State<AddService> {
                                 style: TextStyle(
                                     fontSize: 12,
                                     fontFamily: 'Inter',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[600]),
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.grey[800]),
                               ),
                             ),
                             const SizedBox(height: 2.5),
@@ -279,8 +245,8 @@ class _AddServiceState extends State<AddService> {
                               style: TextStyle(
                                   fontSize: 12,
                                   fontFamily: 'Inter',
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey[600]),
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey[800]),
                             ),
                           ),
                           const SizedBox(height: 2.5),
@@ -326,8 +292,8 @@ class _AddServiceState extends State<AddService> {
                                 style: TextStyle(
                                     fontSize: 12,
                                     fontFamily: 'Inter',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[600]),
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.grey[800]),
                               ),
                             ],
                           ),

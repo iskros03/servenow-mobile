@@ -92,7 +92,7 @@ class _ManageServiceState extends State<ManageService> {
       TaskerService taskerService = TaskerService();
       final response =
           await taskerService.updateTaskerService(serviceId, updateService);
-      print(response['data']['message']);
+      // print(response['data']['message']);
 
       if (response['statusCode'] == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -122,7 +122,7 @@ class _ManageServiceState extends State<ManageService> {
     try {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Update service...'),
+          content: Text('Delete service...'),
           duration: Duration(seconds: 2),
         ),
       );

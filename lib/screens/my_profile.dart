@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:servenow_mobile/services/tasker_auth.dart';
 import 'package:servenow_mobile/services/tasker_user.dart';
-import 'package:servenow_mobile/widgets/custom_card.dart';
 import 'package:servenow_mobile/widgets/custom_dropdown_menu.dart';
 import 'package:servenow_mobile/widgets/custom_text_field.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key});
@@ -137,8 +134,6 @@ class _MyProfileState extends State<MyProfile> {
       'tasker_address_poscode': addressPostalCodeController.text.trim(),
       'tasker_address_state': addressState,
       'tasker_address_area': addressArea,
-      // 'tasker_workingloc_state': workingLocState,
-      // 'tasker_workingloc_area': workingLocArea,
     };
 
     try {
@@ -247,7 +242,7 @@ class _MyProfileState extends State<MyProfile> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[50],
         appBar: AppBar(
           backgroundColor: Color.fromRGBO(24, 52, 92, 1),
           title: Text(
@@ -275,10 +270,9 @@ class _MyProfileState extends State<MyProfile> {
                 _selectedTabIndex = index;
               });
             },
-            overlayColor: WidgetStateProperty.all(Colors.transparent),
-            indicatorColor: Colors.transparent,
+            indicatorColor: Colors.orange[300],
             labelColor: Colors.white,
-            unselectedLabelColor: Colors.grey[500],
+            unselectedLabelColor: Colors.white,
             labelStyle: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 13.0,
@@ -310,371 +304,249 @@ class _MyProfileState extends State<MyProfile> {
             ),
           ],
         ),
-        body: FutureBuilder<Map<String, String>>(
-          future: taskerDataFuture,
-          builder: (context, snapshot) {
-            // Waiting for request
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image(
-                      image: AssetImage('assets/serveNowLogo.png'), width: 100),
-                  SpinKitThreeBounce(
-                    color: Color.fromRGBO(24, 52, 92, 1),
-                    size: 10.0,
-                  ),
-                ],
-              ));
-            } else if (snapshot.hasError) {
-              return const Center(child: Text('Error loading profile data.'));
-            } else {
-              return TabBarView(
-                children: [
-                  // Personal Info Tab
-                  SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 25),
-                            child: Center(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.grey.shade500,
-                                    width: 2.5,
-                                  ),
-                                ),
-                                child: CircleAvatar(
-                                  radius: 45,
-                                  backgroundImage: NetworkImage(
-                                      'https://servenow.com.my/storage/$photo'),
-                                ),
-                              ),
+        body: TabBarView(
+          children: [
+            // Personal Info Tab
+            SingleChildScrollView(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.grey.shade500,
+                              width: 1.5,
                             ),
                           ),
-                          Center(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Divider(
-                                    thickness: 0.5,
-                                    color: Colors.grey[300],
-                                    endIndent:
-                                        8, // Adds spacing between line and text
-                                  ),
-                                ),
-                                Text(
-                                  'Biodata',
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Divider(
-                                    thickness: 0.5,
-                                    color: Colors.grey[300],
-                                    indent:
-                                        8, // Adds spacing between text and line
-                                  ),
-                                ),
-                              ],
-                            ),
+                          child: CircleAvatar(
+                            radius: 45,
+                            backgroundImage: NetworkImage(
+                                'https://servenow.com.my/storage/$photo'),
                           ),
-                          SizedBox(height: 10),
-                          _buildTextField(
-                            'First Name',
-                            firstnameController,
-                            'Enter first name',
-                          ),
-                          _buildTextField('Last Name', lastnameController,
-                              'Enter last name'),
-                          Row(children: [
-                            Expanded(
-                                flex: 3,
-                                child: _buildTextField('IC Number',
-                                    icController, 'Enter IC Number')),
-                            const SizedBox(width: 15),
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      SizedBox(width: 12.5),
-                                      Text(
-                                        'Birthdate',
-                                        style: TextStyle(
-                                            color: Colors.grey[800],
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 2.5),
-                                  Container(
-                                      width: double.infinity,
-                                      padding: const EdgeInsets.all(12.5),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[50],
-                                        border: Border.all(color: Colors.white),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Text(
-                                        '$birthdate',
-                                        style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            fontSize: 14,
-                                            color: Colors.grey[500]),
-                                      )),
-                                  const SizedBox(height: 15),
-                                ],
-                              ),
-                            )
-                          ]),
-                          SizedBox(height: 50),
-                          Center(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Divider(
-                                    thickness: 0.5,
-                                    color: Colors.grey[300],
-                                    endIndent:
-                                        8, // Adds spacing between line and text
-                                  ),
-                                ),
-                                Text(
-                                  'Contact',
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Divider(
-                                    thickness: 0.5,
-                                    color: Colors.grey[300],
-                                    indent:
-                                        8, // Adds spacing between text and line
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          _buildTextField(
-                            'Email',
-                            emailController,
-                            'Enter your email',
-                          ),
-                          _buildTextField(
-                            'Mobile',
-                            mobileController,
-                            'Enter your mobile',
-                          ),
-                          _buildTextField('Bio', bioController, 'Enter bio',
-                              maxLines: 3),
-                          SizedBox(height: 50),
-                          Center(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Divider(
-                                    thickness: 1,
-                                    color: Colors.grey[300],
-                                    endIndent:
-                                        8, // Adds spacing between line and text
-                                  ),
-                                ),
-                                Text(
-                                  'Address',
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Divider(
-                                    thickness: 1,
-                                    color: Colors.grey[300],
-                                    indent:
-                                        8, // Adds spacing between text and line
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          _buildTextField(
-                            'Address Line 1',
-                            addressLineOneController,
-                            'Enter Address Line 1',
-                          ),
-                          _buildTextField(
-                            'Address Line 2',
-                            addressLineTwoController,
-                            'Enter Address Line 2',
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SizedBox(width: 12.5),
-                                        Text(
-                                          'State',
-                                          style: TextStyle(
-                                              color: Colors.grey[600],
-                                              fontFamily: 'Inter',
-                                              fontSize: 12),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 2.5),
-                                    CustomDropdownMenu(
-                                      items: states,
-                                      titleSelect: 'Select State',
-                                      titleValue:
-                                          addressState ?? 'Select State',
-                                      onSelected: (selectedValue) {
-                                        setState(() {
-                                          addressState = selectedValue;
-                                          addressArea = null;
-                                        });
-                                        fetchAreaNames(selectedValue);
-                                      },
-                                    ),
-                                    const SizedBox(height: 15),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 15),
-                              Expanded(
-                                flex: 2,
-                                child: _buildTextField(
-                                  'Postal Code',
-                                  addressPostalCodeController,
-                                  'Enter Postal Code',
-                                ),
-                              )
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  SizedBox(width: 12.5),
-                                  Text(
-                                    'Area',
-                                    style: TextStyle(
-                                      color: Colors.grey[600],
-                                      fontFamily: 'Inter',
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 2.5),
-                              CustomDropdownMenu(
-                                items: areas,
-                                titleSelect: 'Select Area',
-                                titleValue: addressArea ?? 'Select Area',
-                                onSelected: (selectedValue) {
-                                  setState(() {
-                                    addressArea = selectedValue;
-                                  });
-                                },
-                                isEnabled: states.isNotEmpty,
-                              ),
-                              const SizedBox(height: 15),
-                            ],
-                          ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-
-                  SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 30),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        'Biodata',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Inter',
+                            color: Colors.grey[800]),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    _buildTextField(
+                        'First Name', firstnameController, 'Enter first name'),
+                    SizedBox(height: 10),
+                    _buildTextField(
+                        'Last Name', lastnameController, 'Enter last name'),
+                    SizedBox(height: 10),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Row(
                         children: [
-                          CustomCard(
-                            cardColor: Colors.white,
+                          Expanded(
+                              flex: 3,
+                              child: _buildTextField('IC Number', icController,
+                                  'Enter IC Number')),
+                          const SizedBox(width: 15),
+                          Expanded(
+                            flex: 2,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    FaIcon(
-                                      FontAwesomeIcons.circleInfo,
-                                      color: Colors.blue[600],
-                                      size: 20,
-                                    ),
-                                    const SizedBox(width: 7.5),
-                                    Text(
-                                      'Note',
-                                      style: TextStyle(
-                                          color: Colors.blue[600],
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12),
-                                    ),
-                                  ],
+                                Container(
+                                  padding: EdgeInsets.all(12),
+                                  child: Text(
+                                    'Birthdate',
+                                    style: TextStyle(
+                                        color: Colors.grey[800],
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal),
+                                  ),
                                 ),
-                                const SizedBox(height: 4),
-                                const Text(
-                                  'Change will take up to 5 minutes',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontFamily: 'Inter',
-                                    fontSize: 12,
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(12.5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    border: Border.all(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Text(
+                                    '$birthdate',
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 14,
+                                        color: Colors.grey[500]),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          _buildTextField('Old Password', oldPasswordController,
-                              'Enter old password',
-                              obscureText: true),
-                          _buildTextField('New Password', newPasswordController,
-                              'Enter new password',
-                              obscureText: true),
-                          _buildTextField(
-                              'Confirm Password',
-                              confirmPasswordController,
-                              'Enter confirm password',
-                              obscureText: true),
                         ],
                       ),
                     ),
-                  ),
-                ],
-              );
-            }
-          },
+                    SizedBox(height: 50),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        'Contact',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Inter',
+                            color: Colors.grey[800]),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    _buildTextField(
+                        'Email', emailController, 'Enter your email'),
+                    SizedBox(height: 10),
+                    _buildTextField(
+                        'Mobile', mobileController, 'Enter your mobile'),
+                    SizedBox(height: 10),
+                    _buildTextField('Bio', bioController, 'Enter bio',
+                        maxLines: 3),
+                    SizedBox(height: 50),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        'Address',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Inter',
+                            color: Colors.grey[800]),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    _buildTextField('Address Line 1', addressLineOneController,
+                        'Enter Address Line 1'),
+                    SizedBox(height: 10),
+                    _buildTextField('Address Line 2', addressLineTwoController,
+                        'Enter Address Line 2'),
+                    SizedBox(height: 10),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(12),
+                                  child: Text(
+                                    'State',
+                                    style: TextStyle(
+                                        color: Colors.grey[800],
+                                        fontFamily: 'Inter',
+                                        fontSize: 12),
+                                  ),
+                                ),
+                                CustomDropdownMenu(
+                                  items: states,
+                                  titleSelect: 'Select State',
+                                  titleValue: addressState ?? 'Select State',
+                                  onSelected: (selectedValue) {
+                                    setState(() {
+                                      addressState = selectedValue;
+                                      addressArea = null;
+                                    });
+                                    fetchAreaNames(selectedValue);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 15),
+                          Expanded(
+                            flex: 3,
+                            child: _buildTextField(
+                                'Postal Code',
+                                addressPostalCodeController,
+                                'Enter Postal Code'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(12),
+                            child: Text(
+                              'Area',
+                              style: TextStyle(
+                                color: Colors.grey[800],
+                                fontFamily: 'Inter',
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                          CustomDropdownMenu(
+                            items: areas,
+                            titleSelect: 'Select Area',
+                            titleValue: addressArea ?? 'Select Area',
+                            onSelected: (selectedValue) {
+                              setState(() {
+                                addressArea = selectedValue;
+                              });
+                            },
+                            isEnabled: states.isNotEmpty,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // Password Tab
+            SingleChildScrollView(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTextField('Old Password', oldPasswordController,
+                        'Enter old password',
+                        obscureText: true),
+                    SizedBox(height: 10),
+                    _buildTextField('New Password', newPasswordController,
+                        'Enter new password',
+                        obscureText: true),
+                    SizedBox(height: 10),
+                    _buildTextField('Confirm Password',
+                        confirmPasswordController, 'Enter confirm password',
+                        obscureText: true),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -683,31 +555,32 @@ class _MyProfileState extends State<MyProfile> {
   Widget _buildTextField(
       String label, TextEditingController controller, String hintText,
       {bool obscureText = false, int maxLines = 1}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            SizedBox(width: 12.5),
-            Text(
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.all(12),
+            child: Text(
               label,
               style: TextStyle(
                   color: Colors.grey[800],
                   fontFamily: 'Inter',
                   fontSize: 12,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.normal),
             ),
-          ],
-        ),
-        const SizedBox(height: 2.5),
-        CustomTextField(
-          labelText: hintText,
-          maxLines: maxLines,
-          controller: controller,
-          obscureText: obscureText,
-        ),
-        const SizedBox(height: 15),
-      ],
+          ),
+          CustomTextField(
+            labelText: hintText,
+            maxLines: maxLines,
+            controller: controller,
+            obscureText: obscureText,
+          ),
+        ],
+      ),
     );
   }
 }

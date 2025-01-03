@@ -24,23 +24,36 @@ class CustomDropdownMenu extends StatelessWidget {
       builder: (context) {
         return Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(30)),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30), topRight: Radius.circular(30)),
             color: Colors.white,
           ),
           height: MediaQuery.of(context).size.height * 0.5,
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
+              Container(
+                  width: 50, // Set width to 50
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.circular(10), // Apply border radius
+                    color: Colors.grey[400], // Line color
+                  ),
+                  child: Divider(
+                    color: Colors.transparent, // Make divider transparent
+                    thickness: 1, // Line thickness
+                    height: 3, // Space around the line
+                  )),
+              SizedBox(height: 10),
               Text(
                 '$titleSelect',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey[500],
+                  color: Colors.grey[800],
                 ),
               ),
-  
               Expanded(
                 child: ListView.builder(
                   itemCount: items.length,
@@ -51,7 +64,7 @@ class CustomDropdownMenu extends StatelessWidget {
                         style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 14,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.normal,
                             color: Colors.grey[800]),
                       ),
                       onTap: () {
@@ -82,12 +95,15 @@ class CustomDropdownMenu extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             width: 1, // Use the borderWidth parameter
-            color: isEnabled ? Colors.grey[300]! : Colors.grey[300]!, // Change color if disabled
+            color: isEnabled
+                ? Colors.grey[300]!
+                : Colors.grey[300]!, // Change color if disabled
           ),
         ),
         child: Row(
           children: [
-            Text('${titleValue?.substring(0, 1).toUpperCase()}${titleValue?.substring(1)}',
+            Text(
+                '${titleValue?.substring(0, 1).toUpperCase()}${titleValue?.substring(1)}',
                 style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'Inter',

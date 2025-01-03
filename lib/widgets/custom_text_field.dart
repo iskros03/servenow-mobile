@@ -9,6 +9,7 @@ class CustomTextField extends StatelessWidget {
   final int maxLines;
   final TextInputType keyboardType;
   final List<TextInputFormatter>? inputFormatters;
+  final Function()? onEyeTap; // Add onEyeTap callback
 
   const CustomTextField({
     super.key,
@@ -19,6 +20,7 @@ class CustomTextField extends StatelessWidget {
     this.maxLines = 1,
     this.keyboardType = TextInputType.text,
     this.inputFormatters,
+    this.onEyeTap, // Add onEyeTap to the constructor
   });
 
   @override
@@ -38,7 +40,7 @@ class CustomTextField extends StatelessWidget {
         hintText: labelText,
         floatingLabelBehavior: FloatingLabelBehavior.always,
         hintStyle: TextStyle(
-            fontFamily: 'Inter', fontSize: 14, color: Colors.grey[600]),
+            fontFamily: 'Inter', fontSize: 14, color: Colors.grey[400]),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
           borderSide:
@@ -51,10 +53,22 @@ class CustomTextField extends StatelessWidget {
         ),
         prefixText: prefixText,
         prefixStyle: TextStyle(
-          color: Colors.grey[600],
+          color: Colors.grey[800],
           fontSize: 14,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.normal,
         ),
+        suffixIcon: onEyeTap != null
+            ? IconButton(
+                icon: Icon(
+                  obscureText ? Icons.visibility : Icons.visibility_off,
+                  color: Colors.grey[400],
+                  size: 20,
+                ),
+                onPressed: onEyeTap,
+                splashColor: Colors.transparent, // Remove splash effect
+                highlightColor: Colors.transparent,
+              )
+            : null, // Add the eye icon if onEyeTap is provided
       ),
     );
   }

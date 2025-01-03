@@ -254,9 +254,9 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                 _selectedTabIndex = index;
               });
             },
-            indicatorColor: Colors.white,
+            indicatorColor: Colors.orange[300],
             labelColor: Colors.white,
-            unselectedLabelColor: Colors.grey,
+            unselectedLabelColor: Colors.white,
             labelStyle: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 13.0,
@@ -295,16 +295,18 @@ class _TaskPreferencesState extends State<TaskPreferences> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
-                  Text(
-                    'Preferred Working Type',
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Inter',
-                        color: Colors.grey[800]),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text(
+                      'Preferred Working Type',
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Inter',
+                          color: Colors.grey[800]),
+                    ),
                   ),
-                  SizedBox(height: 5),
+                  SizedBox(height: 10),
                   Container(
                     decoration: BoxDecoration(
                         color: Colors.grey[100],
@@ -319,7 +321,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                             style: TextStyle(
                                 fontSize: 12,
                                 fontFamily: 'Inter',
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.normal,
                                 color: Colors.grey[600]),
                           ),
                         ),
@@ -346,15 +348,18 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                     ),
                   ),
                   SizedBox(height: 25),
-                  Text(
-                    'Date',
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Inter',
-                        color: Colors.grey[800]),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text(
+                      'Date',
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Inter',
+                          color: Colors.grey[800]),
+                    ),
                   ),
-                  SizedBox(height: 5),
+                  SizedBox(height: 10),
                   WeekButtons(
                     initialDate: selectedDate!,
                     onDateSelected: (date) {
@@ -365,55 +370,18 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                     onGetTimeSlot: _getTimeSlot,
                   ),
                   SizedBox(height: 25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Time Slot',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Inter',
-                            color: Colors.grey[800]),
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.green,
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Text(
-                            'Available',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 12,
-                                color: Colors.grey[800]),
-                          ),
-                          SizedBox(width: 16),
-                          Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.red,
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Text(
-                            'Unavailable',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 12,
-                                color: Colors.grey[800]),
-                          ),
-                        ],
-                      )
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text(
+                      'Time Slot',
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Inter',
+                          color: Colors.grey[800]),
+                    ),
                   ),
-                  SizedBox(height: 5),
+                  SizedBox(height: 10),
                   Expanded(
                     child: isLoadingTimeSlots
                         ? Center(
@@ -551,35 +519,6 @@ class _TaskPreferencesState extends State<TaskPreferences> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      FaIcon(
-                        FontAwesomeIcons.circleInfo,
-                        color: Colors.blue[600],
-                        size: 20,
-                      ),
-                      const SizedBox(width: 7.5),
-                      Text(
-                        'Note',
-                        style: TextStyle(
-                          color: Colors.blue[600],
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    'Change will take up to 5 minutes',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontFamily: 'Inter',
-                      fontSize: 12,
-                    ),
-                  ),
-                  SizedBox(height: 25),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
@@ -623,15 +562,18 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Working Preferred Location',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Inter',
-                              color: Colors.grey[800]),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Text(
+                            'Working Preferred Location',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Inter',
+                                color: Colors.grey[800]),
+                          ),
                         ),
-                        const SizedBox(height: 5),
+                        const SizedBox(height: 10),
                         Container(
                           decoration: BoxDecoration(
                               color: Colors.grey[100],
@@ -642,18 +584,13 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                             children: [
                               Container(
                                 padding: EdgeInsets.all(12),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'State',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey[600]),
-                                    ),
-                                  ],
+                                child: Text(
+                                  'State',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.grey[800]),
                                 ),
                               ),
                               CustomDropdownMenu(
@@ -682,18 +619,13 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                             children: [
                               Container(
                                 padding: EdgeInsets.all(12),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Area',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey[600]),
-                                    ),
-                                  ],
+                                child: Text(
+                                  'Area',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.grey[800]),
                                 ),
                               ),
                               CustomDropdownMenu(

@@ -83,7 +83,7 @@ class _ServicesState extends State<Services> {
           centerTitle: true,
           elevation: 0,
           title: const Text(
-            'Services',
+            'Service Management',
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'Inter',
@@ -97,226 +97,202 @@ class _ServicesState extends State<Services> {
               Navigator.pop(context);
             },
           ),
-          bottom: const TabBar(
-            indicatorColor: Colors.white,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.grey,
-            labelStyle: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 13.0,
-                fontWeight: FontWeight.bold),
-            tabs: [
-              Tab(text: 'Task Management'),
-              Tab(text: 'Task Service'),
-            ],
-          ),
         ),
-        body: TabBarView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+           
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                child: Column(
+                  children: [
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
                             children: [
+                              Text(
+                                'Total Service : ',
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[600]),
+                              ),
+                              Text(
+                                '${services.length}',
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[600]),
+                              ),
+                            ],
+                          ),
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 10),
+                                backgroundColor: Color.fromRGBO(24, 52, 92, 1),
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                side: BorderSide(
+                                  color: Colors.white,
+                                  width: 1.5,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AddService()),
+                                ).then((result) {
+                                  if (result == true) {
+                                    _loadTaskerServiceList(); // Refresh the service list
+                                  }
+                                });
+                              },
+                              child: Text(
+                                'Add Service',
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold),
+                              ))
+                        ],
+                      ),
+                    ),
+                    CustomTextField(
+                      controller: searchController,
+                      labelText: 'Search Service...',
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 25),
+              Column(
+                children: services.map((service) {
+                  int status = service['service_status'];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: Container(
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                getServiceTypeName(service['service_type_id']),
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[800]),
+                              ),
                               Row(
                                 children: [
                                   Text(
-                                    'Total Service : ',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[600]),
-                                  ),
-                                  Text(
-                                    '${services.length}',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[600]),
-                                  ),
-                                ],
-                              ),
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 10),
-                                    backgroundColor:
-                                        Color.fromRGBO(24, 52, 92, 1),
-                                    foregroundColor: Colors.white,
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    side: BorderSide(
-                                      color: Colors.white,
-                                      width: 1.5,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => AddService()),
-                                    ).then((result) {
-                                      if (result == true) {
-                                        _loadTaskerServiceList(); // Refresh the service list
-                                      }
-                                    });
-                                  },
-                                  child: Text(
-                                    '+  Service',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
-                                  ))
-                            ],
-                          ),
-                        ),
-                        CustomTextField(
-                          controller: searchController,
-                          labelText: 'Search Service...',
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 25),
-                  Column(
-                    children: services.map((service) {
-                      int status = service['service_status'];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    getServiceTypeName(
-                                        service['service_type_id']),
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[800]),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'RM ${double.parse(service['service_rate'].toString()).toStringAsFixed(2)}',
-                                        style: TextStyle(
-                                          fontFamily: 'Inter',
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.green,
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Text(
-                                        service['service_rate_type'],
-                                        style: TextStyle(
-                                          fontFamily: 'Inter',
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    service['service_desc'] ??
-                                        'No description available.',
+                                    'RM ${double.parse(service['service_rate'].toString()).toStringAsFixed(2)}',
                                     style: TextStyle(
                                       fontFamily: 'Inter',
-                                      fontSize: 12,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    service['service_rate_type'],
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
                                       color: Colors.grey[600],
                                     ),
                                   ),
-                                  SizedBox(height: 15),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(5)),
-                                      color: getServiceStatus(status)['color'],
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 7.5),
-                                    child: Text(
-                                      textAlign: TextAlign.center,
-                                      getServiceStatus(status)['text'],
-                                      style: const TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
-                              IconButton(
-                                icon: FaIcon(FontAwesomeIcons.chevronRight,
-                                    color: Colors.grey[600], size: 16),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ManageService(
-                                        serviceIdSingle: service['id'],
-                                        serviceTypeId:
-                                            service['service_type_id'],
-                                        serviceTypeSingle: getServiceTypeName(
-                                            service['service_type_id']),
-                                        serviceRateSingle:
-                                            service['service_rate'],
-                                        serviceStatusSingle:
-                                            service['service_status'],
-                                        serviceDescSingle:
-                                            service['service_desc'],
-                                        serviceRateTypeSingle:
-                                            service['service_rate_type'],
-                                      ),
-                                    ),
-                                  ).then((result) {
-                                    if (result == true) {
-                                      _loadTaskerServiceList();
-                                    }
-                                  });
-                                },
-                              )
+                              Text(
+                                service['service_desc'] ??
+                                    'No description available.',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              SizedBox(height: 15),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(5)),
+                                  color: getServiceStatus(status)['color'],
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 7.5),
+                                child: Text(
+                                  textAlign: TextAlign.center,
+                                  getServiceStatus(status)['text'],
+                                  style: const TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ],
+                          IconButton(
+                            icon: FaIcon(FontAwesomeIcons.chevronRight,
+                                color: Colors.grey[600], size: 16),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ManageService(
+                                    serviceIdSingle: service['id'],
+                                    serviceTypeId: service['service_type_id'],
+                                    serviceTypeSingle: getServiceTypeName(
+                                        service['service_type_id']),
+                                    serviceRateSingle: service['service_rate'],
+                                    serviceStatusSingle:
+                                        service['service_status'],
+                                    serviceDescSingle: service['service_desc'],
+                                    serviceRateTypeSingle:
+                                        service['service_rate_type'],
+                                  ),
+                                ),
+                              ).then((result) {
+                                if (result == true) {
+                                  _loadTaskerServiceList();
+                                }
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
-            ),
-            const Center(child: Text('Lorem Ipsum Content')),
-          ],
+            ],
+          ),
         ),
       ),
     );

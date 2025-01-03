@@ -11,8 +11,8 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  String taskerFirstName = '';
-  String taskerProfilePhoto = '';
+  String? taskerFirstName;
+  String? taskerProfilePhoto;
 
   @override
   void initState() {
@@ -37,331 +37,339 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(24, 52, 92, 1),
+      backgroundColor: Color.fromRGBO(24, 52, 92, 1),
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
-              flex: 1,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    color: const Color.fromRGBO(24, 52, 92, 1),
-                    padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      color: const Color.fromRGBO(24, 52, 92, 1),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Dashboard',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Inter',
+                                  fontSize: 22.5,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Text(
+                                'Hi, $taskerFirstName',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontFamily: 'Inter'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Column(
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
                           children: [
-                            Text(
-                              'Dashboard',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Inter',
-                                fontSize: 22.5,
-                                fontWeight: FontWeight.w700,
+                            Expanded(
+                              child: CustomCard(
+                                cardColor: Colors.grey[50],
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text('Total Earning',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'Inter',
+                                                    color: Colors.grey[600])),
+                                            Text('RM 129.00',
+                                                style: TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    fontSize: 25,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.grey[800])),
+                                          ],
+                                        ),
+                                        // Text(
+                                        //   'Change will take up to 5 minutes',
+                                        //   style: TextStyle(
+                                        //     color: Colors.grey[600],
+                                        //     fontFamily: 'Inter',
+                                        //     fontSize: 12,
+                                        //   ),
+                                        // ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                        width: 75,
+                                        child: FaIcon(FontAwesomeIcons.coins,
+                                            color: Colors.orange.shade700,
+                                            size: 50.0))
+                                  ],
+                                ),
                               ),
                             ),
-                            Text(
-                              'Good Afternoon, $taskerFirstName',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                  fontFamily: 'Inter'),
+                          ],
+                        ),
+                        SizedBox(height: 7.5),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CustomCard(
+                                cardColor: Colors.grey[50],
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text('Total Upcoming Job',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'Inter',
+                                                    color: Colors.grey[600])),
+                                            Text('6',
+                                                style: TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    fontSize: 25,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.grey[800])),
+                                          ],
+                                        ),
+                                        // Text(
+                                        //   'Change will take up to 5 minutes',
+                                        //   style: TextStyle(
+                                        //     color: Colors.grey[600],
+                                        //     fontFamily: 'Inter',
+                                        //     fontSize: 12,
+                                        //   ),
+                                        // ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                        width: 75,
+                                        child: FaIcon(FontAwesomeIcons.accusoft,
+                                            color: Colors.blue, size: 50.0))
+                                  ],
+                                ),
+                              ),
                             ),
                           ],
                         ),
                       ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.all(15),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomCard(
-                                  cardColor: Colors.grey[50],
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text('Total Earning',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Inter',
-                                                      color: Colors.grey[600])),
-                                              Text('RM 129.00',
-                                                  style: TextStyle(
-                                                      fontFamily: 'Inter',
-                                                      fontSize: 25,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.grey[600])),
-                                            ],
-                                          ),
-                                          Text(
-                                            'Change will take up to 5 minutes',
-                                            style: TextStyle(
-                                              color: Colors.grey[600],
-                                              fontFamily: 'Inter',
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                          width: 75,
-                                          child: FaIcon(FontAwesomeIcons.coins,
-                                              color: Colors.orange.shade700,
-                                              size: 50.0))
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 2.5),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomCard(
-                                  cardColor: Colors.grey[50],
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text('Total Upcoming Job',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Inter',
-                                                      color: Colors.grey[600])),
-                                              Text('6',
-                                                  style: TextStyle(
-                                                      fontFamily: 'Inter',
-                                                      fontSize: 25,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.grey[600])),
-                                            ],
-                                          ),
-                                          Text(
-                                            'Change will take up to 5 minutes',
-                                            style: TextStyle(
-                                              color: Colors.grey[600],
-                                              fontFamily: 'Inter',
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                          width: 75,
-                                          child: FaIcon(
-                                              FontAwesomeIcons.accusoft,
-                                              color: Colors.blue,
-                                              size: 50.0))
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
             Expanded(
-              flex: 1,
+              flex: 3,
               child: Container(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.grey[50],
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
                   ),
                 ),
                 child: Column(
                   children: [
-                    CustomCard(
-                      cardColor: Colors.grey[50],
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const FaIcon(
-                                FontAwesomeIcons.bell,
-                                color: Colors.orange,
-                                size: 20,
-                              ),
-                              const SizedBox(width: 7.5),
-                              Text(
-                                'Notification',
-                                style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            'Change will take up to 5 minutes',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontFamily: 'Inter',
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // CustomCard(
+                    //   cardColor: Colors.grey[50],
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       Row(
+                    //         children: [
+                    //           const FaIcon(
+                    //             FontAwesomeIcons.bell,
+                    //             color: Colors.orange,
+                    //             size: 20,
+                    //           ),
+                    //           const SizedBox(width: 7.5),
+                    //           Text(
+                    //             'Notification',
+                    //             style: TextStyle(
+                    //                 color: Colors.grey[600],
+                    //                 fontFamily: 'Inter',
+                    //                 fontWeight: FontWeight.bold,
+                    //                 fontSize: 12),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //       const SizedBox(height: 4),
+                    //       const Text(
+                    //         'Change will take up to 5 minutes',
+                    //         style: TextStyle(
+                    //           color: Colors.red,
+                    //           fontFamily: 'Inter',
+                    //           fontSize: 12,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     Expanded(
                       child: Column(
                         children: [
-                          CustomCard(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 5),
-                            cardColor: Colors.white,
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/services');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20),
+                            ).copyWith(
+                              overlayColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                              shadowColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                              surfaceTintColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.home_repair_service,
-                                      size: 20,
-                                      color: Color.fromRGBO(24, 52, 92, 1),
-                                    ),
-                                    const SizedBox(width: 15),
-                                    Text(
-                                      'Services',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Inter',
-                                        fontSize: 13,
-                                        color: Colors.grey[800],
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  'Services',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    color: Colors.grey[800],
+                                  ),
                                 ),
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.pushNamed(context, '/services');
-                                    },
-                                    icon: FaIcon(
-                                      FontAwesomeIcons.chevronRight,
-                                      color: Colors.grey[600],
-                                      size: 16,
-                                    ))
+                                SizedBox(
+                                  width: 35,
+                                  child: FaIcon(
+                                    FontAwesomeIcons.wrench,
+                                    size: 20,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
-                          CustomCard(
-                            cardColor: Colors.white,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 5),
+                          SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/task_prefences');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20),
+                            ).copyWith(
+                              overlayColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                              shadowColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                              surfaceTintColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.home_repair_service,
-                                      size: 20,
-                                      color: Color.fromRGBO(24, 52, 92, 1),
-                                    ),
-                                    const SizedBox(width: 15),
-                                    Text(
-                                      'Task Preferences',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Inter',
-                                        fontSize: 13,
-                                        color: Colors.grey[800],
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  'Task Preferences',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    color: Colors.grey[800],
+                                  ),
                                 ),
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.pushNamed(
-                                          context, '/task_prefences');
-                                    },
-                                    icon: FaIcon(
-                                      FontAwesomeIcons.chevronRight,
-                                      color: Colors.grey[600],
-                                      size: 16,
-                                    ))
+                                SizedBox(
+                                  width: 35,
+                                  child: FaIcon(
+                                    FontAwesomeIcons.briefcase,
+                                    size: 20,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
-                          CustomCard(
-                            cardColor: Colors.white,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 5),
+                          SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/my_booking');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20),
+                            ).copyWith(
+                              overlayColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                              shadowColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                              surfaceTintColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.home_repair_service,
-                                      size: 20,
-                                      color: Color.fromRGBO(24, 52, 92, 1),
-                                    ),
-                                    const SizedBox(width: 15),
-                                    Text(
-                                      'My Booking',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Inter',
-                                        fontSize: 13,
-                                        color: Colors.grey[800],
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  'My Booking',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    color: Colors.grey[800],
+                                  ),
                                 ),
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.pushNamed(
-                                          context, '/my_booking');
-                                    },
-                                    icon: FaIcon(
-                                      FontAwesomeIcons.chevronRight,
-                                      color: Colors.grey[600],
-                                      size: 16,
-                                    ))
+                                SizedBox(
+                                  width: 35,
+                                  child: FaIcon(
+                                    FontAwesomeIcons.calendarCheck,
+                                    size: 20,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
