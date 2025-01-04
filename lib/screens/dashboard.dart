@@ -112,14 +112,6 @@ class _DashboardState extends State<Dashboard> {
                                                     color: Colors.grey[800])),
                                           ],
                                         ),
-                                        // Text(
-                                        //   'Change will take up to 5 minutes',
-                                        //   style: TextStyle(
-                                        //     color: Colors.grey[600],
-                                        //     fontFamily: 'Inter',
-                                        //     fontSize: 12,
-                                        //   ),
-                                        // ),
                                       ],
                                     ),
                                     SizedBox(
@@ -165,14 +157,6 @@ class _DashboardState extends State<Dashboard> {
                                                     color: Colors.grey[800])),
                                           ],
                                         ),
-                                        // Text(
-                                        //   'Change will take up to 5 minutes',
-                                        //   style: TextStyle(
-                                        //     color: Colors.grey[600],
-                                        //     fontFamily: 'Inter',
-                                        //     fontSize: 12,
-                                        //   ),
-                                        // ),
                                       ],
                                     ),
                                     SizedBox(
@@ -204,41 +188,6 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 child: Column(
                   children: [
-                    // CustomCard(
-                    //   cardColor: Colors.grey[50],
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       Row(
-                    //         children: [
-                    //           const FaIcon(
-                    //             FontAwesomeIcons.bell,
-                    //             color: Colors.orange,
-                    //             size: 20,
-                    //           ),
-                    //           const SizedBox(width: 7.5),
-                    //           Text(
-                    //             'Notification',
-                    //             style: TextStyle(
-                    //                 color: Colors.grey[600],
-                    //                 fontFamily: 'Inter',
-                    //                 fontWeight: FontWeight.bold,
-                    //                 fontSize: 12),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       const SizedBox(height: 4),
-                    //       const Text(
-                    //         'Change will take up to 5 minutes',
-                    //         style: TextStyle(
-                    //           color: Colors.red,
-                    //           fontFamily: 'Inter',
-                    //           fontSize: 12,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
                     Expanded(
                       child: Column(
                         children: [

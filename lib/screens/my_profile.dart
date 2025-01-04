@@ -310,29 +310,30 @@ class _MyProfileState extends State<MyProfile> {
             SingleChildScrollView(
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: Center(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.grey.shade500,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: CircleAvatar(
-                            radius: 45,
-                            backgroundImage: NetworkImage(
-                                'https://servenow.com.my/storage/$photo'),
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(vertical: 20),
+                    //   child: Center(
+                    //     child: Container(
+                    //       decoration: BoxDecoration(
+                    //         shape: BoxShape.circle,
+                    //         border: Border.all(
+                    //           color: Colors.grey.shade500,
+                    //           width: 1.5,
+                    //         ),
+                    //       ),
+                    //       child: CircleAvatar(
+                    //         radius: 45,
+                    //         backgroundImage: NetworkImage(
+                    //             'https://servenow.com.my/storage/$photo'
+                    //             ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Text(

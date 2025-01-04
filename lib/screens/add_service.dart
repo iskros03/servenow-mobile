@@ -143,52 +143,43 @@ class _AddServiceState extends State<AddService> {
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.all(Radius.circular(10))),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    padding: EdgeInsets.all(12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          padding: EdgeInsets.all(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'State',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.grey[800]),
-                              ),
-                            ],
-                          ),
-                        ),
-                        CustomDropdownMenu(
-                          titleValue: serviceTypeTitle,
-                          titleSelect: 'Service Type',
-                          items: serviceType
-                              .map((serviceTypeName) =>
-                                  serviceTypeName['servicetype_name']
-                                      .toString())
-                              .toList(),
-                          onSelected: (selectedValue) {
-                            setState(() {
-                              selectedServiceTypeId = serviceType.firstWhere(
-                                      (service) =>
-                                          service['servicetype_name'] ==
-                                          selectedValue)[
-                                  'id']; // Get the ID based on selected name
-                              serviceTypeTitle =
-                                  selectedValue; // Update the title
-                            });
-                          },
+                        Text(
+                          'State',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey[800]),
                         ),
                       ],
                     ),
+                  ),
+                  CustomDropdownMenu(
+                    titleValue: serviceTypeTitle,
+                    titleSelect: 'Service Type',
+                    items: serviceType
+                        .map((serviceTypeName) =>
+                            serviceTypeName['servicetype_name']
+                                .toString())
+                        .toList(),
+                    onSelected: (selectedValue) {
+                      setState(() {
+                        selectedServiceTypeId = serviceType.firstWhere(
+                                (service) =>
+                                    service['servicetype_name'] ==
+                                    selectedValue)[
+                            'id']; // Get the ID based on selected name
+                        serviceTypeTitle =
+                            selectedValue; // Update the title
+                      });
+                    },
                   ),
                 ],
               ),
@@ -198,116 +189,101 @@ class _AddServiceState extends State<AddService> {
               decoration: BoxDecoration(
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.all(Radius.circular(10))),
-              child: Column(
-                children: [
-                  Row(children: [
-                    Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(12),
-                              child: Text(
-                                'Rate',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.grey[800]),
-                              ),
-                            ),
-                            const SizedBox(height: 2.5),
-                            CustomTextField(
-                              controller: serviceRateController,
-                              obscureText: false,
-                              prefixText: 'RM ',
-                              keyboardType: TextInputType.numberWithOptions(
-                                  decimal: true),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                    RegExp(r'^\d+\.?\d{0,2}')),
-                              ],
-                            ),
-                          ],
-                        )),
-                    const SizedBox(width: 15),
-                    Expanded(
-                      flex: 4,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(width: 12.5),
-                          Container(
-                            padding: EdgeInsets.all(12),
-                            child: Text(
-                              'Rate Type',
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey[800]),
-                            ),
-                          ),
-                          const SizedBox(height: 2.5),
-                          CustomDropdownMenu(
-                            titleSelect: 'Rate Type',
-                            items: rateType,
-                            titleValue: rateTypeTitle,
-                            onSelected: (selectedValue) {
-                              setState(() {
-                                selectedRateType = selectedValue;
-                                rateTypeTitle = selectedValue;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ]),
-                ],
-              ),
-            ),
-            const SizedBox(height: 15),
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Row(children: [
+                Expanded(
+                    flex: 3,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           padding: EdgeInsets.all(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Service Description',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.grey[800]),
-                              ),
-                            ],
+                          child: Text(
+                            'Rate',
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.normal,
+                                color: Colors.grey[800]),
                           ),
                         ),
                         CustomTextField(
-                          labelText: 'Enter your description ...',
-                          controller: serviceDescriptionController,
+                          controller: serviceRateController,
                           obscureText: false,
-                          maxLines: 4,
-                        )
+                          prefixText: 'RM ',
+                          keyboardType: TextInputType.numberWithOptions(
+                              decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d+\.?\d{0,2}')),
+                          ],
+                        ),
                       ],
-                    ),
+                    )),
+                const SizedBox(width: 15),
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 12.5),
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        child: Text(
+                          'Rate Type',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey[800]),
+                        ),
+                      ),
+                      CustomDropdownMenu(
+                        titleSelect: 'Rate Type',
+                        items: rateType,
+                        titleValue: rateTypeTitle,
+                        onSelected: (selectedValue) {
+                          setState(() {
+                            selectedRateType = selectedValue;
+                            rateTypeTitle = selectedValue;
+                          });
+                        },
+                      ),
+                    ],
                   ),
-                ],
+                ),
+              ]),
+            ),
+            const SizedBox(height: 10),
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(12),
+                      child: Text(
+                        'Service Description',
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey[800]),
+                      ),
+                    ),
+                    CustomTextField(
+                      labelText: 'Enter your description ...',
+                      controller: serviceDescriptionController,
+                      obscureText: false,
+                      maxLines: 4,
+                    )
+                  ],
+                ),
               ),
             ),
           ],

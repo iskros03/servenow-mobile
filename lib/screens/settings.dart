@@ -217,17 +217,22 @@ class _SettingsState extends State<Settings> {
                               ],
                             ),
                           ),
-                          SizedBox(height: 10),
+                          // SizedBox(height: 10),
+                          Spacer(),
                           ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
+                              backgroundColor: Colors.red[50],
                               elevation: 0,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
+                                side: BorderSide(
+                                  color: Colors.red.shade50, // Border color
+                                  width: 2, // Border width
+                                ),
                               ),
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 20),
+                                  horizontal: 25, vertical: 10),
                             ).copyWith(
                               overlayColor:
                                   WidgetStateProperty.all(Colors.transparent),
@@ -236,27 +241,16 @@ class _SettingsState extends State<Settings> {
                               surfaceTintColor:
                                   WidgetStateProperty.all(Colors.transparent),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Logout',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Inter',
-                                    fontSize: 12,
-                                    color: Colors.red,
-                                  ),
+                            child: Center(
+                              child: Text(
+                                'Logout',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Inter',
+                                  fontSize: 12,
+                                  color: Colors.red,
                                 ),
-                                SizedBox(
-                                  width: 35,
-                                  child: FaIcon(
-                                    FontAwesomeIcons.doorOpen,
-                                    size: 20,
-                                    color: Colors.red[500],
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         ],

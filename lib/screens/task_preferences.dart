@@ -17,7 +17,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
   late Future<Map<String, String>> taskerDataFuture;
   late Map<String, String> initialTaskerData;
 
-  bool isPublic = true;
+  bool isPublic = false;
 
   String? selectedDate;
 
@@ -26,9 +26,8 @@ class _TaskPreferencesState extends State<TaskPreferences> {
 
   String? workingLocState;
   String? workingLocArea;
-
-  String? selectedWorkingType;
   int? selectedWorkingTypeValue;
+  int? workingStatus;
 
   List<Map<String, dynamic>> timeSlots = [];
   bool isLoadingTimeSlots = false;
@@ -93,6 +92,14 @@ class _TaskPreferencesState extends State<TaskPreferences> {
       workingLocState = data[0]['tasker_workingloc_state'];
       workingLocArea = data[0]['tasker_workingloc_area'];
       selectedWorkingTypeValue = data[0]['tasker_worktype'];
+
+      workingStatus = data[0]['tasker_working_status'];
+
+      if (workingStatus == 1) {
+        isPublic = true;
+      } else {
+        isPublic = false;
+      }
 
       initialTaskerData = {
         'tasker_workingloc_state': data[0]['tasker_workingloc_state'],
@@ -172,6 +179,51 @@ class _TaskPreferencesState extends State<TaskPreferences> {
           await taskerService.saveWorkingType(selectedWorkingTypeValue!);
 
       if (response['statusCode'] == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Center(
+              child: Text(
+                response['message'],
+                style: TextStyle(
+                    fontFamily: 'Inter',
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Center(
+              child: Text(
+                response['message'],
+                style: TextStyle(
+                    fontFamily: 'Inter',
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  void _changeTaskerVisibility() async {
+    try {
+      TaskerService taskerService = TaskerService();
+      final response = await taskerService.changeTaskerVisibility();
+
+      if (response['statusCode'] == 200) {
         print("Working type updated successfully.");
       } else {
         print("Failed to update working type.");
@@ -221,6 +273,35 @@ class _TaskPreferencesState extends State<TaskPreferences> {
       setState(() {
         isLoadingTimeSlots = false;
       });
+    }
+  }
+
+  Map<String, dynamic> getSlotStatus(int status) {
+    switch (status) {
+      case 0:
+        return {
+          'text': 'Unavailable',
+          'color': Colors.red[50],
+          'textColor': Colors.red[500]
+        };
+      case 1:
+        return {
+          'text': 'Available',
+          'color': Colors.green[50],
+          'textColor': Colors.green[500]
+        };
+      case 2:
+        return {
+          'text': 'Booked',
+          'color': Colors.orange[50],
+          'textColor': Colors.orange[500]
+        };
+      default:
+        return {
+          'text': 'Unknown',
+          'color': Colors.red[50],
+          'textColor': Colors.red[500]
+        };
     }
   }
 
@@ -337,7 +418,6 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                               : 'Select Working Type',
                           onSelected: (selectedValue) {
                             setState(() {
-                              selectedWorkingType = selectedValue;
                               selectedWorkingTypeValue =
                                   workingTypeMap[selectedValue];
                             });
@@ -395,87 +475,125 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                         : timeSlots.isNotEmpty
                             ? Stack(
                                 children: [
-                                  Scrollbar(
-                                    thumbVisibility: true,
-                                    child: ListView.builder(
-                                      itemCount: timeSlots.length,
-                                      itemBuilder: (context, index) {
-                                        final timeSlot = timeSlots[index];
-                                        return Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 2.5),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10)),
-                                              color: Colors.grey[100],
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                SizedBox(width: 15),
-                                                Container(
-                                                  padding: EdgeInsets.all(5),
-                                                  decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: timeSlot[
-                                                                  'slot_status'] ==
-                                                              1
-                                                          ? Colors.green
-                                                          : Colors.red),
-                                                ),
-                                                Expanded(
-                                                  child: Row(
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(12.0),
-                                                        child: Text(
-                                                          '${timeSlot['time'] ?? 'N/A'}',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Inter',
-                                                              color: Colors
-                                                                  .grey[800]),
-                                                        ),
-                                                      ),
-                                                      Spacer(),
-                                                      IconButton(
-                                                          onPressed: () {},
-                                                          icon: FaIcon(
-                                                            FontAwesomeIcons
-                                                                .pen,
-                                                            size: 15,
-                                                            color: Colors.grey,
-                                                          ))
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
+                                  Theme(
+                                    data: ThemeData(
+                                      highlightColor: Colors.grey[300],
                                     ),
-                                  ),
-                                  Positioned(
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                    child: Container(
-                                      height: 25,
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            Colors.grey.shade50.withOpacity(0),
-                                            Colors.grey.shade50.withOpacity(1),
-                                          ],
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                        ),
+                                    child: Scrollbar(
+                                      thumbVisibility: true,
+                                      radius: Radius.circular(8.0),
+                                      thickness: 5.0,
+                                      child: ListView.builder(
+                                        itemCount: timeSlots.length,
+                                        itemBuilder: (context, index) {
+                                          final timeSlot = timeSlots[index];
+                                          int status = timeSlot['slot_status'];
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 2.5),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10)),
+                                                color: Colors.white,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(width: 12),
+                                                  Container(
+                                                    width: 125,
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        width: 1.5,
+                                                        color: getSlotStatus(
+                                                            status)['color'],
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  5)),
+                                                      color: getSlotStatus(
+                                                          status)['color'],
+                                                    ),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 5),
+                                                    child: Text(
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      getSlotStatus(
+                                                          status)['text'],
+                                                      style: TextStyle(
+                                                        fontFamily: 'Inter',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 12,
+                                                        color: getSlotStatus(
+                                                                status)[
+                                                            'textColor'],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(12.0),
+                                                          child: Text(
+                                                            '${timeSlot['time'] ?? 'N/A'}',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                color: Colors
+                                                                    .grey[800]),
+                                                          ),
+                                                        ),
+                                                        Spacer(),
+                                                        timeSlot['slot_status'] ==
+                                                                2
+                                                            ? SizedBox.shrink()
+                                                            : IconButton(
+                                                                onPressed:
+                                                                    () {},
+                                                                icon: FaIcon(
+                                                                  FontAwesomeIcons
+                                                                      .pen,
+                                                                  size: 15,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                ))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
                                   ),
+                                  // Positioned(
+                                  //   left: 0,
+                                  //   right: 0,
+                                  //   bottom: 0,
+                                  //   child: Container(
+                                  //     height: 25,
+                                  //     decoration: BoxDecoration(
+                                  //       gradient: LinearGradient(
+                                  //         colors: [
+                                  //           Colors.grey.shade50.withOpacity(0),
+                                  //           Colors.grey.shade50.withOpacity(1),
+                                  //         ],
+                                  //         begin: Alignment.topCenter,
+                                  //         end: Alignment.bottomCenter,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               )
                             : Container(
@@ -496,21 +614,27 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                                 ),
                               ),
                   ),
-                  SizedBox(height: 15),
                   timeSlots.isEmpty
-                      ? SizedBox(
-                          width: double.infinity,
-                          child: CustomEleButton(
-                            text: 'Generate',
-                            onPressed: () {
-                              _createTimeSlot();
-                            },
-                            bgColor: Color.fromRGBO(24, 52, 92, 1),
-                            fgColor: Colors.white,
-                          ),
+                      ? Column(
+                          children: [
+                            SizedBox(height: 15),
+                            SizedBox(
+                              width: double.infinity,
+                              child: CustomEleButton(
+                                text: 'Generate',
+                                onPressed: () {
+                                  _createTimeSlot();
+                                },
+                                bgColor: Color.fromRGBO(24, 52, 92, 1),
+                                fgColor: Colors.white,
+                                borderWidth: 2,
+                                borderColor: Colors.white,
+                              ),
+                            ),
+                            // SizedBox(height: 50),
+                          ],
                         )
                       : SizedBox(),
-                  SizedBox(height: 45),
                 ],
               ),
             ),
@@ -545,105 +669,103 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                             onChanged: (value) {
                               setState(() {
                                 isPublic = value;
+                                _changeTaskerVisibility();
                               });
                             },
                             activeColor: Colors.white,
-                            inactiveThumbColor: Colors.grey,
-                            activeTrackColor: Colors.grey,
-                            inactiveTrackColor: Colors.grey.shade300,
+                            inactiveThumbColor: Color.fromRGBO(24, 52, 92, 1),
+                            activeTrackColor: Color.fromRGBO(24, 52, 92, 1),
+                            inactiveTrackColor: Colors.white,
                           ),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 25),
-                  Visibility(
-                    visible: isPublic,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Text(
-                            'Working Preferred Location',
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Inter',
-                                color: Colors.grey[800]),
-                          ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Text(
+                          'Working Preferred Location',
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Inter',
+                              color: Colors.grey[800]),
                         ),
-                        const SizedBox(height: 10),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(12),
-                                child: Text(
-                                  'State',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.grey[800]),
-                                ),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(12),
+                              child: Text(
+                                'State',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.grey[800]),
                               ),
-                              CustomDropdownMenu(
-                                items: states,
-                                titleSelect: 'Select State',
-                                titleValue: workingLocState ?? 'Select State',
-                                onSelected: (selectedValue) {
-                                  setState(() {
-                                    workingLocState = selectedValue;
-                                    workingLocArea = null;
-                                  });
-                                  fetchAreaNames(selectedValue);
-                                },
-                              ),
-                            ],
-                          ),
+                            ),
+                            CustomDropdownMenu(
+                              items: states,
+                              titleSelect: 'Select State',
+                              titleValue: workingLocState ?? 'Select State',
+                              onSelected: (selectedValue) {
+                                setState(() {
+                                  workingLocState = selectedValue;
+                                  workingLocArea = null;
+                                });
+                                fetchAreaNames(selectedValue);
+                              },
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 15),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(12),
-                                child: Text(
-                                  'Area',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.grey[800]),
-                                ),
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(12),
+                              child: Text(
+                                'Area',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.grey[800]),
                               ),
-                              CustomDropdownMenu(
-                                items: areas,
-                                titleSelect: 'Select Area',
-                                titleValue: workingLocArea ?? 'Select Area',
-                                onSelected: (selectedValue) {
-                                  setState(() {
-                                    workingLocArea = selectedValue;
-                                  });
-                                },
-                                isEnabled: states.isNotEmpty,
-                              ),
-                            ],
-                          ),
+                            ),
+                            CustomDropdownMenu(
+                              items: areas,
+                              titleSelect: 'Select Area',
+                              titleValue: workingLocArea ?? 'Select Area',
+                              onSelected: (selectedValue) {
+                                setState(() {
+                                  workingLocArea = selectedValue;
+                                });
+                              },
+                              isEnabled: states.isNotEmpty,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -704,14 +826,16 @@ class WeekButtonsState extends State<WeekButtons> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                     side: BorderSide(
-                      color: isSelected
-                          ? Color.fromRGBO(24, 52, 92, 1)
-                          : Colors.grey.shade300,
-                      width: 1,
+                      color: isSelected ? Colors.grey.shade500 : Colors.white,
+                      width: 1.5,
                     ),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   elevation: 0,
+                ).copyWith(
+                  overlayColor: WidgetStateProperty.all(Colors.transparent),
+                  shadowColor: WidgetStateProperty.all(Colors.transparent),
+                  surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
                 ),
                 onPressed: () {
                   setState(() {

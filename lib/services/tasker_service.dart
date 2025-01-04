@@ -203,6 +203,36 @@ class TaskerService {
     }
   }
 
+  Future<Map<String, dynamic>> changeTaskerVisibility() async {
+    final TaskerAuth taskerAuth = TaskerAuth();
+    try {
+      final token = await taskerAuth.getToken();
+      final url =
+          Uri.parse('${dotenv.env['DOMAIN']}/api/change-tasker-visibility');
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.body.isNotEmpty) {
+        final responseData = jsonDecode(response.body);
+        print('object');
+         return {
+          'statusCode': response.statusCode,
+          'data': responseData,
+        };
+      } else {
+        throw Exception('Failed to toggle visibility: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception("Failed to fetch API: $e");
+    }
+  }
+
   Future<Map<String, dynamic>> createTimeSlot(String date) async {
     final TaskerAuth taskerAuth = TaskerAuth();
     try {

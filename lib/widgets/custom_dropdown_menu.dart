@@ -16,6 +16,15 @@ class CustomDropdownMenu extends StatelessWidget {
     this.isEnabled = true, // Default to enabled
   });
 
+  String capitalizeFirstLetter(String str) {
+    List<String> words = str.split(' ');
+    for (int i = 0; i < words.length; i++) {
+      words[i] =
+          words[i][0].toUpperCase() + words[i].substring(1).toLowerCase();
+    }
+    return words.join(' ');
+  }
+
   void _showBottomSheet(BuildContext context) {
     if (!isEnabled) return; // Do nothing if not enabled
 
@@ -102,8 +111,7 @@ class CustomDropdownMenu extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Text(
-                '${titleValue?.substring(0, 1).toUpperCase()}${titleValue?.substring(1)}',
+            Text(capitalizeFirstLetter('$titleValue'),
                 style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'Inter',

@@ -16,7 +16,7 @@ class CustomEleButton extends StatelessWidget {
     required this.onPressed,
     required this.bgColor,
     required this.fgColor,
-    this.borderRadius = 8.0,
+    this.borderRadius = 10.0,
     this.borderColor = const Color.fromRGBO(24, 52, 92, 1),
     this.borderWidth = 1.0,
     this.fontSize = 14,
@@ -27,7 +27,7 @@ class CustomEleButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 17.5, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         backgroundColor: bgColor,
         foregroundColor: fgColor,
         elevation: 0,
