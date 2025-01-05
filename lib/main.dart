@@ -10,6 +10,7 @@ import 'package:servenow_mobile/screens/services.dart';
 import 'package:servenow_mobile/screens/sign_in.dart';
 import 'package:servenow_mobile/screens/sign_up.dart';
 import 'package:servenow_mobile/screens/task_preferences.dart';
+import 'package:servenow_mobile/screens/update_timeslot_availability.dart';
 
 
 
@@ -30,6 +31,7 @@ Future<void> main() async {
       '/manage_service': (context) => const ManageService(),
       '/task_prefences': (context) => const TaskPreferences(),
       '/my_booking': (context) => const MyBooking(),
+      '/update_time_slot': (context) => const UpdateTimeslotAvailability(),
     }
   ));
 }

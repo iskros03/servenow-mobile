@@ -28,7 +28,6 @@ class _DashboardState extends State<Dashboard> {
         taskerFirstName = data[0]['tasker_firstname'];
         taskerProfilePhoto = data[0]['tasker_photo'];
       });
-      print('Fetched Data: $data');
     } catch (e) {
       print('Error occurred: $e');
     }

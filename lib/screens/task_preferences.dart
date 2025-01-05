@@ -363,7 +363,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                         fontFamily: 'Inter',
                         color: Colors.orange[300],
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     ),
             ),
@@ -381,13 +381,13 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                     child: Text(
                       'Preferred Working Type',
                       style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 13,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Inter',
                           color: Colors.grey[800]),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 7.5),
                   Container(
                     decoration: BoxDecoration(
                         color: Colors.grey[100],
@@ -433,13 +433,13 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                     child: Text(
                       'Date',
                       style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 13,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Inter',
                           color: Colors.grey[800]),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 7.5),
                   WeekButtons(
                     initialDate: selectedDate!,
                     onDateSelected: (date) {
@@ -455,13 +455,13 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                     child: Text(
                       'Time Slot',
                       style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 13,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Inter',
                           color: Colors.grey[800]),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 7.5),
                   Expanded(
                     child: isLoadingTimeSlots
                         ? Center(
@@ -469,7 +469,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                             'Loading...',
                             style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: 14,
+                                fontSize: 13,
                                 color: Colors.grey[600]),
                           ))
                         : timeSlots.isNotEmpty
@@ -501,7 +501,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                                                 children: [
                                                   SizedBox(width: 12),
                                                   Container(
-                                                    width: 125,
+                                                    width: 100,
                                                     decoration: BoxDecoration(
                                                       border: Border.all(
                                                         width: 1.5,
@@ -517,8 +517,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                                                     ),
                                                     padding: const EdgeInsets
                                                         .symmetric(
-                                                        horizontal: 15,
-                                                        vertical: 5),
+                                                        vertical: 2.5),
                                                     child: Text(
                                                       textAlign:
                                                           TextAlign.center,
@@ -528,7 +527,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                                                         fontFamily: 'Inter',
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        fontSize: 12,
+                                                        fontSize: 10,
                                                         color: getSlotStatus(
                                                                 status)[
                                                             'textColor'],
@@ -547,6 +546,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                                                             style: TextStyle(
                                                                 fontFamily:
                                                                     'Inter',
+                                                                fontSize: 13,
                                                                 color: Colors
                                                                     .grey[800]),
                                                           ),
@@ -555,16 +555,24 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                                                         timeSlot['slot_status'] ==
                                                                 2
                                                             ? SizedBox.shrink()
-                                                            : IconButton(
-                                                                onPressed:
-                                                                    () {},
-                                                                icon: FaIcon(
-                                                                  FontAwesomeIcons
-                                                                      .pen,
-                                                                  size: 15,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                ))
+                                                            : SizedBox(
+                                                                height: 35,
+                                                                child:
+                                                                    IconButton(
+                                                                        onPressed:
+                                                                            () {
+                                                                              Navigator.pushNamed(context, '/update_time_slot');
+                                                                            },
+                                                                        icon:
+                                                                            FaIcon(
+                                                                          FontAwesomeIcons
+                                                                              .pen,
+                                                                          size:
+                                                                              15,
+                                                                          color:
+                                                                              Colors.grey,
+                                                                        )),
+                                                              )
                                                       ],
                                                     ),
                                                   ),
@@ -608,7 +616,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                                   'No time slots available. Please generate.',
                                   style: TextStyle(
                                     fontFamily: 'Inter',
-                                    fontSize: 14,
+                                    fontSize: 13,
                                     color: Colors.grey[600],
                                   ),
                                 ),
@@ -655,7 +663,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                         Text(
                           'Profile Visibility',
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 13,
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.bold,
                             color: Colors.grey[800],
@@ -673,8 +681,8 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                               });
                             },
                             activeColor: Colors.white,
-                            inactiveThumbColor: Color.fromRGBO(24, 52, 92, 1),
-                            activeTrackColor: Color.fromRGBO(24, 52, 92, 1),
+                            inactiveThumbColor: Colors.greenAccent,
+                            activeTrackColor: Colors.greenAccent,
                             inactiveTrackColor: Colors.white,
                           ),
                         ),
@@ -690,13 +698,13 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                         child: Text(
                           'Working Preferred Location',
                           style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 13,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Inter',
                               color: Colors.grey[800]),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 7.5),
                       Container(
                         decoration: BoxDecoration(
                             color: Colors.grey[100],
@@ -830,7 +838,7 @@ class WeekButtonsState extends State<WeekButtons> {
                       width: 1.5,
                     ),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: EdgeInsets.symmetric(vertical: 7.5),
                   elevation: 0,
                 ).copyWith(
                   overlayColor: WidgetStateProperty.all(Colors.transparent),

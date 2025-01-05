@@ -396,7 +396,7 @@ class _ManageServiceState extends State<ManageService> {
                       text: 'Delete',
                       onPressed: _showDeleteConfirmation,
                       bgColor: Colors.red[50],
-                      borderWidth: 2,
+                      borderWidth: 0,
                       borderColor: Colors.white,
                       fgColor: Colors.red),
                 ),

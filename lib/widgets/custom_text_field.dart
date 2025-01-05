@@ -28,19 +28,19 @@ class CustomTextField extends StatelessWidget {
     return TextField(
       controller: controller,
       style:
-          TextStyle(fontFamily: 'Inter', fontSize: 14, color: Colors.grey[600]),
+          TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.grey[600]),
       obscureText: obscureText,
       maxLines: maxLines,
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
       decoration: InputDecoration(
-        contentPadding: const EdgeInsets.all(12.5),
+        contentPadding: const EdgeInsets.symmetric(vertical: 12,horizontal: 12),
         filled: true,
         fillColor: Colors.white,
         hintText: labelText,
         floatingLabelBehavior: FloatingLabelBehavior.always,
         hintStyle: TextStyle(
-            fontFamily: 'Inter', fontSize: 14, color: Colors.grey[400]),
+            fontFamily: 'Inter', fontSize: 13, color: Colors.grey[400]),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
           borderSide:
@@ -54,7 +54,7 @@ class CustomTextField extends StatelessWidget {
         prefixText: prefixText,
         prefixStyle: TextStyle(
           color: Colors.grey[800],
-          fontSize: 14,
+          fontSize: 13,
           fontWeight: FontWeight.normal,
         ),
         suffixIcon: onEyeTap != null

@@ -80,7 +80,6 @@ class _SignInState extends State<SignIn> {
 
       if (data['statusCode'] == 200) {
         final token = data['data']['token'];
-        print('Token: $token');
 
         await taskerAuth.saveToken(token);
         Navigator.pushReplacementNamed(context, '/home');

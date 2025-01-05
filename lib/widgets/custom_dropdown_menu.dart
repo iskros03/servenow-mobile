@@ -72,7 +72,7 @@ class CustomDropdownMenu extends StatelessWidget {
                         items[index],
                         style: TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 14,
+                            fontSize: 13,
                             fontWeight: FontWeight.normal,
                             color: Colors.grey[800]),
                       ),
@@ -98,7 +98,7 @@ class CustomDropdownMenu extends StatelessWidget {
           ? () => _showBottomSheet(context)
           : null, // Open bottom sheet only if enabled
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -113,7 +113,7 @@ class CustomDropdownMenu extends StatelessWidget {
           children: [
             Text(capitalizeFirstLetter('$titleValue'),
                 style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 13,
                     fontFamily: 'Inter',
                     color: isEnabled
                         ? Colors.grey[800]

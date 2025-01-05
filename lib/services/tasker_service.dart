@@ -221,7 +221,7 @@ class TaskerService {
       if (response.body.isNotEmpty) {
         final responseData = jsonDecode(response.body);
         print('object');
-         return {
+        return {
           'statusCode': response.statusCode,
           'data': responseData,
         };
@@ -284,6 +284,38 @@ class TaskerService {
         }
       } else {
         throw Exception('Failed to load time slots: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception("Failed to fetch API: $e");
+    }
+  }
+
+  Future<Map<String, dynamic>> changeTimeSlotAvailablility(
+      String id, String slotStatus) async {
+    final TaskerAuth taskerAuth = TaskerAuth();
+    try {
+      final token = await taskerAuth.getToken();
+      final url = Uri.parse('${dotenv.env['DOMAIN']}/api/update-time-slot-$id');
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode({
+          'slot_status': slotStatus,
+        }),
+      );
+
+      if (response.body.isNotEmpty) {
+        final responseData = jsonDecode(response.body);
+        return {
+          'statusCode': response.statusCode,
+          'data': responseData,
+        };
+      } else {
+        throw Exception('Failed to update the working type');
       }
     } catch (e) {
       throw Exception("Failed to fetch API: $e");

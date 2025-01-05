@@ -149,21 +149,21 @@ class _ServicesState extends State<Services> {
                         children: [
                           Row(
                             children: [
-                              Text(
-                                'Total Service : ',
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[600]),
-                              ),
-                              Text(
-                                '${services.length}',
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[600]),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 20),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5))),
+                                child: Text(
+                                  'Total Service : ${services.length}',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600]),
+                                ),
                               ),
                             ],
                           ),
@@ -342,7 +342,7 @@ class _ServicesState extends State<Services> {
                                     ),
                                     SizedBox(height: 15),
                                     Container(
-                                      width: 125,
+                                      width: 100,
                                       decoration: BoxDecoration(
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(5)),
@@ -357,7 +357,7 @@ class _ServicesState extends State<Services> {
                                         style: TextStyle(
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 12,
+                                          fontSize: 10,
                                           color: getServiceStatus(
                                               status)['textColor'],
                                         ),
