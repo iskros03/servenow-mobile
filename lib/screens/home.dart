@@ -26,8 +26,8 @@ class _HomeState extends State<Home> {
       body: IndexedStack(
         index: _currentIndex,
         children: const [
-          Dashboard(),
           Try(),
+          Dashboard(),
           Settings(),
         ],
       ),
