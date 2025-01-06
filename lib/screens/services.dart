@@ -135,86 +135,134 @@ class _ServicesState extends State<Services> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                child: Column(
-                  children: [
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 20),
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                                child: Text(
-                                  'Total Service : ${services.length}',
+              Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 60,
+                              child: Text(
+                                textAlign: TextAlign.start,
+                                'Services',
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[600]),
+                              ),
+                            ),
+                            Text(
+                              '${services.length}',
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[600]),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 60,
+                                  child: Text(
+                                    textAlign: TextAlign.start,
+                                    'Per Hour',
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[600]),
+                                  ),
+                                ),
+                                Text(
+                                  '23',
                                   style: TextStyle(
                                       fontFamily: 'Inter',
-                                      fontSize: 13,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.grey[600]),
                                 ),
-                              ),
-                            ],
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AddService()),
-                              ).then((result) {
-                                if (result == true) {
-                                  _loadTaskerServiceList(); // Refresh the service list
-                                }
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromRGBO(24, 52, 92, 1),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              side: BorderSide(
-                                color: Colors.white,
-                                width: 2,
-                              ),
-                            ).copyWith(
-                              overlayColor:
-                                  WidgetStateProperty.all(Colors.transparent),
-                              shadowColor:
-                                  WidgetStateProperty.all(Colors.transparent),
-                              surfaceTintColor:
-                                  WidgetStateProperty.all(Colors.transparent),
+                              ],
                             ),
-                            child: Text(
-                              'Add Service',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 60,
+                                  child: Text(
+                                    textAlign: TextAlign.start,
+                                    'Per Job',
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[600]),
+                                  ),
+                                ),
+                                Text(
+                                  '10',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600]),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+                          controller: searchController,
+                          labelText: 'Search any service',
+                        ),
                       ),
-                    ),
-                    CustomTextField(
-                      controller: searchController,
-                      labelText: 'Search Service...',
-                    ),
-                  ],
-                ),
+                      SizedBox(width: 12),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddService()),
+                          ).then((result) {
+                            if (result == true) {
+                              _loadTaskerServiceList(); // Refresh the service list
+                            }
+                          });
+                        },
+                        style: IconButton.styleFrom().copyWith(
+                          overlayColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                          shadowColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                          surfaceTintColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                        ),
+                        icon: Icon(
+                          Icons.add_circle,
+                          color: Colors.orange[500],
+                          size: 30,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               SizedBox(height: 25),
               Expanded(
@@ -238,7 +286,7 @@ class _ServicesState extends State<Services> {
                               backgroundColor: Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(5),
                               ),
                               padding: EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 20),

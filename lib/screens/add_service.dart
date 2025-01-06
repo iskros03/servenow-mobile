@@ -128,7 +128,7 @@ class _AddServiceState extends State<AddService> {
                 fontFamily: 'Inter',
                 color: Colors.orange[300],
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontSize: 13,
               ),
             ),
           ),
@@ -141,24 +141,19 @@ class _AddServiceState extends State<AddService> {
             Container(
               decoration: BoxDecoration(
                   color: Colors.grey[100],
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     padding: EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'State',
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.normal,
-                              color: Colors.grey[800]),
-                        ),
-                      ],
+                    child: Text(
+                      'State',
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey[800]),
                     ),
                   ),
                   CustomDropdownMenu(
@@ -188,7 +183,7 @@ class _AddServiceState extends State<AddService> {
             Container(
               decoration: BoxDecoration(
                   color: Colors.grey[100],
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
               child: Row(children: [
                 Expanded(
                     flex: 3,
@@ -257,11 +252,11 @@ class _AddServiceState extends State<AddService> {
             Container(
               decoration: BoxDecoration(
                   color: Colors.grey[100],
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
               child: Container(
                 decoration: BoxDecoration(
                     color: Colors.grey[100],
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

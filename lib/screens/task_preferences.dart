@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:servenow_mobile/screens/update_timeslot_availability.dart';
 import 'package:servenow_mobile/services/tasker_service.dart';
 import 'package:servenow_mobile/services/tasker_user.dart';
 import 'package:servenow_mobile/widgets/custom_dropdown_menu.dart';
@@ -221,13 +222,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
   void _changeTaskerVisibility() async {
     try {
       TaskerService taskerService = TaskerService();
-      final response = await taskerService.changeTaskerVisibility();
-
-      if (response['statusCode'] == 200) {
-        print("Working type updated successfully.");
-      } else {
-        print("Failed to update working type.");
-      }
+      await taskerService.changeTaskerVisibility();
     } catch (e) {
       print("Error: $e");
     }
@@ -391,7 +386,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                   Container(
                     decoration: BoxDecoration(
                         color: Colors.grey[100],
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -534,48 +529,53 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                                                       ),
                                                     ),
                                                   ),
-                                                  Expanded(
-                                                    child: Row(
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(12.0),
-                                                          child: Text(
-                                                            '${timeSlot['time'] ?? 'N/A'}',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Inter',
-                                                                fontSize: 13,
-                                                                color: Colors
-                                                                    .grey[800]),
-                                                          ),
-                                                        ),
-                                                        Spacer(),
-                                                        timeSlot['slot_status'] ==
-                                                                2
-                                                            ? SizedBox.shrink()
-                                                            : SizedBox(
-                                                                height: 35,
-                                                                child:
-                                                                    IconButton(
-                                                                        onPressed:
-                                                                            () {
-                                                                              Navigator.pushNamed(context, '/update_time_slot');
-                                                                            },
-                                                                        icon:
-                                                                            FaIcon(
-                                                                          FontAwesomeIcons
-                                                                              .pen,
-                                                                          size:
-                                                                              15,
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        )),
-                                                              )
-                                                      ],
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            12.0),
+                                                    child: Text(
+                                                      '${timeSlot['time'] ?? 'N/A'}',
+                                                      style: TextStyle(
+                                                          fontFamily: 'Inter',
+                                                          fontSize: 13,
+                                                          color:
+                                                              Colors.grey[800]),
                                                     ),
                                                   ),
+                                                  Spacer(),
+                                                  timeSlot['slot_status'] == 2
+                                                      ? SizedBox.shrink()
+                                                      : SizedBox(
+                                                          height: 35,
+                                                          child: IconButton(
+                                                              onPressed: () {
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) => UpdateTimeslotAvailability(
+                                                                            slotStatus: timeSlot[
+                                                                                'slot_status'],
+                                                                            slotId:
+                                                                                timeSlot['taskerTimeSlotID']))).then(
+                                                                    (result) {
+                                                                  if (result ==
+                                                                      true) {
+                                                                    print(
+                                                                        'true');
+                                                                    _getTimeSlot(
+                                                                        selectedDate
+                                                                            .toString());
+                                                                  }
+                                                                });
+                                                              },
+                                                              icon: FaIcon(
+                                                                FontAwesomeIcons
+                                                                    .pen,
+                                                                size: 15,
+                                                                color:
+                                                                    Colors.grey,
+                                                              )),
+                                                        ),
                                                 ],
                                               ),
                                             ),
@@ -584,24 +584,6 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                                       ),
                                     ),
                                   ),
-                                  // Positioned(
-                                  //   left: 0,
-                                  //   right: 0,
-                                  //   bottom: 0,
-                                  //   child: Container(
-                                  //     height: 25,
-                                  //     decoration: BoxDecoration(
-                                  //       gradient: LinearGradient(
-                                  //         colors: [
-                                  //           Colors.grey.shade50.withOpacity(0),
-                                  //           Colors.grey.shade50.withOpacity(1),
-                                  //         ],
-                                  //         begin: Alignment.topCenter,
-                                  //         end: Alignment.bottomCenter,
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
                                 ],
                               )
                             : Container(
@@ -655,7 +637,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(5),
                       border: Border.all(width: 1, color: Colors.grey.shade300),
                     ),
                     child: Row(
@@ -834,8 +816,8 @@ class WeekButtonsState extends State<WeekButtons> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                     side: BorderSide(
-                      color: isSelected ? Colors.grey.shade500 : Colors.white,
-                      width: 1.5,
+                      color: isSelected ? Colors.grey.shade300 : Colors.white,
+                      width: 1,
                     ),
                   ),
                   padding: EdgeInsets.symmetric(vertical: 7.5),

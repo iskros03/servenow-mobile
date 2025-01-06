@@ -23,17 +23,24 @@ class _MyBookingState extends State<MyBooking> {
   String selectedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   List<dynamic> bookingsList = [];
-  List<dynamic> filteredBookings = [];
   bool isLoadingBookingList = false;
 
-  List<dynamic> unavailableSlotList = []; // List for unavailable slots
+  List<dynamic> unavailableSlotList = [];
+
+  DateTime minDate = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0);
+  DateTime maxDate = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0);
 
   @override
   void initState() {
     super.initState();
     _calendarController = CalendarController();
-    _loadBookings(); // Fetch bookings from API
-    _loadUnavailableSlot(); // Fetch unavailable slots from API
+    _loadBookings();
+    _loadUnavailableSlot();
+
+    minDate = minDate.add(Duration(hours: 5));
+    maxDate = maxDate.add(Duration(hours: 21));
   }
 
   Future<void> _loadUnavailableSlot() async {
@@ -43,7 +50,7 @@ class _MyBookingState extends State<MyBooking> {
       setState(() {
         if (bookingResponse['statusCode'] == 200) {
           unavailableSlotList = bookingResponse['data'];
-          _dataSource = _getCalendarDataSource(); // Update data source
+          _dataSource = _getCalendarDataSource();
         } else {
           print('Failed to load unavailable slots');
         }
@@ -64,7 +71,12 @@ class _MyBookingState extends State<MyBooking> {
         isLoadingBookingList = false;
         if (bookingResponse['statusCode'] == 200) {
           bookingsList = bookingResponse['booking'];
-          _dataSource = _getCalendarDataSource(); // Update data source
+          // Assign a color from the predefined list for each booking
+          for (int i = 0; i < bookingsList.length; i++) {
+            bookingsList[i]['color'] =
+                predefinedColors[i % predefinedColors.length];
+          }
+          _dataSource = _getCalendarDataSource();
         } else {
           print('Failed to load bookings');
         }
@@ -119,6 +131,21 @@ class _MyBookingState extends State<MyBooking> {
     }
   }
 
+  List<Color> predefinedColors = [
+    Colors.brown.shade300,
+    Colors.red.shade300,
+    Colors.indigo.shade300,
+    Colors.blue.shade300,
+    Colors.purple.shade300,
+    Colors.cyan.shade300,
+    Colors.teal.shade300,
+    Colors.lime.shade300,
+    Colors.orange.shade300,
+    Colors.pink.shade300,
+    Colors.lightGreen.shade300,
+    Colors.blueGrey.shade300,
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,12 +177,17 @@ class _MyBookingState extends State<MyBooking> {
               initialDate: selectedDate,
               onDateSelected: (date) {
                 setState(() {
+                  DateTime selectedDateTime = DateTime.parse(date.toString());
+
+                  minDate = DateTime(selectedDateTime.year,
+                      selectedDateTime.month, selectedDateTime.day, 5, 0, 0);
+                  maxDate = DateTime(selectedDateTime.year,
+                      selectedDateTime.month, selectedDateTime.day, 21, 0, 0);
+                  print(minDate);
                   selectedDate = date;
                   DateTime parsedDate =
                       DateFormat('yyyy-MM-dd').parse(selectedDate);
-                  String formattedDate =
-                      DateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(parsedDate);
-                  print(formattedDate);
+
                   _calendarController.displayDate = parsedDate;
                 });
               },
@@ -181,7 +213,6 @@ class _MyBookingState extends State<MyBooking> {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: bookingsList.where((booking) {
-                                // Filter the bookings based on selected date
                                 return booking['date'] == selectedDate;
                               }).map((booking) {
                                 return Padding(
@@ -200,28 +231,29 @@ class _MyBookingState extends State<MyBooking> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          booking['title'],
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13,
-                                            fontFamily: 'Inter',
-                                            color: Colors.grey[600],
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 15, vertical: 5),
+                                          decoration: BoxDecoration(
+                                              color: booking['color'],
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5))),
+                                          child: Text(
+                                            booking['title'],
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
+                                              fontFamily: 'Inter',
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ),
-                                        // Text(
-                                        //   '${booking['startTime']} - ${booking['endTime']}',
-                                        //   style: TextStyle(
-                                        //     color: Colors.grey[600],
-                                        //     fontSize: 12,
-                                        //     fontFamily: 'Inter',
-                                        //     fontWeight: FontWeight.bold,
-                                        //   ),
-                                        // ),
+                                        SizedBox(height: 5),
                                         Text(
                                           '${booking['address']}',
                                           style: TextStyle(
-                                            color: Colors.grey[800],
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey[600],
                                             fontSize: 12,
                                             fontFamily: 'Inter',
                                           ),
@@ -239,27 +271,15 @@ class _MyBookingState extends State<MyBooking> {
                             child: SfCalendar(
                               controller: _calendarController,
                               view: _getCalendarView(viewTypeTitle),
-                              minDate: DateTime(
-                                  DateTime.now().year,
-                                  DateTime.now().month,
-                                  DateTime.now().day,
-                                  7,
-                                  0,
-                                  0),
-                              maxDate: DateTime(
-                                      DateTime.now().year,
-                                      DateTime.now().month,
-                                      DateTime.now().day,
-                                      20,
-                                      0,
-                                      0)
-                                  .add(Duration(days: 6)),
+                              minDate: minDate,
+                              maxDate: maxDate,
                               dataSource: _dataSource,
+                              appointmentBuilder: appointmentBuilder,
                               timeSlotViewSettings: const TimeSlotViewSettings(
                                 startHour: 7,
                                 endHour: 20,
                                 timeFormat: 'HH:00',
-                                timeIntervalHeight: 37.5,
+                                timeIntervalHeight: 32.5,
                               ),
                               allowDragAndDrop: true,
                               dragAndDropSettings: const DragAndDropSettings(
@@ -270,7 +290,7 @@ class _MyBookingState extends State<MyBooking> {
                               backgroundColor: Colors.white,
                               showWeekNumber: false,
                               showCurrentTimeIndicator: false,
-                              viewHeaderHeight: 0,
+                              // viewHeaderHeight: 0,
                               headerHeight: 0,
                               onDragEnd: dragEnd,
                             ),
@@ -310,28 +330,46 @@ class _MyBookingState extends State<MyBooking> {
     );
   }
 
+  Widget appointmentBuilder(
+      BuildContext context, CalendarAppointmentDetails details) {
+    final Appointment appointment = details.appointments.first;
+    return Container(
+      decoration: BoxDecoration(
+        color: appointment.color,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      padding: EdgeInsets.all(5),
+      child: Text(
+        appointment.subject,
+        style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+            fontFamily: 'Inter'),
+      ),
+    );
+  }
+
   EventDataSource _getCalendarDataSource() {
     List<Appointment> appointments = [];
 
-    // Add bookings from bookingsList
     for (var book in bookingsList) {
+      Color bookingColor = book['color'];
       appointments.add(Appointment(
         startTime: DateTime.parse('${book['date']} ${book['startTime']}'),
         endTime: DateTime.parse('${book['date']} ${book['endTime']}'),
         subject: book['task'],
-        color: Colors.blue,
+        color: bookingColor,
         id: book['id'],
       ));
     }
 
-    // Add unavailable slots from unavailableSlotList
     for (var slot in unavailableSlotList) {
       appointments.add(Appointment(
         startTime: DateTime.parse('${slot['date']} ${slot['startTime']}'),
         endTime: DateTime.parse('${slot['date']} ${slot['endTime']}'),
         subject: slot['title'],
-        color: Colors.red,
-        isAllDay: false,
+        color: Colors.grey.shade200,
         id: slot['slot_id'],
       ));
     }
@@ -357,12 +395,15 @@ class _MyBookingState extends State<MyBooking> {
     DateTime roundedStartTime = _roundToNearestHour(appointment.startTime);
     DateTime roundedEndTime = _roundToNearestHour(appointment.endTime);
 
-    if (_hasConflict(roundedStartTime, roundedEndTime, appointment)) {
+    if (appointment.subject == 'Unavailable') {
+      _revertUnavailable(appointment, revert: true);
+    } else if (_hasConflict(roundedStartTime, roundedEndTime, appointment)) {
       setState(() {
         _revertBookingTimes(appointment, revert: true);
       });
     } else {
       setState(() {
+        bool hasChanged = appointment.startTime != roundedStartTime || appointment.endTime != roundedEndTime;
         _updateBookingTimes(appointment, roundedStartTime, roundedEndTime);
         print(appointment);
         updateId = appointment.id;
@@ -371,7 +412,9 @@ class _MyBookingState extends State<MyBooking> {
             "${startTime.year}-${startTime.month.toString().padLeft(2, '0')}-${startTime.day.toString().padLeft(2, '0')}";
         updateStartTime = appointment.startTime.toString().substring(11, 19);
         updateEndTime = appointment.endTime.toString().substring(11, 19);
+        if (hasChanged) {
         _updateBooking();
+      }
       });
     }
 
@@ -428,6 +471,41 @@ class _MyBookingState extends State<MyBooking> {
     }
   }
 
+  void _revertUnavailable(Appointment appointment, {bool revert = false}) {
+    print('Revert');
+
+    for (var slot in unavailableSlotList) {
+      if (slot['slot_id'] == appointment.id) {
+        if (revert) {
+          DateTime? parsedStartTime = DateTime.tryParse(slot['startTime']);
+          DateTime? parsedEndTime = DateTime.tryParse(slot['endTime']);
+
+          if (parsedStartTime != null && parsedEndTime != null) {
+            appointment.startTime = parsedStartTime;
+            appointment.endTime = parsedEndTime;
+          } else {
+            DateTime date = DateTime.parse(slot['date']);
+            appointment.startTime = DateTime(
+              date.year,
+              date.month,
+              date.day,
+              int.parse(slot['startTime'].split(':')[0]),
+              int.parse(slot['startTime'].split(':')[1]),
+            );
+            appointment.endTime = DateTime(
+              date.year,
+              date.month,
+              date.day,
+              int.parse(slot['endTime'].split(':')[0]),
+              int.parse(slot['endTime'].split(':')[1]),
+            );
+          }
+        }
+        break;
+      }
+    }
+  }
+
   void _revertBookingTimes(Appointment appointment, {bool revert = false}) {
     for (var book in bookingsList) {
       if (book['id'] == appointment.id) {
@@ -439,7 +517,6 @@ class _MyBookingState extends State<MyBooking> {
             appointment.startTime = parsedStartTime;
             appointment.endTime = parsedEndTime;
           } else {
-            // Parse the date and time from the stored strings if not in ISO 8601 format
             DateTime date = DateTime.parse(book['date']);
             appointment.startTime = DateTime(
               date.year,
@@ -470,8 +547,9 @@ class _MyBookingState extends State<MyBooking> {
       ),
       child: Row(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(12),
+          Container(
+            padding: EdgeInsets.all(12),
+            width: 100,
             child: Text(
               selectedDate,
               style: TextStyle(
@@ -554,7 +632,7 @@ class WeekButtonsState extends State<WeekButtons> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                     side: BorderSide(
-                      color: isSelected ? Colors.grey.shade500 : Colors.white,
+                      color: isSelected ? Colors.grey.shade300 : Colors.white,
                       width: 1,
                     ),
                   ),

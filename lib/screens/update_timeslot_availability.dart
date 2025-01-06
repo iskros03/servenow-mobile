@@ -3,7 +3,10 @@ import 'package:servenow_mobile/services/tasker_service.dart';
 import 'package:servenow_mobile/widgets/custom_dropdown_menu.dart';
 
 class UpdateTimeslotAvailability extends StatefulWidget {
-  const UpdateTimeslotAvailability({super.key});
+  final dynamic slotStatus;
+  final dynamic slotId;
+
+  const UpdateTimeslotAvailability({super.key, this.slotStatus, this.slotId});
 
   @override
   State<UpdateTimeslotAvailability> createState() =>
@@ -12,13 +15,25 @@ class UpdateTimeslotAvailability extends StatefulWidget {
 
 class _UpdateTimeslotAvailabilityState
     extends State<UpdateTimeslotAvailability> {
+
+  dynamic taskerSlotId;
+  dynamic taskerSlotStatus;
+  String? availabilityTitle;
+  dynamic selectedAvailability;
+
+  @override
+  void initState() {
+    super.initState();
+    taskerSlotId = '${widget.slotId}';
+    taskerSlotStatus = widget.slotStatus;  // Assuming slotStatus is 0 or 1.
+    availabilityTitle = taskerSlotStatus == 1 ? 'Available' : 'Unavailable';
+    selectedAvailability = taskerSlotStatus; // Set it to 0 or 1
+  }
+
   final List<String> timeslotAvailability = [
     'Available',
     'Unavailable',
   ];
-
-  String availabilityTitle = 'Select Availability';
-  dynamic selectedAvailability;
 
   Future<void> changeTimeSlotAvailablility() async {
     try {
@@ -30,8 +45,8 @@ class _UpdateTimeslotAvailabilityState
       );
 
       TaskerService taskerService = TaskerService();
-      final response =
-          await taskerService.changeTimeSlotAvailablility('51',selectedAvailability);
+      final response = await taskerService.changeTimeSlotAvailablility(
+          taskerSlotId, selectedAvailability.toString());
 
       if (response['statusCode'] == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -95,7 +110,7 @@ class _UpdateTimeslotAvailabilityState
                 fontFamily: 'Inter',
                 color: Colors.orange[300],
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontSize: 13,
               ),
             ),
           ),
@@ -114,18 +129,13 @@ class _UpdateTimeslotAvailabilityState
                 children: [
                   Container(
                     padding: EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'State',
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.normal,
-                              color: Colors.grey[800]),
-                        ),
-                      ],
+                    child: Text(
+                      'Time Slot Availability',
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey[800]),
                     ),
                   ),
                   CustomDropdownMenu(
@@ -135,10 +145,10 @@ class _UpdateTimeslotAvailabilityState
                     onSelected: (selectedValue) {
                       setState(() {
                         if (selectedValue == 'Available') {
-                          selectedAvailability = '1';
+                          selectedAvailability = 1;
                           availabilityTitle = 'Available';
                         } else if (selectedValue == 'Unavailable') {
-                          selectedAvailability = '0';
+                          selectedAvailability = 0;
                           availabilityTitle = 'Unavailable';
                         }
                       });

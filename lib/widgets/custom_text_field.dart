@@ -42,14 +42,14 @@ class CustomTextField extends StatelessWidget {
         hintStyle: TextStyle(
             fontFamily: 'Inter', fontSize: 13, color: Colors.grey[400]),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          borderRadius: BorderRadius.all(Radius.circular(5)),
           borderSide:
               BorderSide(color: Colors.grey[300] ?? Colors.grey, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          borderRadius: BorderRadius.all(Radius.circular(5)),
           borderSide:
-              BorderSide(color: Colors.grey[300] ?? Colors.grey, width: 1),
+              BorderSide(color: Colors.grey[500] ?? Colors.grey, width: 1),
         ),
         prefixText: prefixText,
         prefixStyle: TextStyle(
