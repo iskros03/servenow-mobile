@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:servenow_mobile/services/tasker_auth.dart';
 import 'package:servenow_mobile/services/tasker_user.dart';
 import 'package:servenow_mobile/widgets/custom_dropdown_menu.dart';
@@ -17,9 +18,6 @@ class _MyProfileState extends State<MyProfile> {
   List<String> states = [];
   List<String> areas = [];
 
-  // String? selectedState;
-  // String? selectedArea;
-
   int _selectedTabIndex = 0;
 
   TextEditingController firstnameController = TextEditingController();
@@ -31,8 +29,9 @@ class _MyProfileState extends State<MyProfile> {
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController icController = TextEditingController();
-  String? birthdate;
+  String? birthdate; // Birthdate
   String? photo; // Photo
+
   // Address
   TextEditingController addressLineOneController = TextEditingController();
   TextEditingController addressLineTwoController = TextEditingController();
@@ -45,6 +44,34 @@ class _MyProfileState extends State<MyProfile> {
     super.initState();
     taskerDataFuture = _loadTaskerData();
     fetchStateNames();
+
+    icController.addListener(() {
+      _updateBirthdateFromIC(icController.text);
+    });
+  }
+
+  void _updateBirthdateFromIC(String icNumber) {
+    if (icNumber.length >= 6) {
+      String extractedDate = icNumber.substring(0, 6);
+      String yearPrefix = extractedDate.substring(0, 2);
+      String month = extractedDate.substring(2, 4);
+      String day = extractedDate.substring(4, 6);
+
+      int yearPrefixInt = int.parse(yearPrefix);
+
+      String year;
+      if (yearPrefixInt > 50) {
+        year = '19$yearPrefix';
+      } else {
+        year = '20$yearPrefix';
+      }
+
+      birthdate = '$year-$month-$day';
+
+      if (icNumber.length >= 12) {
+        setState(() {});
+      }
+    }
   }
 
   void fetchStateNames() async {
@@ -78,7 +105,6 @@ class _MyProfileState extends State<MyProfile> {
   Future<Map<String, String>> _loadTaskerData() async {
     TaskerUser taskerUser = TaskerUser();
     try {
-      await Future.delayed(const Duration(seconds: 1));
       var data = await taskerUser.getTaskerData();
 
       firstnameController.text = data[0]['tasker_firstname'];
@@ -120,6 +146,50 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   void _saveProfile() async {
+    String icNumber = icController.text.trim();
+    String email = emailController.text.trim();
+
+    if (icNumber.length != 12) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Center(
+            child: Text(
+              'IC Number must be 12 characters long.',
+              style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 13,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.white),
+            ),
+          ),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
+
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Center(
+              child: Text(
+            'Please enter a valid email address.',
+            style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 13,
+                fontWeight: FontWeight.normal,
+                color: Colors.white),
+          )),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
+
+    // Prepare the updated data
     final updatedData = {
       'tasker_firstname': firstnameController.text.trim(),
       'tasker_lastname': lastnameController.text.trim(),
@@ -127,7 +197,7 @@ class _MyProfileState extends State<MyProfile> {
       'tasker_photo': photo,
       'email': emailController.text.trim(),
       'tasker_bio': bioController.text,
-      'tasker_icno': icController.text.trim(),
+      'tasker_icno': icNumber, // Use the validated IC number
       'tasker_dob': birthdate,
       'tasker_address_one': addressLineOneController.text,
       'tasker_address_two': addressLineTwoController.text,
@@ -138,12 +208,24 @@ class _MyProfileState extends State<MyProfile> {
 
     try {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Saving profile...'),
+        SnackBar(
+          backgroundColor: Color.fromRGBO(24, 52, 92, 1),
+          content: Center(
+            child: Text(
+              'Saving profile...',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
           duration: Duration(seconds: 1),
         ),
       );
 
+      // Update tasker data
       TaskerUser taskerUser = TaskerUser();
       final taskerData = await taskerUser.getTaskerData();
       String taskerID = taskerData[0]['id'].toString();
@@ -154,7 +236,17 @@ class _MyProfileState extends State<MyProfile> {
       if (response['statusCode'] == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(responseData['message']),
+            content: Center(
+              child: Text(
+                responseData['message'],
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 3),
           ),
@@ -165,7 +257,17 @@ class _MyProfileState extends State<MyProfile> {
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('$error'),
+          content: Center(
+            child: Text(
+              '$error',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 3),
         ),
@@ -224,6 +326,7 @@ class _MyProfileState extends State<MyProfile> {
     lastnameController.dispose();
     emailController.dispose();
     mobileController.dispose();
+    icController.removeListener(() {});
     icController.dispose();
     bioController.dispose();
     oldPasswordController.dispose();
@@ -359,9 +462,14 @@ class _MyProfileState extends State<MyProfile> {
                       child: Row(
                         children: [
                           Expanded(
-                              flex: 3,
-                              child: _buildTextField('IC Number', icController,
-                                  'Enter IC Number')),
+                            flex: 3,
+                            child: _buildTextField(
+                                'IC Number', icController, 'Enter IC Number',
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                maxLength: 12),
+                          ),
                           const SizedBox(width: 15),
                           Expanded(
                             flex: 2,
@@ -383,7 +491,8 @@ class _MyProfileState extends State<MyProfile> {
                                   padding: const EdgeInsets.all(12.5),
                                   decoration: BoxDecoration(
                                     color: Colors.grey[100],
-                                    border: Border.all(color: Colors.grey.shade100),
+                                    border:
+                                        Border.all(color: Colors.grey.shade100),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Text(
@@ -417,7 +526,13 @@ class _MyProfileState extends State<MyProfile> {
                         'Email', emailController, 'Enter your email'),
                     SizedBox(height: 10),
                     _buildTextField(
-                        'Mobile', mobileController, 'Enter your mobile'),
+                      'Mobile',
+                      mobileController,
+                      'Enter your mobile',
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                    ),
                     SizedBox(height: 10),
                     _buildTextField('Bio', bioController, 'Enter bio',
                         maxLines: 3),
@@ -555,7 +670,10 @@ class _MyProfileState extends State<MyProfile> {
 
   Widget _buildTextField(
       String label, TextEditingController controller, String hintText,
-      {bool obscureText = false, int maxLines = 1}) {
+      {bool obscureText = false,
+      int maxLines = 1,
+      List<TextInputFormatter>? inputFormatters,
+      int? maxLength}) {
     return Container(
       decoration: BoxDecoration(
           color: Colors.grey[100],
@@ -579,6 +697,8 @@ class _MyProfileState extends State<MyProfile> {
             maxLines: maxLines,
             controller: controller,
             obscureText: obscureText,
+            inputFormatters: inputFormatters,
+            maxLength: maxLength, // Pass maxLength here
           ),
         ],
       ),

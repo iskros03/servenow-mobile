@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:servenow_mobile/services/tasker_auth.dart';
 import 'package:servenow_mobile/services/tasker_user.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -12,16 +13,16 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  String? taskerFirstName;
-  String? taskerLastName;
-  String? taskerSettingsPhoto;
-  String? taskerCode;
-
   @override
   void initState() {
     super.initState();
     _loadTaskerData();
   }
+
+  String? taskerFirstName;
+  String? taskerLastName;
+  String? taskerSettingsPhoto;
+  String? taskerCode;
 
   void _loadTaskerData() async {
     TaskerUser taskerUser = TaskerUser();
@@ -37,6 +38,131 @@ class _SettingsState extends State<Settings> {
     } catch (e) {
       print('Error occurred: $e');
     }
+  }
+
+  void _logout() async {
+    TaskerAuth taskerAuth = TaskerAuth();
+    try {
+      bool isLoggedOut = await taskerAuth.getTaskerLogout();
+      if (isLoggedOut) {
+        Navigator.pushReplacementNamed(context, '/sign_in');
+        print('Logout successful.');
+      } else {
+        print('Failed to log out.');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
+  }
+
+  void _showLogoutConfirmation() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Sign Out',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Are you sure you want to Sign out? You will need to log in again to access your account.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 13,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); 
+                        },
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor: Colors.grey[200],
+                          foregroundColor: Colors.grey[800],
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ).copyWith(
+                          overlayColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                          shadowColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                          surfaceTintColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _logout,
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor: Colors.red[50],
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ).copyWith(
+                          overlayColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                          shadowColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                          surfaceTintColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                        ),
+                        child: Text(
+                          'Sign Out',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -135,41 +261,6 @@ class _SettingsState extends State<Settings> {
                 ),
                 child: Column(
                   children: [
-                    // CustomCard(
-                    //   cardColor: Colors.grey[50],
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       Row(
-                    //         children: [
-                    //           const FaIcon(
-                    //             FontAwesomeIcons.bell,
-                    //             color: Colors.orange,
-                    //             size: 20,
-                    //           ),
-                    //           const SizedBox(width: 7.5),
-                    //           Text(
-                    //             'Notification',
-                    //             style: TextStyle(
-                    //                 color: Colors.grey[700],
-                    //                 fontFamily: 'Inter',
-                    //                 fontWeight: FontWeight.bold,
-                    //                 fontSize: 12),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       const SizedBox(height: 4),
-                    //       const Text(
-                    //         'Change will take up to 5 minutes',
-                    //         style: TextStyle(
-                    //           color: Colors.red,
-                    //           fontFamily: 'Inter',
-                    //           fontSize: 12,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
                     Expanded(
                       child: Column(
                         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -202,8 +293,8 @@ class _SettingsState extends State<Settings> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Inter',
-                                    fontSize: 12,
-                                    color: Colors.grey[800],
+                                    fontSize: 13,
+                                    color: Colors.grey[700],
                                   ),
                                 ),
                                 SizedBox(
@@ -220,7 +311,7 @@ class _SettingsState extends State<Settings> {
                           // SizedBox(height: 10),
                           Spacer(),
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: _showLogoutConfirmation,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red[50],
                               elevation: 0,
@@ -243,11 +334,11 @@ class _SettingsState extends State<Settings> {
                             ),
                             child: Center(
                               child: Text(
-                                'Logout',
+                                'Sign Out',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Inter',
-                                  fontSize: 12,
+                                  fontSize: 13,
                                   color: Colors.red,
                                 ),
                               ),

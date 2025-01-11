@@ -39,7 +39,6 @@ class _ServicesState extends State<Services> {
       var data = await TaskerService().getTaskerServiceList();
       setState(() {
         services = data;
-        print('Services: $services');
       });
     } catch (e) {
       print('Error occurred: $e');
@@ -137,94 +136,6 @@ class _ServicesState extends State<Services> {
             children: [
               Column(
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 60,
-                              child: Text(
-                                textAlign: TextAlign.start,
-                                'Services',
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[600]),
-                              ),
-                            ),
-                            Text(
-                              '${services.length}',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey[600]),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 60,
-                                  child: Text(
-                                    textAlign: TextAlign.start,
-                                    'Per Hour',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[600]),
-                                  ),
-                                ),
-                                Text(
-                                  '23',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[600]),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 60,
-                                  child: Text(
-                                    textAlign: TextAlign.start,
-                                    'Per Job',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[600]),
-                                  ),
-                                ),
-                                Text(
-                                  '10',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[600]),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 12),
                   Row(
                     children: [
                       Expanded(
@@ -264,7 +175,7 @@ class _ServicesState extends State<Services> {
                   ),
                 ],
               ),
-              SizedBox(height: 25),
+              SizedBox(height: 20),
               Expanded(
                 child: Theme(
                   data: ThemeData(
@@ -299,22 +210,7 @@ class _ServicesState extends State<Services> {
                                   WidgetStateProperty.all(Colors.transparent),
                             ),
                             onPressed: () {
-                              if (service['service_status'] == 0) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Center(
-                                      child: Text(
-                                        'This service is pending and cannot be managed.',
-                                        style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.normal),
-                                      ),
-                                    ),
-                                    backgroundColor: Colors.orange[300],
-                                  ),
-                                );
-                              } else {
+                              if (service['service_status'] != 0) {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

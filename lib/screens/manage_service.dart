@@ -124,7 +124,6 @@ class _ManageServiceState extends State<ManageService> {
           duration: Duration(seconds: 2),
         ),
       );
-
       TaskerService taskerService = TaskerService();
       final response = await taskerService.deleteTaskerService(serviceId);
       print(response['data']['message']);
@@ -157,45 +156,111 @@ class _ManageServiceState extends State<ManageService> {
   }
 
   void _showDeleteConfirmation() {
+    print(serviceId);
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return Dialog(
           backgroundColor: Colors.white,
-          title: Text(
-            'Are you sure you want to delete this service?',
-            style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 16,
-                color: Colors.grey[800],
-                fontWeight: FontWeight.normal),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
           ),
-          content: Text(
-            'This action cannot be undone.',
-            style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 14,
-                color: Colors.grey[600],
-                fontWeight: FontWeight.bold),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                    fontFamily: 'Inter', fontSize: 14, color: Colors.grey[800]),
-              ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Delete Confirmation',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'This action cannot be undone. Are you sure you want to delete this service?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 13,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor: Colors.grey[200],
+                          foregroundColor: Colors.grey[800],
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ).copyWith(
+                          overlayColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                          shadowColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                          surfaceTintColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _deleteService,
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor: Colors.red[50],
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ).copyWith(
+                          overlayColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                          shadowColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                          surfaceTintColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                        ),
+                        child: Text(
+                          'Delete',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            CustomEleButton(
-                text: 'Delete',
-                onPressed: _deleteService,
-                bgColor: Colors.red,
-                borderColor: Colors.red,
-                fgColor: Colors.white)
-          ],
+          ),
         );
       },
     );
@@ -246,162 +311,152 @@ class _ManageServiceState extends State<ManageService> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(12),
-                          child: Text(
-                            'Service Type',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.normal,
-                                color: Colors.grey[800]),
-                          ),
-                        ),
-                        CustomDropdownMenu(
-                          titleValue: selectedServiceTypeName,
-                          titleSelect: 'Service Type',
-                          items: serviceType
-                              .map((serviceTypeName) =>
-                                  serviceTypeName['servicetype_name']
-                                      .toString())
-                              .toList(),
-                          onSelected: (selectedValue) {
-                            setState(() {
-                              selectedServiceTypeId = serviceType.firstWhere(
-                                  (service) =>
-                                      service['servicetype_name'] ==
-                                      selectedValue)['id'];
-                              selectedServiceTypeName = selectedValue;
-                            });
-                          },
-                        ),
-                      ],
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    child: Text(
+                      'Service Type',
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey[800]),
                     ),
                   ),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: Row(children: [
-                    Expanded(
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(12),
-                          child: Text(
-                            'Rate',
-                            style: TextStyle(
-                                color: Colors.grey[800],
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12),
-                          ),
-                        ),
-                        CustomTextField(
-                          controller: serviceRateController,
-                          obscureText: false,
-                          prefixText: 'RM ',
-                          keyboardType:
-                              TextInputType.numberWithOptions(decimal: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r'^\d+\.?\d{0,2}')),
-                          ],
-                        ),
-                      ],
-                    )),
-                    SizedBox(width: 15),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(12),
-                            child: Text(
-                              'Rate Type',
-                              style: TextStyle(
-                                  color: Colors.grey[800],
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 12),
-                            ),
-                          ),
-                          CustomDropdownMenu(
-                            titleSelect: 'Rate Type',
-                            items: rateType,
-                            titleValue: selectedRateType,
-                            onSelected: (selectedValue) {
-                              setState(() {
-                                selectedRateType = selectedValue;
-                              });
-                            },
-                            // isEnabled: selectedServiceTypeId?.isNotEmpty ?? false,
-                          ),
-                        ],
+                  CustomDropdownMenu(
+                    titleValue: selectedServiceTypeName,
+                    titleSelect: 'Service Type',
+                    items: serviceType
+                        .map((serviceTypeName) =>
+                            serviceTypeName['servicetype_name']
+                                .toString())
+                        .toList(),
+                    onSelected: (selectedValue) {
+                      setState(() {
+                        selectedServiceTypeId = serviceType.firstWhere(
+                            (service) =>
+                                service['servicetype_name'] ==
+                                selectedValue)['id'];
+                        selectedServiceTypeName = selectedValue;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 10),
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Row(children: [
+                Expanded(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(12),
+                      child: Text(
+                        'Rate',
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.normal,
+                            fontSize: 12),
                       ),
                     ),
-                  ]),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                    CustomTextField(
+                      controller: serviceRateController,
+                      obscureText: false,
+                      prefixText: 'RM ',
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d+\.?\d{0,2}')),
+                      ],
+                    ),
+                  ],
+                )),
+                SizedBox(width: 15),
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         padding: EdgeInsets.all(12),
                         child: Text(
-                          'Service Description',
+                          'Rate Type',
                           style: TextStyle(
                               color: Colors.grey[800],
-                              fontWeight: FontWeight.normal,
                               fontFamily: 'Inter',
+                              fontWeight: FontWeight.normal,
                               fontSize: 12),
                         ),
                       ),
-                      CustomTextField(
-                        labelText: 'Enter your description ...',
-                        controller: serviceDescriptionController,
-                        obscureText: false,
-                        maxLines: 4,
+                      CustomDropdownMenu(
+                        titleSelect: 'Rate Type',
+                        items: rateType,
+                        titleValue: selectedRateType,
+                        onSelected: (selectedValue) {
+                          setState(() {
+                            selectedRateType = selectedValue;
+                          });
+                        },
+                        // isEnabled: selectedServiceTypeId?.isNotEmpty ?? false,
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 30),
-                
-                SizedBox(
-                  width: double.infinity,
-                  child: CustomEleButton(
-                      text: 'Delete',
-                      onPressed: _showDeleteConfirmation,
-                      bgColor: Colors.red[50],
-                      borderWidth: 0,
-                      borderColor: Colors.white,
-                      fgColor: Colors.red),
-                ),
-              ],
-            )
+              ]),
+            ),
+            SizedBox(height: 10),
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    child: Text(
+                      'Service Description',
+                      style: TextStyle(
+                          color: Colors.grey[800],
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'Inter',
+                          fontSize: 12),
+                    ),
+                  ),
+                  CustomTextField(
+                    labelText: 'Enter your description ...',
+                    controller: serviceDescriptionController,
+                    obscureText: false,
+                    maxLines: 4,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 30),
+            SizedBox(
+              width: double.infinity,
+              child: CustomEleButton(
+                  text: 'Delete',
+                  onPressed: _showDeleteConfirmation,
+                  bgColor: Colors.red[50],
+                  borderWidth: 0,
+                  borderColor: Colors.white,
+                  fgColor: Colors.red),
+            ),
           ],
         ),
       ),

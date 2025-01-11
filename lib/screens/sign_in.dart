@@ -159,7 +159,8 @@ class _SignInState extends State<SignIn> {
                   obscureText: obscurePassword,
                   labelText: 'Password',
                   controller: passwordController,
-                  onEyeTap: togglePasswordVisibility, // Toggle password visibility
+                  onEyeTap:
+                      togglePasswordVisibility, // Toggle password visibility
                 ),
                 const SizedBox(height: 10),
                 SizedBox(
@@ -168,7 +169,7 @@ class _SignInState extends State<SignIn> {
                         borderRadius: 10,
                         borderWidth: 0,
                         fgColor: Colors.white,
-                        bgColor: const Color.fromRGBO(24, 52, 92, 1),
+                        bgColor: Color.fromRGBO(24, 52, 92, 1),
                         text: 'Sign In',
                         onPressed: () {
                           getSignIn();

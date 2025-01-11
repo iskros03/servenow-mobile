@@ -37,7 +37,7 @@ class CustomDropdownMenu extends StatelessWidget {
                 topLeft: Radius.circular(30), topRight: Radius.circular(30)),
             color: Colors.white,
           ),
-          height: MediaQuery.of(context).size.height * 0.5,
+          height: MediaQuery.of(context).size.height * 0.75,
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
@@ -58,9 +58,9 @@ class CustomDropdownMenu extends StatelessWidget {
                 '$titleSelect',
                 style: TextStyle(
                   fontFamily: 'Inter',
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey[800],
+                  color: Colors.grey[700],
                 ),
               ),
               Expanded(
@@ -72,9 +72,9 @@ class CustomDropdownMenu extends StatelessWidget {
                         items[index],
                         style: TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 13,
-                            fontWeight: FontWeight.normal,
-                            color: Colors.grey[800]),
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[600]),
                       ),
                       onTap: () {
                         onSelected(items[index]);
@@ -113,7 +113,7 @@ class CustomDropdownMenu extends StatelessWidget {
           children: [
             Text(capitalizeFirstLetter('$titleValue'),
                 style: TextStyle(
-                    fontSize: 13,
+                    fontSize: 12,
                     fontFamily: 'Inter',
                     color: isEnabled
                         ? Colors.grey[800]

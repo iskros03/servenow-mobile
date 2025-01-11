@@ -13,7 +13,7 @@ class TaskerAuth {
 
   Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('auth_token'); // Dia return null kalau token tak ada
+    return prefs.getString('auth_token');
   }
 
   Future<dynamic> getTaskerAuth(
@@ -41,6 +41,14 @@ class TaskerAuth {
     } catch (e) {
       throw Exception('Failed to fetch API: $e');
     }
+  }
+
+  Future<bool> getTaskerLogout() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.remove('auth_token');
+
+    // Or clear all stored data
+    // await prefs.clear();
   }
 
   Future<Map<String, dynamic>> updateTaskerPassword(
