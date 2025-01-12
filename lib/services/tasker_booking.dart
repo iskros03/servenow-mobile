@@ -67,7 +67,6 @@ class TaskerBooking {
       final token = await TaskerAuth().getToken();
       final url = Uri.parse('${dotenv.env['DOMAIN']}/api/booking-reschedule');
 
-      // Sending updateBooking data as JSON in the body of the POST request
       final response = await http.post(
         url,
         headers: {
@@ -75,11 +74,39 @@ class TaskerBooking {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: jsonEncode(updateBooking), // Include the body here
+        body: jsonEncode(updateBooking),
       );
 
       if (response.body.isNotEmpty) {
         final data = jsonDecode(response.body);
+        return {
+          'statusCode': response.statusCode,
+          'data': data,
+        };
+      } else {
+        throw Exception('Failed to update booking.');
+      }
+    } catch (e) {
+      throw Exception("Failed to fetch API: $e");
+    }
+  }
+
+  Future<Map<String, dynamic>> changeBookingStatus(Map<String, dynamic> changeBooking) async {
+    try {
+      final token = await TaskerAuth().getToken();
+      final url = Uri.parse('${dotenv.env['DOMAIN']}/api/change-booking-status');
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(changeBooking),
+      );
+      if (response.body.isNotEmpty) {
+        final data = jsonDecode(response.body);
+        print(data);
         return {
           'statusCode': response.statusCode,
           'data': data,

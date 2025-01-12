@@ -308,8 +308,7 @@ class _SettingsState extends State<Settings> {
                               ],
                             ),
                           ),
-                          // SizedBox(height: 10),
-                          Spacer(),
+                          SizedBox(height: 15),
                           ElevatedButton(
                             onPressed: _showLogoutConfirmation,
                             style: ElevatedButton.styleFrom(

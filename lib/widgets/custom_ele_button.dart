@@ -19,7 +19,7 @@ class CustomEleButton extends StatelessWidget {
     this.borderRadius = 8.0,
     this.borderColor = const Color.fromRGBO(24, 52, 92, 1),
     this.borderWidth = 1.0,
-    this.fontSize = 13,
+    this.fontSize = 12,
   });
 
   @override

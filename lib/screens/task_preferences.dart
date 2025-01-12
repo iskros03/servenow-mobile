@@ -607,7 +607,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                   timeSlots.isEmpty
                       ? Column(
                           children: [
-                            SizedBox(height: 15),
+                            SizedBox(height: 10),
                             SizedBox(
                               width: double.infinity,
                               child: CustomEleButton(
