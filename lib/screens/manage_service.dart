@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:servenow_mobile/services/tasker_service.dart';
 import 'package:servenow_mobile/widgets/custom_dropdown_menu.dart';
-import 'package:servenow_mobile/widgets/custom_ele_button.dart';
 import 'package:servenow_mobile/widgets/custom_text_field.dart';
 
 class ManageService extends StatefulWidget {
@@ -275,7 +274,7 @@ class _ManageServiceState extends State<ManageService> {
         centerTitle: true,
         elevation: 0,
         title: const Text(
-          'Service Management',
+          'Update Service Details',
           style: TextStyle(
             color: Colors.white,
             fontFamily: 'Inter',
@@ -446,17 +445,17 @@ class _ManageServiceState extends State<ManageService> {
                 ],
               ),
             ),
-            const SizedBox(height: 30),
-            SizedBox(
-              width: double.infinity,
-              child: CustomEleButton(
-                  text: 'Delete',
-                  onPressed: _showDeleteConfirmation,
-                  bgColor: Colors.red[50],
-                  borderWidth: 0,
-                  borderColor: Colors.white,
-                  fgColor: Colors.red),
-            ),
+            // const SizedBox(height: 30),
+            // SizedBox(
+            //   width: double.infinity,
+            //   child: CustomEleButton(
+            //       text: 'Delete',
+            //       onPressed: _showDeleteConfirmation,
+            //       bgColor: Colors.red[50],
+            //       borderWidth: 0,
+            //       borderColor: Colors.white,
+            //       fgColor: Colors.red),
+            // ),
           ],
         ),
       ),

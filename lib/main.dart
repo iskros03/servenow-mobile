@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:servenow_mobile/screens/add_service.dart';
 import 'package:servenow_mobile/screens/booking_details.dart';
+import 'package:servenow_mobile/screens/booking_list.dart';
 import 'package:servenow_mobile/screens/home.dart';
 import 'package:servenow_mobile/screens/manage_service.dart';
 import 'package:servenow_mobile/screens/my_booking.dart';
@@ -32,5 +33,7 @@ Future<void> main() async {
         '/my_booking': (context) => const MyBooking(),
         '/update_time_slot': (context) => const UpdateTimeslotAvailability(),
         '/booking_details': (context) => const BookingDetails(),
+        '/booking_list': (context) => const BookingList(),
+
       }));
 }

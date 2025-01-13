@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:servenow_mobile/screens/task_preferences.dart';
 import 'package:servenow_mobile/services/tasker_user.dart';
 import 'package:servenow_mobile/widgets/custom_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,6 +14,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   String? taskerFirstName;
   String? taskerProfilePhoto;
+  int? taskerStatus;
 
   @override
   void initState() {
@@ -27,6 +29,7 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         taskerFirstName = data[0]['tasker_firstname'];
         taskerProfilePhoto = data[0]['tasker_photo'];
+        taskerStatus = data[0]['tasker_status'];
       });
     } catch (e) {
       print('Error occurred: $e');
@@ -236,7 +239,13 @@ class _DashboardState extends State<Dashboard> {
                           SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, '/task_prefences');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TaskPreferences(
+                                          taskerStatus: taskerStatus,
+                                        )),
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
@@ -303,6 +312,50 @@ class _DashboardState extends State<Dashboard> {
                               children: [
                                 Text(
                                   'My Booking',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 35,
+                                  child: FaIcon(
+                                    FontAwesomeIcons.calendarCheck,
+                                    size: 20,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/booking_list');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20),
+                            ).copyWith(
+                              overlayColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                              shadowColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                              surfaceTintColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Booking List',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Inter',

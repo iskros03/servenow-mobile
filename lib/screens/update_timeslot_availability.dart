@@ -81,7 +81,7 @@ class _UpdateTimeslotAvailabilityState
         centerTitle: true,
         elevation: 0,
         title: const Text(
-          'Update Time Slot',
+          'Update Availability',
           style: TextStyle(
             color: Colors.white,
             fontFamily: 'Inter',

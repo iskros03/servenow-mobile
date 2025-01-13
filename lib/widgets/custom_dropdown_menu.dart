@@ -72,9 +72,9 @@ class CustomDropdownMenu extends StatelessWidget {
                         items[index],
                         style: TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[600]),
+                            fontSize: 13,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey[800]),
                       ),
                       onTap: () {
                         onSelected(items[index]);
@@ -113,7 +113,7 @@ class CustomDropdownMenu extends StatelessWidget {
           children: [
             Text(capitalizeFirstLetter('$titleValue'),
                 style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 13,
                     fontFamily: 'Inter',
                     color: isEnabled
                         ? Colors.grey[800]

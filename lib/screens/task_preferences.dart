@@ -8,7 +8,8 @@ import 'package:intl/intl.dart';
 import 'package:servenow_mobile/widgets/custom_ele_button.dart';
 
 class TaskPreferences extends StatefulWidget {
-  const TaskPreferences({super.key});
+  final dynamic taskerStatus;
+  const TaskPreferences({super.key, this.taskerStatus});
 
   @override
   State<TaskPreferences> createState() => _TaskPreferencesState();
@@ -28,10 +29,11 @@ class _TaskPreferencesState extends State<TaskPreferences> {
   String? workingLocState;
   String? workingLocArea;
   int? selectedWorkingTypeValue;
+  int workingRadius = 0;
   int? workingStatus;
 
   List<Map<String, dynamic>> timeSlots = [];
-  bool isLoadingTimeSlots = false;
+  bool isLoading = false;
 
   Map<String, int> workingTypeMap = {
     'Full Time': 1,
@@ -40,19 +42,24 @@ class _TaskPreferencesState extends State<TaskPreferences> {
 
   int _selectedTabIndex = 0;
 
+  dynamic taskerStatus;
+
   @override
   void initState() {
     super.initState();
 
     taskerDataFuture = _loadTaskerData();
     fetchStateNames();
-
     DateTime firstDate = DateTime.now(); // Today
     selectedDate = DateFormat('yyyy-MM-dd').format(firstDate);
     _getTimeSlot('$selectedDate');
+    taskerStatus = '${widget.taskerStatus}';
   }
 
   void fetchStateNames() async {
+    setState(() {
+      isLoading = true;
+    });
     TaskerUser getState = TaskerUser();
     try {
       final stateNames = await getState.getState();
@@ -63,13 +70,21 @@ class _TaskPreferencesState extends State<TaskPreferences> {
       if (taskerData['tasker_workingloc_state'] != null) {
         fetchAreaNames(taskerData['tasker_workingloc_state']!);
       }
+      print(taskerData['tasker_workingloc_state']);
     } catch (e) {
       print('Error: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
   void fetchAreaNames(String selectedArea) async {
     TaskerUser getArea = TaskerUser();
+    setState(() {
+      isLoading = true;
+    });
     try {
       final areaNames = await getArea.getArea(selectedArea);
       setState(() {
@@ -77,11 +92,19 @@ class _TaskPreferencesState extends State<TaskPreferences> {
       });
     } catch (e) {
       print("Error: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
   Future<Map<String, String>> _loadTaskerData() async {
     TaskerUser taskerUser = TaskerUser();
+    setState(() {
+      isLoading = true;
+    });
+
     try {
       await Future.delayed(const Duration(seconds: 1));
       var data = await taskerUser.getTaskerData();
@@ -93,6 +116,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
       workingLocState = data[0]['tasker_workingloc_state'];
       workingLocArea = data[0]['tasker_workingloc_area'];
       selectedWorkingTypeValue = data[0]['tasker_worktype'];
+      workingRadius = data[0]['working_radius'];
 
       workingStatus = data[0]['tasker_working_status'];
 
@@ -105,12 +129,17 @@ class _TaskPreferencesState extends State<TaskPreferences> {
       initialTaskerData = {
         'tasker_workingloc_state': data[0]['tasker_workingloc_state'],
         'tasker_workingloc_area': data[0]['tasker_workingloc_area'],
+        'working_radius': data[0]['working_radius'],
         'tasker_worktype': data[0]['tasker_worktype'].toString(),
       };
       return initialTaskerData;
     } catch (e) {
       print('Error occurred: $e');
       return {'error': 'Failed to load tasker data'};
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -118,6 +147,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
     final updatedLocation = {
       'tasker_workingloc_state': workingLocState,
       'tasker_workingloc_area': workingLocArea,
+      'working_radius': workingRadius,
     };
 
     try {
@@ -251,7 +281,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
 
   void _getTimeSlot(String date) async {
     setState(() {
-      isLoadingTimeSlots = true;
+      isLoading = true;
     });
 
     try {
@@ -266,7 +296,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
       );
     } finally {
       setState(() {
-        isLoadingTimeSlots = false;
+        isLoading = false;
       });
     }
   }
@@ -290,6 +320,41 @@ class _TaskPreferencesState extends State<TaskPreferences> {
           'text': 'Booked',
           'color': Colors.orange[50],
           'textColor': Colors.orange[500]
+        };
+      default:
+        return {
+          'text': 'Unknown',
+          'color': Colors.red[50],
+          'textColor': Colors.red[500]
+        };
+    }
+  }
+
+  Map<String, dynamic> getTaskerStatus(dynamic taskerStaus) {
+    switch (taskerStaus) {
+      case 0:
+        return {
+          'text': 'Incomplete Profile',
+          'color': Colors.orange[50],
+          'textColor': Colors.orange[500]
+        };
+      case 1:
+        return {
+          'text': 'Not Verified',
+          'color': Colors.red[50],
+          'textColor': Colors.red[500]
+        };
+      case 2:
+        return {
+          'text': 'Verified & Active',
+          'color': Colors.green[50],
+          'textColor': Colors.green[500]
+        };
+      case 3:
+        return {
+          'text': 'Inactive',
+          'color': Colors.red[50],
+          'textColor': Colors.red[500]
         };
       default:
         return {
@@ -338,8 +403,8 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                 fontSize: 13.0,
                 fontWeight: FontWeight.bold),
             tabs: [
-              Tab(text: 'Time Slot'),
-              Tab(text: 'Visibility & Location'),
+              SizedBox(width: double.infinity, child: Tab(text: 'Time Slot')),
+              SizedBox(width: double.infinity, child: Tab(text: 'Preferences')),
             ],
           ),
           actions: [
@@ -371,70 +436,6 @@ class _TaskPreferencesState extends State<TaskPreferences> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text(
-                      'Preferred Working Type',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Inter',
-                          color: Colors.grey[800]),
-                    ),
-                  ),
-                  SizedBox(height: 7.5),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Text(
-                            'Full time - (7:30 AM to 7:30 PM), Part time - (2:30 PM to 7:30 PM)',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.normal,
-                                color: Colors.grey[600]),
-                          ),
-                        ),
-                        CustomDropdownMenu(
-                          items: workingTypeMap.keys.toList(),
-                          titleSelect: 'Select Working Type',
-                          titleValue: selectedWorkingTypeValue != null
-                              ? workingTypeMap.keys.firstWhere(
-                                  (key) =>
-                                      workingTypeMap[key] ==
-                                      selectedWorkingTypeValue,
-                                )
-                              : 'Select Working Type',
-                          onSelected: (selectedValue) {
-                            setState(() {
-                              selectedWorkingTypeValue =
-                                  workingTypeMap[selectedValue];
-                            });
-                            _saveWorkingType();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 25),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text(
-                      'Date',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Inter',
-                          color: Colors.grey[800]),
-                    ),
-                  ),
-                  SizedBox(height: 7.5),
                   WeekButtons(
                     initialDate: selectedDate!,
                     onDateSelected: (date) {
@@ -444,21 +445,9 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                     },
                     onGetTimeSlot: _getTimeSlot,
                   ),
-                  SizedBox(height: 25),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text(
-                      'Time Slot',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Inter',
-                          color: Colors.grey[800]),
-                    ),
-                  ),
-                  SizedBox(height: 7.5),
+                  SizedBox(height: 10),
                   Expanded(
-                    child: isLoadingTimeSlots
+                    child: isLoading
                         ? Center(
                             child: Text(
                             'Loading...',
@@ -485,16 +474,17 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                                           int status = timeSlot['slot_status'];
                                           return Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                vertical: 2.5),
+                                                vertical: 3.5),
                                             child: Container(
+                                              height: 40,
                                               decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.all(
-                                                    Radius.circular(10)),
+                                                    Radius.circular(7.5)),
                                                 color: Colors.white,
                                               ),
                                               child: Row(
                                                 children: [
-                                                  SizedBox(width: 12),
+                                                  SizedBox(width: 10),
                                                   Container(
                                                     width: 100,
                                                     decoration: BoxDecoration(
@@ -529,12 +519,13 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                                                       ),
                                                     ),
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            12.0),
+                                                  SizedBox(
+                                                    width: 75,
                                                     child: Text(
-                                                      '${timeSlot['time'] ?? 'N/A'}',
+                                                      textAlign: TextAlign.end,
+                                                      formatTime(
+                                                          timeSlot['time'] ??
+                                                              '00:00:00'),
                                                       style: TextStyle(
                                                           fontFamily: 'Inter',
                                                           fontSize: 13,
@@ -593,7 +584,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                                   color: Colors.grey[100],
                                 ),
                                 width: double.infinity,
-                                padding: EdgeInsets.all(12),
+                                padding: EdgeInsets.all(10),
                                 child: Text(
                                   'No time slots available. Please generate.',
                                   style: TextStyle(
@@ -634,7 +625,50 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    height: 50,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(width: 1, color: Colors.grey.shade300),
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Acount Status',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[800],
+                          ),
+                        ),
+                        Spacer(),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 2.5),
+                          decoration: BoxDecoration(
+                            color: getTaskerStatus(
+                                int.parse(taskerStatus))['color'],
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          child: Text(
+                            getTaskerStatus(int.parse(taskerStatus))['text'],
+                            style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.bold,
+                                color: getTaskerStatus(
+                                    int.parse(taskerStatus))['textColor'],
+                                fontSize: 10),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    height: 50,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(5),
@@ -652,9 +686,12 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                           ),
                         ),
                         Spacer(),
-                        Transform.scale(
-                          scale: 0.85,
+                        SizedBox(
+                          width: 50,
+                          height: 25,
                           child: Switch(
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
                             value: isPublic,
                             onChanged: (value) {
                               setState(() {
@@ -671,13 +708,64 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 25),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Text(
+                  SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    decoration: BoxDecoration(
+                        border:
+                            Border.all(width: 1, color: Colors.grey.shade300),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(7.5))),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            'Preferred Working Type',
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Inter',
+                                color: Colors.grey[800]),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: CustomDropdownMenu(
+                            items: workingTypeMap.keys.toList(),
+                            titleSelect: 'Select Working Type',
+                            titleValue: selectedWorkingTypeValue != null
+                                ? workingTypeMap.keys.firstWhere(
+                                    (key) =>
+                                        workingTypeMap[key] ==
+                                        selectedWorkingTypeValue,
+                                  )
+                                : 'Select Working Type',
+                            onSelected: (selectedValue) {
+                              setState(() {
+                                selectedWorkingTypeValue =
+                                    workingTypeMap[selectedValue];
+                              });
+                              _saveWorkingType();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(7.5)),
+                        border:
+                            Border.all(width: 1, color: Colors.grey.shade300)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
                           'Working Preferred Location',
                           style: TextStyle(
                               fontSize: 13,
@@ -685,77 +773,148 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                               fontFamily: 'Inter',
                               color: Colors.grey[800]),
                         ),
-                      ),
-                      const SizedBox(height: 7.5),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(12),
-                              child: Text(
-                                'State',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.grey[800]),
+                        const SizedBox(height: 10),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[50],
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(7.5))),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  'State',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.grey[800]),
+                                ),
                               ),
-                            ),
-                            CustomDropdownMenu(
-                              items: states,
-                              titleSelect: 'Select State',
-                              titleValue: workingLocState ?? 'Select State',
-                              onSelected: (selectedValue) {
-                                setState(() {
-                                  workingLocState = selectedValue;
-                                  workingLocArea = null;
-                                });
-                                fetchAreaNames(selectedValue);
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(12),
-                              child: Text(
-                                'Area',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.grey[800]),
+                              CustomDropdownMenu(
+                                items: states,
+                                titleSelect: 'Select State',
+                                titleValue: workingLocState ?? 'Select State',
+                                onSelected: (selectedValue) {
+                                  setState(() {
+                                    workingLocState = selectedValue;
+                                    workingLocArea = null;
+                                  });
+                                  fetchAreaNames(selectedValue);
+                                },
                               ),
-                            ),
-                            CustomDropdownMenu(
-                              items: areas,
-                              titleSelect: 'Select Area',
-                              titleValue: workingLocArea ?? 'Select Area',
-                              onSelected: (selectedValue) {
-                                setState(() {
-                                  workingLocArea = selectedValue;
-                                });
-                              },
-                              isEnabled: states.isNotEmpty,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 10),
+                        SizedBox(height: 10),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[50],
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(7.5))),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  'Area',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.grey[800]),
+                                ),
+                              ),
+                              CustomDropdownMenu(
+                                items: areas,
+                                titleSelect: 'Select Area',
+                                titleValue: workingLocArea ?? 'Select Area',
+                                onSelected: (selectedValue) {
+                                  setState(() {
+                                    workingLocArea = selectedValue;
+                                  });
+                                },
+                                isEnabled: states.isNotEmpty,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[50],
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(7.5))),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  'Working Radius (KM)',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.grey[800]),
+                                ),
+                              ),
+                              Container(
+                                height: 50,
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(7.5),
+                                    border: Border.all(
+                                        width: 1, color: Colors.grey.shade300)),
+                                child: Row(
+                                  children: [
+                                    SliderTheme(
+                                      data: SliderThemeData(
+                                          activeTrackColor:
+                                              Color.fromRGBO(24, 52, 92, 1),
+                                          thumbColor:
+                                              Color.fromRGBO(24, 52, 92, 1),
+                                          inactiveTrackColor:
+                                              Color.fromRGBO(24, 52, 92, 1)
+                                                  .withOpacity(0.5),
+                                          overlayShape:
+                                              SliderComponentShape.noThumb),
+                                      child: Expanded(
+                                        child: Slider(
+                                          value: workingRadius.toDouble(),
+                                          min: 0,
+                                          max: 100,
+                                          label:
+                                              workingRadius.round().toString(),
+                                          onChanged: (double value) {
+                                            setState(() {
+                                              workingRadius = value.toInt();
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      '${workingRadius.round()} KM',
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontFamily: 'Inter',
+                                          color: Colors.grey[800],
+                                          fontWeight: FontWeight.normal),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -862,3 +1021,12 @@ class WeekButtonsState extends State<WeekButtons> {
     );
   }
 }
+
+String formatTime(String time) {
+  final dateFormat = DateFormat('hh:mm a');
+  final timeFormat = DateFormat('HH:mm:ss'); // Original format (24-hour)
+  final parsedTime = timeFormat.parse(time);
+  return dateFormat.format(parsedTime);
+}
+
+
