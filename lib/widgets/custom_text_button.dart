@@ -14,12 +14,16 @@ class CustomTextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onPressed, // Add this to handle the tap event
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 14,
-          color: Colors.blue,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontWeight: FontWeight.normal,
+            fontSize: 12,
+            fontFamily: 'Inter',
+            color: Colors.blue,
+          ),
         ),
       ),
     );

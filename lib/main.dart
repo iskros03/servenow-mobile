@@ -3,10 +3,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:servenow_mobile/screens/add_service.dart';
 import 'package:servenow_mobile/screens/booking_details.dart';
 import 'package:servenow_mobile/screens/booking_list.dart';
+import 'package:servenow_mobile/screens/booking_summary.dart';
 import 'package:servenow_mobile/screens/home.dart';
 import 'package:servenow_mobile/screens/manage_service.dart';
 import 'package:servenow_mobile/screens/my_booking.dart';
 import 'package:servenow_mobile/screens/my_profile.dart';
+import 'package:servenow_mobile/screens/review_list.dart';
+import 'package:servenow_mobile/screens/review_management.dart';
 import 'package:servenow_mobile/screens/settings.dart';
 import 'package:servenow_mobile/screens/services.dart';
 import 'package:servenow_mobile/screens/sign_in.dart';
@@ -33,7 +36,9 @@ Future<void> main() async {
         '/my_booking': (context) => const MyBooking(),
         '/update_time_slot': (context) => const UpdateTimeslotAvailability(),
         '/booking_details': (context) => const BookingDetails(),
+        '/booking_summary': (context) => const BookingSummary(),
         '/booking_list': (context) => const BookingList(),
-
+        '/review_management': (context) => const ReviewManagement(),
+        '/review_list': (context) => const ReviewList(),
       }));
 }

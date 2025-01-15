@@ -115,155 +115,155 @@ class _ManageServiceState extends State<ManageService> {
     }
   }
 
-  void _deleteService() async {
-    try {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Delete service...'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      TaskerService taskerService = TaskerService();
-      final response = await taskerService.deleteTaskerService(serviceId);
-      print(response['data']['message']);
-      if (response['statusCode'] == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(response['data']['message']),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 3),
-          ),
-        );
-        Navigator.of(context).pop();
-        Navigator.pop(context, true);
+  // void _deleteService() async {
+  //   try {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('Delete service...'),
+  //         duration: Duration(seconds: 2),
+  //       ),
+  //     );
+  //     TaskerService taskerService = TaskerService();
+  //     final response = await taskerService.deleteTaskerService(serviceId);
+  //     print(response['data']['message']);
+  //     if (response['statusCode'] == 201) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text(response['data']['message']),
+  //           backgroundColor: Colors.green,
+  //           duration: Duration(seconds: 3),
+  //         ),
+  //       );
+  //       Navigator.of(context).pop();
+  //       Navigator.pop(context, true);
 
-        // Navigator.pushReplacementNamed(context, '/services');
-      } else if (response['statusCode'] == 301) {
-        throw Exception(response['data']['message']);
-      } else {
-        throw Exception(response['data']['message']);
-      }
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${error.toString()}'),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 3),
-        ),
-      );
-    }
-  }
+  //       // Navigator.pushReplacementNamed(context, '/services');
+  //     } else if (response['statusCode'] == 301) {
+  //       throw Exception(response['data']['message']);
+  //     } else {
+  //       throw Exception(response['data']['message']);
+  //     }
+  //   } catch (error) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('Error: ${error.toString()}'),
+  //         backgroundColor: Colors.red,
+  //         duration: const Duration(seconds: 3),
+  //       ),
+  //     );
+  //   }
+  // }
 
-  void _showDeleteConfirmation() {
-    print(serviceId);
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Delete Confirmation',
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[700],
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'This action cannot be undone. Are you sure you want to delete this service?',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 13,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          backgroundColor: Colors.grey[200],
-                          foregroundColor: Colors.grey[800],
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ).copyWith(
-                          overlayColor:
-                              WidgetStateProperty.all(Colors.transparent),
-                          shadowColor:
-                              WidgetStateProperty.all(Colors.transparent),
-                          surfaceTintColor:
-                              WidgetStateProperty.all(Colors.transparent),
-                        ),
-                        child: Text(
-                          'Cancel',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: _deleteService,
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          backgroundColor: Colors.red[50],
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ).copyWith(
-                          overlayColor:
-                              WidgetStateProperty.all(Colors.transparent),
-                          shadowColor:
-                              WidgetStateProperty.all(Colors.transparent),
-                          surfaceTintColor:
-                              WidgetStateProperty.all(Colors.transparent),
-                        ),
-                        child: Text(
-                          'Delete',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // void _showDeleteConfirmation() {
+  //   print(serviceId);
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Dialog(
+  //         backgroundColor: Colors.white,
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(16.0),
+  //         ),
+  //         child: Padding(
+  //           padding: const EdgeInsets.all(20.0),
+  //           child: Column(
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: [
+  //               Text(
+  //                 'Delete Confirmation',
+  //                 style: TextStyle(
+  //                   fontFamily: 'Inter',
+  //                   fontSize: 18,
+  //                   fontWeight: FontWeight.bold,
+  //                   color: Colors.grey[700],
+  //                 ),
+  //               ),
+  //               SizedBox(height: 8),
+  //               Text(
+  //                 'This action cannot be undone. Are you sure you want to delete this service?',
+  //                 textAlign: TextAlign.center,
+  //                 style: TextStyle(
+  //                   fontFamily: 'Inter',
+  //                   fontSize: 13,
+  //                   color: Colors.grey[600],
+  //                 ),
+  //               ),
+  //               SizedBox(height: 20),
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                 children: [
+  //                   Expanded(
+  //                     child: ElevatedButton(
+  //                       onPressed: () {
+  //                         Navigator.of(context).pop();
+  //                       },
+  //                       style: ElevatedButton.styleFrom(
+  //                         elevation: 0,
+  //                         backgroundColor: Colors.grey[200],
+  //                         foregroundColor: Colors.grey[800],
+  //                         padding: const EdgeInsets.symmetric(vertical: 12),
+  //                         shape: RoundedRectangleBorder(
+  //                           borderRadius: BorderRadius.circular(8.0),
+  //                         ),
+  //                       ).copyWith(
+  //                         overlayColor:
+  //                             WidgetStateProperty.all(Colors.transparent),
+  //                         shadowColor:
+  //                             WidgetStateProperty.all(Colors.transparent),
+  //                         surfaceTintColor:
+  //                             WidgetStateProperty.all(Colors.transparent),
+  //                       ),
+  //                       child: Text(
+  //                         'Cancel',
+  //                         style: TextStyle(
+  //                           fontFamily: 'Inter',
+  //                           fontSize: 13,
+  //                           fontWeight: FontWeight.bold,
+  //                           color: Colors.grey[700],
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   SizedBox(width: 12),
+  //                   Expanded(
+  //                     child: ElevatedButton(
+  //                       onPressed: _deleteService,
+  //                       style: ElevatedButton.styleFrom(
+  //                         elevation: 0,
+  //                         backgroundColor: Colors.red[50],
+  //                         foregroundColor: Colors.white,
+  //                         padding: const EdgeInsets.symmetric(vertical: 12),
+  //                         shape: RoundedRectangleBorder(
+  //                           borderRadius: BorderRadius.circular(8.0),
+  //                         ),
+  //                       ).copyWith(
+  //                         overlayColor:
+  //                             WidgetStateProperty.all(Colors.transparent),
+  //                         shadowColor:
+  //                             WidgetStateProperty.all(Colors.transparent),
+  //                         surfaceTintColor:
+  //                             WidgetStateProperty.all(Colors.transparent),
+  //                       ),
+  //                       child: Text(
+  //                         'Delete',
+  //                         style: TextStyle(
+  //                           fontFamily: 'Inter',
+  //                           fontSize: 13,
+  //                           fontWeight: FontWeight.bold,
+  //                           color: Colors.red,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {

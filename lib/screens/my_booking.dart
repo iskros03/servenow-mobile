@@ -420,12 +420,17 @@ class _MyBookingState extends State<MyBooking> {
                                   children: [
                                     Row(
                                       children: [
-                                        booking['status'] == 3
+                                        booking['status'] == 3 ||
+                                                booking['status'] == 6
                                             ? Row(
                                                 children: [
                                                   Text(
                                                     textAlign: TextAlign.center,
-                                                    'Confirmed ',
+                                                    booking['status'] == 3
+                                                        ? 'Confirmed'
+                                                        : booking['status'] == 6
+                                                            ? 'Completed '
+                                                            : '',
                                                     style: TextStyle(
                                                         color: Colors.green,
                                                         fontWeight:
@@ -441,7 +446,8 @@ class _MyBookingState extends State<MyBooking> {
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 15, vertical: 5),
                                           decoration: BoxDecoration(
-                                              color: booking['status'] == 3
+                                              color: booking['status'] == 3 ||
+                                                      booking['status'] == 6
                                                   ? Colors.grey.shade50
                                                   : booking['color'],
                                               borderRadius: BorderRadius.all(
@@ -452,7 +458,8 @@ class _MyBookingState extends State<MyBooking> {
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 12,
                                                 fontFamily: 'Inter',
-                                                color: booking['status'] == 3
+                                                color: booking['status'] == 3 ||
+                                                        booking['status'] == 6
                                                     ? Colors.grey.shade500
                                                     : Colors.white),
                                           ),
@@ -556,7 +563,8 @@ class _MyBookingState extends State<MyBooking> {
                                                 booking['startTime'],
                                             bookingEndTime: booking['endTime'],
                                             bookingNote:
-                                                booking['booking_note'] ?? 'No Task Note.',
+                                                booking['booking_note'] ??
+                                                    'No Task Note.',
                                           ),
                                         ),
                                       ).then((result) {
@@ -587,13 +595,19 @@ class _MyBookingState extends State<MyBooking> {
                                       children: [
                                         Row(
                                           children: [
-                                            booking['status'] == 3
+                                            booking['status'] == 3 ||
+                                                    booking['status'] == 6
                                                 ? Row(
                                                     children: [
                                                       Text(
                                                         textAlign:
                                                             TextAlign.center,
-                                                        'Confirmed ',
+                                                        booking['status'] == 3
+                                                            ? 'Confirmed'
+                                                            : booking['status'] ==
+                                                                    6
+                                                                ? 'Completed '
+                                                                : '',
                                                         style: TextStyle(
                                                             color: Colors.green,
                                                             fontWeight:
@@ -610,7 +624,9 @@ class _MyBookingState extends State<MyBooking> {
                                               padding: EdgeInsets.symmetric(
                                                   horizontal: 15, vertical: 5),
                                               decoration: BoxDecoration(
-                                                  color: booking['status'] == 3
+                                                  color: booking['status'] ==
+                                                              3 ||
+                                                          booking['status'] == 6
                                                       ? Colors.grey.shade50
                                                       : booking['color'],
                                                   borderRadius:
@@ -623,7 +639,9 @@ class _MyBookingState extends State<MyBooking> {
                                                     fontSize: 12,
                                                     fontFamily: 'Inter',
                                                     color: booking['status'] ==
-                                                            3
+                                                                3 ||
+                                                            booking['status'] ==
+                                                                6
                                                         ? Colors.grey.shade500
                                                         : Colors.white),
                                               ),
@@ -713,14 +731,15 @@ class _MyBookingState extends State<MyBooking> {
 
     return Container(
       decoration: BoxDecoration(
-        color:
-            appointment.recurrenceId == 3 ? Colors.grey[50] : appointment.color,
+        color: appointment.recurrenceId == 3 || appointment.recurrenceId == 6
+            ? Colors.grey[50]
+            : appointment.color,
         borderRadius: BorderRadius.circular(5),
       ),
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: Row(
         children: [
-          appointment.recurrenceId == 3
+          appointment.recurrenceId == 3 || appointment.recurrenceId == 6
               ? Row(
                   children: [
                     Container(
@@ -731,13 +750,18 @@ class _MyBookingState extends State<MyBooking> {
                         color: Colors.white,
                       ),
                       child: Text(
+                        appointment.recurrenceId == 3
+                            ? 'Confirmed'
+                            : appointment.recurrenceId == 6
+                                ? 'Completed'
+                                : '',
                         textAlign: TextAlign.center,
-                        'Confirmed ',
                         style: TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                            fontFamily: 'Inter'),
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          fontFamily: 'Inter',
+                        ),
                       ),
                     ),
                     SizedBox(width: 10),
@@ -748,11 +772,12 @@ class _MyBookingState extends State<MyBooking> {
             appointment.subject,
             style: TextStyle(
               color: appointment.subject == 'Unavailable Slot'
-                  ? Colors.white
-                  : appointment.recurrenceId == 3
+                  ? Colors.red
+                  : appointment.recurrenceId == 3 ||
+                          appointment.recurrenceId == 6
                       ? Colors.grey[500]
                       : Colors.white,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.normal,
               fontSize: 12,
               fontFamily: 'Inter',
             ),
@@ -762,11 +787,12 @@ class _MyBookingState extends State<MyBooking> {
             '$showStartTime - $showEndTime',
             style: TextStyle(
               color: appointment.subject == 'Unavailable Slot'
-                  ? Colors.white
-                  : appointment.recurrenceId == 3
+                  ? Colors.red
+                  : appointment.recurrenceId == 3 ||
+                          appointment.recurrenceId == 6
                       ? Colors.grey[500]
                       : Colors.white,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.normal,
               fontSize: 12,
               fontFamily: 'Inter',
             ),
@@ -827,7 +853,7 @@ class _MyBookingState extends State<MyBooking> {
       setState(() {
         _revertUnavailable(appointment, revert: true);
       });
-    } else if (appointment.recurrenceId == 3) {
+    } else if (appointment.recurrenceId == 3 || appointment.recurrenceId == 6) {
       setState(() {
         _revertBookingTimes(appointment, revert: true);
       });

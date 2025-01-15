@@ -143,6 +143,12 @@ class _BookingDetailsState extends State<BookingDetails> {
           'color': Colors.purple[50],
           'textColor': Colors.purple[500]
         };
+      case 6:
+        return {
+          'text': 'Completed',
+          'color': Colors.green[50],
+          'textColor': Colors.green[500]
+        };
       default:
         return {
           'text': 'Unknown',

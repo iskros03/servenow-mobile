@@ -333,7 +333,7 @@ class _DashboardState extends State<Dashboard> {
                           SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, '/booking_list');
+                              Navigator.pushNamed(context, '/booking_summary');
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
@@ -356,6 +356,50 @@ class _DashboardState extends State<Dashboard> {
                               children: [
                                 Text(
                                   'Booking List',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 35,
+                                  child: FaIcon(
+                                    FontAwesomeIcons.calendarCheck,
+                                    size: 20,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                           SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/review_management');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20),
+                            ).copyWith(
+                              overlayColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                              shadowColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                              surfaceTintColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Review Management',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Inter',
