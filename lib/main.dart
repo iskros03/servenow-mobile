@@ -10,6 +10,7 @@ import 'package:servenow_mobile/screens/my_booking.dart';
 import 'package:servenow_mobile/screens/my_profile.dart';
 import 'package:servenow_mobile/screens/review_list.dart';
 import 'package:servenow_mobile/screens/review_management.dart';
+import 'package:servenow_mobile/screens/review_summary.dart';
 import 'package:servenow_mobile/screens/settings.dart';
 import 'package:servenow_mobile/screens/services.dart';
 import 'package:servenow_mobile/screens/sign_in.dart';
@@ -38,7 +39,9 @@ Future<void> main() async {
         '/booking_details': (context) => const BookingDetails(),
         '/booking_summary': (context) => const BookingSummary(),
         '/booking_list': (context) => const BookingList(),
-        '/review_management': (context) => const ReviewManagement(),
+        '/review_summary': (context) => const ReviewSummary(),
         '/review_list': (context) => const ReviewList(),
+        '/review_management': (context) => const ReviewManagement(),
+
       }));
 }

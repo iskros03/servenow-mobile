@@ -15,6 +15,7 @@ class BookingDetails extends StatefulWidget {
   final dynamic bookingEndTime;
   final dynamic bookingDate;
   final dynamic bookingTask;
+  final dynamic bookingRate;
 
   const BookingDetails(
       {super.key,
@@ -27,7 +28,8 @@ class BookingDetails extends StatefulWidget {
       this.bookingDate,
       this.bookingEndTime,
       this.bookingNote,
-      this.bookingTask});
+      this.bookingTask,
+      this.bookingRate});
 
   @override
   State<BookingDetails> createState() => _BookingDetailsState();
@@ -46,6 +48,7 @@ class _BookingDetailsState extends State<BookingDetails> {
   dynamic bookingNote;
   dynamic bookingEndTime;
   dynamic bookingDate;
+  dynamic bookingRate;
 
   @override
   void initState() {
@@ -64,6 +67,7 @@ class _BookingDetailsState extends State<BookingDetails> {
     bookingDate = widget.bookingDate;
     bookingEndTime = '${widget.bookingEndTime}';
     bookingNote = '${widget.bookingNote}';
+    bookingRate = '${widget.bookingRate}';
   }
 
   Future<void> _changeBookingStatus() async {
@@ -146,8 +150,8 @@ class _BookingDetailsState extends State<BookingDetails> {
       case 6:
         return {
           'text': 'Completed',
-          'color': Colors.green[50],
-          'textColor': Colors.green[500]
+          'color': Colors.green[500],
+          'textColor': Colors.green[50]
         };
       default:
         return {
@@ -271,6 +275,13 @@ class _BookingDetailsState extends State<BookingDetails> {
     );
   }
 
+  String formatTime(String time) {
+    final dateFormat = DateFormat('hh:mm a');
+    final timeFormat = DateFormat('HH:mm:ss'); // Original format (24-hour)
+    final parsedTime = timeFormat.parse(time);
+    return dateFormat.format(parsedTime);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -293,342 +304,284 @@ class _BookingDetailsState extends State<BookingDetails> {
           onPressed: () => Navigator.pop(context, true),
         ),
       ),
-      body: Column(
-        children: [
-          Padding(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-              child: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                        border:
-                            Border.all(width: 1, color: Colors.grey.shade300)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      body: Padding(
+          padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              bookingTask,
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey[600],
-                                  fontSize: 14),
-                            ),
-                            Spacer(),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 2.5),
-                              decoration: BoxDecoration(
-                                color: getBookingStatus(bookingStatus)['color'],
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                              ),
-                              child: Text(
-                                getBookingStatus(bookingStatus)['text'],
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.bold,
-                                    color: getBookingStatus(
-                                        bookingStatus)['textColor'],
-                                    fontSize: 12),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10),
                         Text(
-                          bookingClientName,
+                          bookingTask,
                           style: TextStyle(
                               fontFamily: 'Inter',
-                              fontWeight: FontWeight.normal,
+                              fontWeight: FontWeight.bold,
                               color: Colors.grey[600],
-                              fontSize: 13),
+                              fontSize: 14),
                         ),
-                        SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 5,
-                              child: SizedBox(
-                                child: Text(
-                                  bookingClientAddress,
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.grey[700],
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 25),
-                            Expanded(
-                              flex: 4,
-                              child: TextButton.icon(
-                                onPressed: () {
-                                  print('Get Direction button pressed');
-                                },
-                                icon: Icon(
-                                  FontAwesomeIcons
-                                      .locationArrow, // Updated icon
-                                ),
-                                label: Text(
-                                  'Get Direction', // Updated label
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                                style: TextButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  alignment: Alignment.center,
-                                  backgroundColor: Colors.blue,
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    side: BorderSide(
-                                        color: Colors.blue, width: 1),
-                                  ),
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                  ),
-                                ).copyWith(
-                                  overlayColor: WidgetStateProperty.all(
-                                      Colors.transparent),
-                                  shadowColor: WidgetStateProperty.all(
-                                      Colors.transparent),
-                                  surfaceTintColor: WidgetStateProperty.all(
-                                      Colors.transparent),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 5,
-                              child: SizedBox(
-                                child: Text(
-                                  bookingCLientPhone,
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.grey[700],
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 25),
-                            Expanded(
-                              flex: 4,
-                              child: TextButton.icon(
-                                onPressed: () {
-                                  print('Contact button pressed');
-                                },
-                                icon: Icon(
-                                  FontAwesomeIcons.whatsapp,
-                                ),
-                                label: Text(
-                                  'Contact Client',
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                                style: TextButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  alignment: Alignment.center,
-                                  backgroundColor: Colors.green,
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    side: BorderSide(
-                                        color: Colors.green, width: 1),
-                                  ),
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                  ),
-                                ).copyWith(
-                                  overlayColor: WidgetStateProperty.all(
-                                      Colors.transparent),
-                                  shadowColor: WidgetStateProperty.all(
-                                      Colors.transparent),
-                                  surfaceTintColor: WidgetStateProperty.all(
-                                      Colors.transparent),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                        Center(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            width: double.infinity,
-                            child: Divider(
-                              color: Colors.grey.shade300,
-                              thickness: 1.5,
-                              height: 25,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          DateFormat('d MMMM yyyy')
-                              .format(DateTime.parse(bookingDate)),
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.normal,
-                            color: Colors.grey[700],
-                            fontSize: 13,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              child: _buildTimeCard(bookingStartTime),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Text(
-                                '-',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: _buildTimeCard(bookingEndTime),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10),
+                        Spacer(),
                         Container(
-                          padding: EdgeInsets.all(12),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 2.5),
                           decoration: BoxDecoration(
-                            color: Colors.yellow.shade50,
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            color: getBookingStatus(bookingStatus)['color'],
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(8)),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              FaIcon(
-                                FontAwesomeIcons.thumbtack,
-                                size: 14,
-                                color: Colors.orange,
-                              ),
-                              SizedBox(height: 5),
-                              SizedBox(
-                                width: double.infinity,
-                                child: Text(
-                                  bookingNote,
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.grey[700],
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                            ],
+                          child: Text(
+                            getBookingStatus(bookingStatus)['text'],
+                            style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.bold,
+                                color: getBookingStatus(
+                                    bookingStatus)['textColor'],
+                                fontSize: 12),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  bookingStatus == 2 || bookingStatus == 4
-                      ? Row(
+                    bookingRate == 'null'
+                        ? SizedBox.shrink()
+                        : Column(
+                            children: [
+                              SizedBox(height: 5),
+                              Text(
+                                'RM $bookingRate',
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.orange[600],
+                                    fontSize: 13),
+                              ),
+                            ],
+                          ),
+                    SizedBox(height: 5),
+                    Text(
+                      bookingClientName,
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey[600],
+                          fontSize: 13),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      DateFormat('d MMMM yyyy')
+                          .format(DateTime.parse(bookingDate)),
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey[700],
+                        fontSize: 13,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Row(
+                      children: [
+                        Row(
                           children: [
-                            Expanded(
-                              child: CustomEleButton(
-                                  text: 'Unable To Serve',
-                                  onPressed: () {
-                                    setState(() {
-                                      option = 2;
-                                    });
-                                    _showChangeStatusBookingConfirmation();
-                                  },
-                                  bgColor: Colors.red[50],
-                                  borderWidth: 0,
-                                  borderColor: Colors.white,
-                                  fgColor: Colors.red),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: CustomEleButton(
-                                  text: 'Confirm Booking',
-                                  onPressed: () {
-                                    setState(() {
-                                      option = 1;
-                                    });
-                                    _showChangeStatusBookingConfirmation();
-                                  },
-                                  bgColor: Colors.green[50],
-                                  borderWidth: 0,
-                                  borderColor: Colors.white,
-                                  fgColor: Colors.green),
+                            Text(
+                              formatTime(bookingStartTime),
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.normal,
+                                color: Colors.grey[600],
+                              ),
                             ),
                           ],
+                        ),
+                        Text(
+                          ' - ',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        Text(
+                          formatTime(bookingEndTime),
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: SizedBox(
+                            child: Text(
+                              bookingClientAddress,
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.normal,
+                                color: Colors.blue[700],
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 25),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            width: 35,
+                            height: 35, // Ensure the container is a circle
+                            decoration: BoxDecoration(
+                              color: Colors.blue[50], // Background color
+                              shape: BoxShape
+                                  .circle, // Makes the background circular
+                            ),
+                            child: Center(
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: FaIcon(
+                                  FontAwesomeIcons.locationArrow,
+                                  size: 18,
+                                ),
+                                color: Colors.blue,
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                              ),
+                            ),
+                          ),
                         )
-                      : SizedBox.shrink()
-                ],
-              )),
-        ],
-      ),
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: SizedBox(
+                            child: Text(
+                              bookingCLientPhone,
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.normal,
+                                color: Colors.green[700],
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 25),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            width: 35,
+                            height: 35, // Ensure the container is a circle
+                            decoration: BoxDecoration(
+                              color: Colors.green[50], // Background color
+                              shape: BoxShape
+                                  .circle, // Makes the background circular
+                            ),
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: FaIcon(
+                                FontAwesomeIcons.whatsapp,
+                                size: 18,
+                              ),
+                              color: Colors.green,
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 1,
+                          color: Colors.grey.shade300,
+                        ),
+                        color: Colors.yellow.shade50,
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FaIcon(
+                            FontAwesomeIcons.thumbtack,
+                            size: 14,
+                            color: Colors.orange,
+                          ),
+                          SizedBox(height: 5),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              bookingNote,
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.normal,
+                                color: Colors.grey[700],
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 10),
+              bookingStatus == 2 || bookingStatus == 4
+                  ? Row(
+                      children: [
+                        Expanded(
+                          child: CustomEleButton(
+                              text: 'Unable To Serve',
+                              onPressed: () {
+                                setState(() {
+                                  option = 2;
+                                });
+                                _showChangeStatusBookingConfirmation();
+                              },
+                              bgColor: Colors.red[50],
+                              borderWidth: 0,
+                              borderColor: Colors.white,
+                              fgColor: Colors.red),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: CustomEleButton(
+                              text: 'Confirm Booking',
+                              onPressed: () {
+                                setState(() {
+                                  option = 1;
+                                });
+                                _showChangeStatusBookingConfirmation();
+                              },
+                              bgColor: Colors.green[50],
+                              borderWidth: 0,
+                              borderColor: Colors.white,
+                              fgColor: Colors.green),
+                        ),
+                      ],
+                    )
+                  : SizedBox.shrink()
+            ],
+          )),
     );
   }
-}
-
-Widget _buildTimeCard(String time) {
-  String formattedTime;
-
-  if (time.contains('T')) {
-    DateTime parsedTime = DateTime.parse(time);
-    formattedTime = DateFormat('h:mm a').format(parsedTime);
-  } else {
-    try {
-      DateFormat inputFormat = DateFormat('HH:mm:ss');
-      DateTime parsedTime = inputFormat.parse(time);
-      formattedTime = DateFormat('h:mm a').format(parsedTime);
-    } catch (e) {
-      formattedTime = 'Invalid time';
-    }
-  }
-
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-    decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.all(Radius.circular(10))),
-    child: Center(
-      child: Text(
-        formattedTime,
-        style: TextStyle(
-          fontSize: 18,
-          fontFamily: 'Inter',
-          fontWeight: FontWeight.normal,
-          color: Colors.grey[600],
-        ),
-      ),
-    ),
-  );
 }

@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:servenow_mobile/screens/booking_list.dart';
+import 'package:servenow_mobile/services/tasker_booking.dart';
 
 class BookingSummary extends StatefulWidget {
   const BookingSummary({super.key});
@@ -10,6 +12,54 @@ class BookingSummary extends StatefulWidget {
 }
 
 class _BookingSummaryState extends State<BookingSummary> {
+  List<dynamic> data = [];
+  Map<String, dynamic> monthlyChartData = {};
+  Map<String, dynamic> yearlyChartData = {};
+
+  dynamic totalBooking = 0;
+  dynamic totalUnpaid = 0;
+  dynamic totalConfirmed = 0;
+  dynamic totalCompleted = 0;
+  dynamic totalCancelled = 0;
+  dynamic totalCompletedAmount = 0;
+  dynamic totalCancelledAmount = 0;
+  dynamic totalFloatingAmount = 0;
+  dynamic totalCompletedAmountThisMonth = 0;
+
+  Future<void> _loadTaskerBookingList() async {
+    try {
+      var response = await TaskerBooking().getBookingList();
+      if (response['statusCode'] == 200) {
+        setState(() {
+          data = response['data'];
+          monthlyChartData = response['monthlyChartData'];
+          yearlyChartData = response['yearlyChartData'];
+          totalBooking = response['totalBooking'];
+          totalUnpaid = response['totalUnpaid'];
+          totalConfirmed = response['totalConfirmed'];
+          totalCompleted = response['totalCompleted'];
+          totalCancelled = response['totalCancelled'];
+          totalCompletedAmount = response['totalCompletedAmount'];
+          totalCancelledAmount = response['totalCancelledAmount'];
+          totalFloatingAmount = response['totalFloatingAmount'];
+          totalCompletedAmountThisMonth =
+              response['totalCompletedAmountThisMonth'];
+        });
+        print(monthlyChartData);
+      } else {
+        print('Failed to load booking list: ${response['statusCode']}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTaskerBookingList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +110,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                 color: Colors.grey.shade700),
                           ),
                           Text(
-                            '2',
+                            '$totalBooking',
                             style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 22,
@@ -72,7 +122,14 @@ class _BookingSummaryState extends State<BookingSummary> {
                       Spacer(),
                       IconButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/booking_list');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BookingList(
+                                bookingData: data,
+                              ),
+                            ),
+                          );
                         },
                         icon: FaIcon(FontAwesomeIcons.eye),
                         color: Colors.blue,
@@ -112,7 +169,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                   color: Colors.green.shade700),
                             ),
                             Text(
-                              '2',
+                              '$totalCompleted',
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 22,
@@ -144,7 +201,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                   color: Colors.greenAccent.shade700),
                             ),
                             Text(
-                              '2',
+                              '$totalConfirmed',
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 22,
@@ -181,7 +238,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                   color: Colors.orange.shade700),
                             ),
                             Text(
-                              '2',
+                              '$totalUnpaid',
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 22,
@@ -213,7 +270,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                   color: Colors.red.shade800),
                             ),
                             Text(
-                              '2',
+                              '$totalCancelled',
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 22,
@@ -349,7 +406,11 @@ class _BookingSummaryState extends State<BookingSummary> {
                                             width: 1, color: Colors.red),
                                         width: 50,
                                         fromY: 0,
-                                        toY: 20,
+                                        toY: double.tryParse(
+                                                monthlyChartData['cancelled']
+                                                        ?[0] ??
+                                                    '0.0') ??
+                                            0.0,
                                         color: Colors.red.withOpacity(0.35),
                                       )
                                     ]),
@@ -360,7 +421,11 @@ class _BookingSummaryState extends State<BookingSummary> {
                                             width: 1, color: Colors.green),
                                         width: 50,
                                         fromY: 0,
-                                        toY: 30,
+                                        toY: double.tryParse(
+                                                monthlyChartData['completed']
+                                                        ?[0] ??
+                                                    '0.0') ??
+                                            0.0,
                                         color: Colors.green.withOpacity(0.35),
                                       )
                                     ]),
@@ -371,7 +436,11 @@ class _BookingSummaryState extends State<BookingSummary> {
                                             width: 1, color: Colors.orange),
                                         width: 50,
                                         fromY: 0,
-                                        toY: 13,
+                                        toY: double.tryParse(
+                                                monthlyChartData['floating']
+                                                        ?[0] ??
+                                                    '0.0') ??
+                                            0.0,
                                         color: Colors.orange.withOpacity(0.35),
                                       )
                                     ]),
@@ -380,12 +449,15 @@ class _BookingSummaryState extends State<BookingSummary> {
                               ),
                             ),
                             Text(
-                              'January 2025',
+                              monthlyChartData['labels'] != null
+                                  ? monthlyChartData['labels'][0] ?? ''
+                                  : '',
                               style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
+                                fontFamily: 'Inter',
+                                fontSize: 12,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.grey.shade700,
+                              ),
                             )
                           ],
                         ),
@@ -506,7 +578,11 @@ class _BookingSummaryState extends State<BookingSummary> {
                                             width: 1, color: Colors.red),
                                         width: 50,
                                         fromY: 0,
-                                        toY: 20,
+                                        toY: double.tryParse(
+                                                monthlyChartData['cancelled']
+                                                        ?[0] ??
+                                                    '0.0') ??
+                                            0.0,
                                         color: Colors.red.withOpacity(0.35),
                                       )
                                     ]),
@@ -517,7 +593,11 @@ class _BookingSummaryState extends State<BookingSummary> {
                                             width: 1, color: Colors.green),
                                         width: 50,
                                         fromY: 0,
-                                        toY: 30,
+                                        toY: double.tryParse(
+                                                monthlyChartData['completed']
+                                                        ?[0] ??
+                                                    '0.0') ??
+                                            0.0,
                                         color: Colors.green.withOpacity(0.35),
                                       )
                                     ]),
@@ -528,7 +608,11 @@ class _BookingSummaryState extends State<BookingSummary> {
                                             width: 1, color: Colors.orange),
                                         width: 50,
                                         fromY: 0,
-                                        toY: 13,
+                                        toY: double.tryParse(
+                                                yearlyChartData['floating']
+                                                        ?[0] ??
+                                                    '0.0') ??
+                                            0.0,
                                         color: Colors.orange.withOpacity(0.35),
                                       )
                                     ]),
@@ -537,7 +621,9 @@ class _BookingSummaryState extends State<BookingSummary> {
                               ),
                             ),
                             Text(
-                              'Year 2025',
+                              yearlyChartData['labels'] != null
+                                  ? yearlyChartData['labels'][0].toString()
+                                  : '',
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 12,
@@ -572,7 +658,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                       ),
                       Spacer(),
                       Text(
-                        '(+) RM 0.00',
+                        '(+) RM $totalCompletedAmount',
                         style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 18,
@@ -602,7 +688,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                       ),
                       Spacer(),
                       Text(
-                        '(~) RM 10.00',
+                        '(~) RM $totalCancelledAmount',
                         style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 18,
@@ -632,7 +718,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                       ),
                       Spacer(),
                       Text(
-                        '(-) RM 0.00',
+                        '(-) RM $totalFloatingAmount',
                         style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 18,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:servenow_mobile/widgets/custom_dropdown_menu.dart';
+import 'package:servenow_mobile/widgets/custom_text_field.dart';
 
 class ReviewManagement extends StatefulWidget {
   const ReviewManagement({super.key});
@@ -9,552 +11,231 @@ class ReviewManagement extends StatefulWidget {
 }
 
 class _ReviewManagementState extends State<ReviewManagement> {
+  final TextEditingController chatController = TextEditingController();
+
+  Map<String, int> reviewStatus = {
+    'Show': 1,
+    'Hide': 2,
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[50],
-        appBar: AppBar(
-          backgroundColor: const Color.fromRGBO(24, 52, 92, 1),
-          centerTitle: true,
-          elevation: 0,
-          title: const Text(
-            'Review Management',
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'Inter',
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        backgroundColor: const Color.fromRGBO(24, 52, 92, 1),
+        centerTitle: true,
+        elevation: 0,
+        title: const Text(
+          'Review Management',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Inter',
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(7.5)),
-                  child: Row(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Total Reviews',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 13,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.grey.shade700),
-                          ),
-                          Text(
-                            '2',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey.shade600),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/review_list');
-                        },
-                        icon: FaIcon(FontAwesomeIcons.eye),
-                        color: Colors.blue,
-                        style: IconButton.styleFrom().copyWith(
-                          overlayColor:
-                              WidgetStateProperty.all(Colors.transparent),
-                          shadowColor:
-                              WidgetStateProperty.all(Colors.transparent),
-                          surfaceTintColor:
-                              WidgetStateProperty.all(Colors.transparent),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(7.5),
+                          color: Colors.grey[50],
                         ),
-                      )
-                    ],
-                  )),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7.5)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Total Reviews',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
-                            ),
-                            Text(
-                              '(January)',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
-                            ),
-                            Text(
-                              '2',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade600),
-                            ),
-                          ],
-                        )),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7.5)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Total Reviews',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
-                            ),
-                            Text(
-                              '(2025)',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
-                            ),
-                            Text(
-                              '2',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade600),
-                            ),
-                          ],
-                        )),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7.5)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Total Unreview Booking',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
-                            ),
-                            Text(
-                              '2',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red.shade600),
-                            ),
-                          ],
-                        )),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(child: SizedBox.shrink())
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7.5)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Average Rating',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
-                            ),
-                            Text(
-                              '0.0',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade600),
-                            ),
-                          ],
-                        )),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7.5)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Positive Reviews',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
-                            ),
-                            Text(
-                              '5.9 %',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green.shade600),
-                            ),
-                          ],
-                        )),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7.5)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Neutral Reviews',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
-                            ),
-                            Text(
-                              '2.9 %',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade600),
-                            ),
-                          ],
-                        )),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7.5)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Negative Reviews',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
-                            ),
-                            Text(
-                              '2 %',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red.shade600),
-                            ),
-                          ],
-                        )),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(7.5)),
-                  child: Row(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            FontAwesomeIcons.solidFaceLaughBeam,
-                            size: 20,
-                            color: Colors.green,
+                          vertical: 5,
+                          horizontal: 10,
+                        ),
+                        child: Text(
+                          'wecw ewfewf',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 12,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey[800],
                           ),
-                          SizedBox(width: 10),
-                          Text(
-                            'Very Happy',
-                            style: TextStyle(
+                        ),
+                      ),
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          children: List.generate(
+                            5,
+                            (index) => FaIcon(
+                              FontAwesomeIcons.solidStar,
+                              color: index < 3 ? Colors.orange : Colors.grey,
+                              size: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Isk Ros',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 13,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      '16 January 2025 11:28 PM',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey[800],
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomDropdownMenu(
+                          items: reviewStatus.keys.toList(),
+                          onSelected: (selectedValue) {
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 5,
+                    ),
+                    itemCount: 4,
+                    itemBuilder: (context, index) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: Image.network(
+                          'https://picsum.photos/100?random=$index',
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(7.5)),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    child: Row(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Isk Ros: ',
+                              style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 13,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.green),
-                          )
-                        ],
-                      ),
-                      Spacer(),
-                      Text(
-                        '3',
-                        style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            Text(
+                              'Hai',
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 13,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        Text(
+                          '16/01/2025 11:29 PM',
+                          style: TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade700),
-                      ),
-                    ],
+                            fontSize: 13,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(7.5)),
-                  child: Row(
+                  SizedBox(height: 10),
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          Icon(
-                            FontAwesomeIcons.solidFaceSmile,
-                            size: 20,
+                      Expanded(
+                          child: CustomTextField(
+                              labelText: 'Your Message',
+                              controller: chatController)),
+                      SizedBox(width: 7.5),
+                      Container(
+                        width: 35,
+                        height: 35,
+                        decoration: BoxDecoration(
+                          color: Colors.blue[50],
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/');
+                          },
+                          icon: FaIcon(
+                            FontAwesomeIcons.solidPaperPlane,
+                            size: 15,
                             color: Colors.blue,
                           ),
-                          SizedBox(width: 10),
-                          Text(
-                            'Happy',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 13,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.blue),
-                          )
-                        ],
-                      ),
-                      Spacer(),
-                      Text(
-                        '5',
-                        style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade700),
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                        ),
                       ),
                     ],
                   ),
-                ),
+                ],
               ),
-              SizedBox(height: 10),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(7.5)),
-                  child: Row(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            FontAwesomeIcons.solidFaceMeh,
-                            size: 20,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            'Neutral',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 13,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.grey),
-                          )
-                        ],
-                      ),
-                      Spacer(),
-                      Text(
-                        '5',
-                        style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade700),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(7.5)),
-                  child: Row(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            FontAwesomeIcons.solidFaceFrown,
-                            size: 20,
-                            color: Colors.orange,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            'Sad',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 13,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.orange),
-                          )
-                        ],
-                      ),
-                      Spacer(),
-                      Text(
-                        '0',
-                        style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade700),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(7.5)),
-                  child: Row(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            FontAwesomeIcons.solidFaceAngry,
-                            size: 20,
-                            color: Colors.red,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            'Angry',
-                            style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 13,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.red),
-                          )
-                        ],
-                      ),
-                      Spacer(),
-                      Text(
-                        '0',
-                        style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade700),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

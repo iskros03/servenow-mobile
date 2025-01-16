@@ -1,87 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:servenow_mobile/services/tasker_service.dart';
+import 'package:intl/intl.dart';
+import 'package:servenow_mobile/screens/booking_details.dart';
 
 class BookingList extends StatefulWidget {
-  const BookingList({super.key});
+  final List<dynamic>? bookingData;
+
+  const BookingList({super.key, this.bookingData});
 
   @override
   State<BookingList> createState() => _BookingListState();
 }
 
 class _BookingListState extends State<BookingList> {
-    List<dynamic> services = []; // List service from specific tasker
-  List<dynamic> serviceType = []; // List service type
+  List<dynamic> services = [];
+  List<dynamic> serviceType = [];
+  List<dynamic> bookingData = [];
   final TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _loadTaskerServiceList();
-    _loadTaskerServiceType();
+    bookingData = widget.bookingData ?? [];
   }
 
-  void _loadTaskerServiceType() async {
-    try {
-      var data = await TaskerService().getTaskerServiceType();
-      setState(() {
-        serviceType = data;
-      });
-    } catch (e) {
-      print('Error occurred: $e');
-    }
-  }
-
-  void _loadTaskerServiceList() async {
-    try {
-      var data = await TaskerService().getTaskerServiceList();
-      setState(() {
-        services = data;
-      });
-    } catch (e) {
-      print('Error occurred: $e');
-    }
-  }
-
-  String getServiceTypeName(int serviceTypeId) {
-    final serviceTypeName = serviceType.firstWhere(
-      (serviceType) => serviceType['id'] == serviceTypeId,
-      orElse: () => {'servicetype_name': '...'},
-    );
-    return serviceTypeName['servicetype_name'];
-  }
-
-  Map<String, dynamic> getServiceStatus(int status) {
+  Map<String, dynamic> getBookingStatus(int status) {
     switch (status) {
-      case 0:
+      case 1:
         return {
-          'text': 'Pending',
+          'text': 'To Pay',
           'color': Colors.orange[50],
           'textColor': Colors.orange[500]
         };
-      case 1:
+      case 2:
         return {
-          'text': 'Active',
+          'text': 'Paid',
           'color': Colors.green[50],
           'textColor': Colors.green[500]
         };
-      case 2:
-        return {
-          'text': 'Inactive',
-          'color': Colors.red[50],
-          'textColor': Colors.red[500]
-        };
       case 3:
         return {
-          'text': 'Rejected',
-          'color': Colors.red[50],
-          'textColor': Colors.red[500]
+          'text': 'Confirmed',
+          'color': Colors.green[50],
+          'textColor': Colors.green[500]
         };
       case 4:
         return {
-          'text': 'Teminated',
+          'text': 'Rescheduled',
           'color': Colors.purple[50],
           'textColor': Colors.purple[500]
+        };
+      case 6:
+        return {
+          'text': 'Completed',
+          'color': Colors.green[500],
+          'textColor': Colors.green[50]
         };
       default:
         return {
@@ -101,6 +73,12 @@ class _BookingListState extends State<BookingList> {
     return words.join(' ');
   }
 
+  String formatTime(String time) {
+    final dateFormat = DateFormat('hh:mm a');
+    final timeFormat = DateFormat('HH:mm:ss'); // Original format (24-hour)
+    final parsedTime = timeFormat.parse(time);
+    return dateFormat.format(parsedTime);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,164 +105,161 @@ class _BookingListState extends State<BookingList> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Theme(
-                data: ThemeData(
-                  highlightColor: Colors.grey[300],
-                ),
-                child: Scrollbar(
-                  thumbVisibility: true,
-                  thickness: 5.0,
-                  radius: Radius.circular(8.0),
-                  child: ListView.builder(
-                    itemCount: services.length,
-                    itemBuilder: (context, index) {
-                      final service = services[index];
-                      int status = service['service_status'];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(7.5)),
+              child: ListView.builder(
+                itemCount: bookingData.length,
+                itemBuilder: (context, index) {
+                  final booking = bookingData[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      ).copyWith(
+                        overlayColor:
+                            WidgetStateProperty.all(Colors.transparent),
+                        shadowColor:
+                            WidgetStateProperty.all(Colors.transparent),
+                        surfaceTintColor:
+                            WidgetStateProperty.all(Colors.transparent),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookingDetails(
+                              bookingId: booking['bookingID'],
+                              bookingTask: booking['servicetype_name'],
+                              bookingStatus: booking['booking_status'],
+                              bookingClientName: booking['client_firstname'] +
+                                  ' ' +
+                                  booking['client_lastname'],
+                              bookingCLientPhone: booking['client_phoneno'],
+                              bookingClientAddress: booking['booking_address'],
+                              bookingDate: booking['booking_date'],
+                              bookingStartTime: booking['booking_time_start'],
+                              bookingEndTime: booking['booking_time_end'],
+                              bookingRate: booking['booking_rate'],
+                              bookingNote: booking['booking_note'] ??
+                                  'Unavailable Note.',
+                            ),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        );
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
                             children: [
-                              Text(
-                                capitalizeFirstLetter(getServiceTypeName(
-                                    service['service_type_id'])),
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[800]),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    'RM ${double.parse(service['service_rate'].toString()).toStringAsFixed(2)}',
-                                    style: TextStyle(
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7.5),
+                                    color: Colors.grey[50]),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 10),
+                                child: Text(
+                                  booking['booking_order_id'],
+                                  style: TextStyle(
                                       fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    capitalizeFirstLetter(
-                                        service['service_rate_type']),
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                service['service_desc'] ??
-                                    'No description available.',
-                                style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 12,
-                                  color: Colors.grey[800],
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.grey[800]),
                                 ),
                               ),
-                              SizedBox(height: 10),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(5)),
-                                      color: getServiceStatus(status)['color'],
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 5),
-                                    child: Text(
-                                      textAlign: TextAlign.center,
-                                      getServiceStatus(status)['text'],
-                                      style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 10,
-                                        color: getServiceStatus(
-                                            status)['textColor'],
-                                      ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  IconButton(
-                                      color: service['service_status'] == 0
-                                          ? Colors.grey.shade300
-                                          : Colors.blueGrey,
-                                      style: ButtonStyle(
-                                              tapTargetSize:
-                                                  MaterialTapTargetSize
-                                                      .shrinkWrap)
-                                          .copyWith(
-                                        overlayColor: WidgetStateProperty.all(
-                                            Colors.transparent),
-                                        shadowColor: WidgetStateProperty.all(
-                                            Colors.transparent),
-                                        surfaceTintColor:
-                                            WidgetStateProperty.all(
-                                                Colors.transparent),
-                                      ),
-                                      onPressed: () {
-                                        if (service['service_status'] != 0) {
-                                          // Navigator.push(
-                                          //   context,
-                                          //   MaterialPageRoute(
-                                          //     builder: (context) =>
-                                          //         ManageService(
-                                          //       serviceIdSingle: service['id'],
-                                          //       serviceTypeId:
-                                          //           service['service_type_id'],
-                                          //       serviceTypeSingle:
-                                          //           getServiceTypeName(service[
-                                          //               'service_type_id']),
-                                          //       serviceRateSingle:
-                                          //           service['service_rate'],
-                                          //       serviceStatusSingle:
-                                          //           service['service_status'],
-                                          //       serviceDescSingle:
-                                          //           service['service_desc'],
-                                          //       serviceRateTypeSingle: service[
-                                          //           'service_rate_type'],
-                                          //     ),
-                                          //   ),
-                                          // ).then((result) {
-                                          //   if (result == true) {
-                                          //     _loadTaskerServiceList();
-                                          //   }
-                                          // });
-                                        }
-                                      },
-                                      icon: FaIcon(
-                                        FontAwesomeIcons.pen,
-                                        size: 18,
-                                      ))
-                                ],
+                              Spacer(),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(7.5)),
+                                  color: getBookingStatus(
+                                      booking['booking_status'])['color'],
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 2.5),
+                                child: Text(
+                                    getBookingStatus(
+                                        booking['booking_status'])['text'],
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      color: getBookingStatus(
+                                              booking['booking_status'])[
+                                          'textColor'],
+                                    )),
                               ),
                             ],
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                          SizedBox(height: 5),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 75,
+                                  child: Text(
+                                    "RM ${booking['booking_rate']}",
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.orange[700]),
+                                  ),
+                                ),
+                                Text(
+                                  booking['servicetype_name'],
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600]),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              children: [
+                                Text(
+                                  DateFormat('d MMMM yyyy').format(
+                                      DateTime.parse(booking['booking_date'])),
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  '${formatTime(booking['booking_time_start'])} - ${formatTime(booking['booking_time_end'])}',
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ],

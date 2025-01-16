@@ -389,6 +389,7 @@ class _MyBookingState extends State<MyBooking> {
                                         bookingDate: booking['date'],
                                         bookingStartTime: booking['startTime'],
                                         bookingEndTime: booking['endTime'],
+                                        bookingRate: booking['booking_rate'],
                                         bookingNote: booking['booking_note'] ??
                                             'Unavailable Note.',
                                       ),

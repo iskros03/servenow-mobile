@@ -377,7 +377,7 @@ class _DashboardState extends State<Dashboard> {
                            SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, '/review_management');
+                              Navigator.pushNamed(context, '/review_summary');
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
@@ -399,7 +399,7 @@ class _DashboardState extends State<Dashboard> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Review Management',
+                                  'Review Summary',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Inter',
