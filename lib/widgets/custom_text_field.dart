@@ -10,7 +10,8 @@ class CustomTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final Function()? onEyeTap;
-  final int? maxLength; // Add maxLength parameter
+  final int? maxLength;
+  final FocusNode? focusNode; // Add the FocusNode parameter
 
   const CustomTextField({
     super.key,
@@ -22,38 +23,35 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.inputFormatters,
     this.onEyeTap,
-    this.maxLength, // Accept maxLength as an argument
+    this.maxLength,
+    this.focusNode, // Accept focusNode as an argument
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      style:
-          TextStyle(fontFamily: 'Inter', fontSize: 12, color: Colors.grey[600]),
+      focusNode: focusNode, // Attach the FocusNode here
+      style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: Colors.grey[600]),
       obscureText: obscureText,
       maxLines: maxLines,
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
-      maxLength: maxLength, 
+      maxLength: maxLength,
       decoration: InputDecoration(
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         filled: true,
         fillColor: Colors.white,
         hintText: labelText,
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintStyle: TextStyle(
-            fontFamily: 'Inter', fontSize: 12, color: Colors.grey[400]),
+        hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 12, color: Colors.grey[400]),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(5)),
-          borderSide:
-              BorderSide(color: Colors.grey[300] ?? Colors.grey, width: 1),
+          borderSide: BorderSide(color: Colors.grey[300] ?? Colors.grey, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(5)),
-          borderSide:
-              BorderSide(color: Colors.grey[500] ?? Colors.grey, width: 1),
+          borderSide: BorderSide(color: Colors.grey[500] ?? Colors.grey, width: 1),
         ),
         prefixText: prefixText,
         prefixStyle: TextStyle(
@@ -69,11 +67,11 @@ class CustomTextField extends StatelessWidget {
                   size: 20,
                 ),
                 onPressed: onEyeTap,
-                splashColor: Colors.transparent, // Remove splash effect
+                splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
               )
             : null,
-        counterText: "", 
+        counterText: "",
       ),
     );
   }

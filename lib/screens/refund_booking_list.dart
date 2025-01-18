@@ -2,25 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:servenow_mobile/screens/booking_details.dart';
 
-class BookingList extends StatefulWidget {
-  final List<dynamic>? bookingData;
+class RefundBookingList extends StatefulWidget {
+  final List<dynamic>? bookingRefundData;
 
-  const BookingList({super.key, this.bookingData});
+  const RefundBookingList({super.key, this.bookingRefundData});
 
   @override
-  State<BookingList> createState() => _BookingListState();
+  State<RefundBookingList> createState() => _RefundBookingListState();
 }
 
-class _BookingListState extends State<BookingList> {
-  List<dynamic> services = [];
-  List<dynamic> serviceType = [];
-  List<dynamic> bookingData = [];
-  final TextEditingController searchController = TextEditingController();
+class _RefundBookingListState extends State<RefundBookingList> {
+  List<dynamic> bookingRefundData = [];
 
   @override
   void initState() {
+    bookingRefundData = widget.bookingRefundData ?? [];
     super.initState();
-    bookingData = widget.bookingData ?? [];
   }
 
   Map<String, dynamic> getBookingStatus(int status) {
@@ -116,9 +113,9 @@ class _BookingListState extends State<BookingList> {
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: bookingData.length,
+                itemCount: bookingRefundData.length,
                 itemBuilder: (context, index) {
-                  final booking = bookingData[index];
+                  final booking = bookingRefundData[index];
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
                     child: ElevatedButton(
@@ -145,12 +142,12 @@ class _BookingListState extends State<BookingList> {
                             builder: (context) => BookingDetails(
                               bookingId: booking['bookingID'],
                               bookingTask: booking['servicetype_name'],
-                              bookingEmail: booking['client_email'],
                               bookingStatus: booking['booking_status'],
                               bookingClientName: booking['client_firstname'] +
                                   ' ' +
                                   booking['client_lastname'],
                               bookingCLientPhone: booking['client_phoneno'],
+                              bookingEmail: booking['client_email'],
                               bookingClientAddress: booking['booking_address'],
                               bookingDate: booking['booking_date'],
                               bookingStartTime: booking['booking_time_start'],

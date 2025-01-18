@@ -39,146 +39,242 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(24, 52, 92, 1),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
               flex: 2,
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: EdgeInsets.all(20),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
-                      color: const Color.fromRGBO(24, 52, 92, 1),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 0),
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(7.5),
+                          color: Color.fromRGBO(24, 52, 92, 1)),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Dashboard',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Inter',
-                                  fontSize: 22.5,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              Text(
-                                'Hi, $taskerFirstName',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                    fontFamily: 'Inter'),
-                              ),
-                            ],
+                          SizedBox(
+                            width: 100,
+                            height: 50,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Total Earnings',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: 'Inter',
+                                        color: Colors.white)),
+                                Text('RM 1954.00',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white)),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 100,
+                            height: 50,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Your Rank Level',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: 'Inter',
+                                        color: Colors.white)),
+                                Text('Elite Tasker',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white)),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 100,
+                            height: 50,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Satisfication',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: 'Inter',
+                                        color: Colors.white)),
+                                Text('4 Star',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white)),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    Column(
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: CustomCard(
-                                cardColor: Colors.grey[50],
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text('Total Earning',
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontFamily: 'Inter',
-                                                    color: Colors.grey[600])),
-                                            Text('RM 129.00',
-                                                style: TextStyle(
-                                                    fontFamily: 'Inter',
-                                                    fontSize: 25,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.grey[800])),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                        width: 75,
-                                        child: FaIcon(FontAwesomeIcons.coins,
-                                            color: Colors.orange.shade700,
-                                            size: 50.0))
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
+                        SizedBox(
+                          width: 100,
+                          child: Column(
+                            children: [
+                              Text('RM 34.00',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600])),
+                              Text('This Month',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      fontFamily: 'Inter',
+                                      color: Colors.grey[600])),
+                            ],
+                          ),
                         ),
-                        SizedBox(height: 7.5),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: CustomCard(
-                                cardColor: Colors.grey[50],
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text('Total Upcoming Job',
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontFamily: 'Inter',
-                                                    color: Colors.grey[600])),
-                                            Text('6',
-                                                style: TextStyle(
-                                                    fontFamily: 'Inter',
-                                                    fontSize: 25,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.grey[800])),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                        width: 75,
-                                        child: FaIcon(FontAwesomeIcons.accusoft,
-                                            color: Colors.blue, size: 50.0))
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
+                        SizedBox(
+                          width: 100,
+                          child: Column(
+                            children: [
+                              Text('RM 19.00',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600])),
+                              Text('This Year',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      fontFamily: 'Inter',
+                                      color: Colors.grey[600])),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 100,
+                          child: Column(
+                            children: [
+                              Text('3 / 20',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600])),
+                              Text('Bookings Completed',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      fontFamily: 'Inter',
+                                      color: Colors.grey[600])),
+                            ],
+                          ),
                         ),
                       ],
-                    )
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          child: Column(
+                            children: [
+                              Text('RM 34.00',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600])),
+                              Text('This Month',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      fontFamily: 'Inter',
+                                      color: Colors.grey[600])),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 100,
+                          child: Column(
+                            children: [
+                              Text('RM 19.00',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600])),
+                              Text('This Year',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      fontFamily: 'Inter',
+                                      color: Colors.grey[600])),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 100,
+                          child: Column(
+                            children: [
+                              Text('3 / 20',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600])),
+                              Text('Bookings Completed',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      fontFamily: 'Inter',
+                                      color: Colors.grey[600])),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
             ),
             Expanded(
-              flex: 3,
+              flex: 2,
               child: Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -374,7 +470,7 @@ class _DashboardState extends State<Dashboard> {
                               ],
                             ),
                           ),
-                           SizedBox(height: 10),
+                          SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () {
                               Navigator.pushNamed(context, '/review_summary');
@@ -400,6 +496,51 @@ class _DashboardState extends State<Dashboard> {
                               children: [
                                 Text(
                                   'Review Summary',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 35,
+                                  child: FaIcon(
+                                    FontAwesomeIcons.calendarCheck,
+                                    size: 20,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, '/refund_booking_summary');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20),
+                            ).copyWith(
+                              overlayColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                              shadowColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                              surfaceTintColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Refund Booking Summary',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Inter',

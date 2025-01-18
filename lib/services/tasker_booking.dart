@@ -155,4 +155,33 @@ class TaskerBooking {
       throw Exception("Failed to fetch API: $e");
     }
   }
+
+  Future<Map<String, dynamic>> getRefundBookingList() async {
+    try {
+      final token = await TaskerAuth().getToken();
+      final url = Uri.parse('${dotenv.env['DOMAIN']}/api/get-refund-list');
+      final response = await http.get(url, headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      });
+      if (response.body.isNotEmpty) {
+        final data = json.decode(response.body);
+        return {
+          'statusCode': response.statusCode,
+          'data': data['data'],
+          'totalRefund': data['totalRefund'],
+          'totalPendingRefund': data['totalPendingRefund'],
+          'totalSelfRefund': data['totalSelfRefund'],
+          'totalApprovedAmount': data['totalApprovedAmount'],
+          'totalPenalizedAmount': data['totalPenalizedAmount'],
+          'totalPendingAmount': data['totalPendingAmount'],
+        };
+      } else {
+        throw Exception('Failed to get booking list');
+      }
+    } catch (e) {
+      throw Exception("Failed to fetch API: $e");
+    }
+  }
 }

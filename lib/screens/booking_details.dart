@@ -16,6 +16,7 @@ class BookingDetails extends StatefulWidget {
   final dynamic bookingDate;
   final dynamic bookingTask;
   final dynamic bookingRate;
+  final dynamic bookingEmail;
 
   const BookingDetails(
       {super.key,
@@ -29,7 +30,8 @@ class BookingDetails extends StatefulWidget {
       this.bookingEndTime,
       this.bookingNote,
       this.bookingTask,
-      this.bookingRate});
+      this.bookingRate,
+      this.bookingEmail});
 
   @override
   State<BookingDetails> createState() => _BookingDetailsState();
@@ -49,6 +51,7 @@ class _BookingDetailsState extends State<BookingDetails> {
   dynamic bookingEndTime;
   dynamic bookingDate;
   dynamic bookingRate;
+  dynamic bookingEmail;
 
   @override
   void initState() {
@@ -68,6 +71,7 @@ class _BookingDetailsState extends State<BookingDetails> {
     bookingEndTime = '${widget.bookingEndTime}';
     bookingNote = '${widget.bookingNote}';
     bookingRate = '${widget.bookingRate}';
+    bookingEmail = '${widget.bookingEmail}';
   }
 
   Future<void> _changeBookingStatus() async {
@@ -152,6 +156,12 @@ class _BookingDetailsState extends State<BookingDetails> {
           'text': 'Completed',
           'color': Colors.green[500],
           'textColor': Colors.green[50]
+        };
+      case 7:
+        return {
+          'text': 'Pending Refund',
+          'color': Colors.orange[50],
+          'textColor': Colors.orange[500]
         };
       default:
         return {
@@ -334,8 +344,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                               horizontal: 12, vertical: 2.5),
                           decoration: BoxDecoration(
                             color: getBookingStatus(bookingStatus)['color'],
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(8)),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
                           ),
                           child: Text(
                             getBookingStatus(bookingStatus)['text'],
@@ -438,30 +447,35 @@ class _BookingDetailsState extends State<BookingDetails> {
                           ),
                         ),
                         SizedBox(width: 25),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            width: 35,
-                            height: 35, // Ensure the container is a circle
-                            decoration: BoxDecoration(
-                              color: Colors.blue[50], // Background color
-                              shape: BoxShape
-                                  .circle, // Makes the background circular
-                            ),
-                            child: Center(
-                              child: IconButton(
-                                onPressed: () {},
-                                icon: FaIcon(
-                                  FontAwesomeIcons.locationArrow,
-                                  size: 18,
+                        bookingStatus == 2 ||
+                                bookingStatus == 3 ||
+                                bookingStatus == 4
+                            ? Expanded(
+                                flex: 1,
+                                child: Container(
+                                  width: 35,
+                                  height:
+                                      35, // Ensure the container is a circle
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue[50], // Background color
+                                    shape: BoxShape
+                                        .circle, // Makes the background circular
+                                  ),
+                                  child: Center(
+                                    child: IconButton(
+                                      onPressed: () {},
+                                      icon: FaIcon(
+                                        FontAwesomeIcons.locationArrow,
+                                        size: 18,
+                                      ),
+                                      color: Colors.blue,
+                                      splashColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                    ),
+                                  ),
                                 ),
-                                color: Colors.blue,
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                              ),
-                            ),
-                          ),
-                        )
+                              )
+                            : SizedBox.shrink()
                       ],
                     ),
                     SizedBox(height: 5),
@@ -482,65 +496,88 @@ class _BookingDetailsState extends State<BookingDetails> {
                           ),
                         ),
                         SizedBox(width: 25),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            width: 35,
-                            height: 35, // Ensure the container is a circle
-                            decoration: BoxDecoration(
-                              color: Colors.green[50], // Background color
-                              shape: BoxShape
-                                  .circle, // Makes the background circular
-                            ),
-                            child: IconButton(
-                              onPressed: () {},
-                              icon: FaIcon(
-                                FontAwesomeIcons.whatsapp,
-                                size: 18,
-                              ),
-                              color: Colors.green,
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                            ),
-                          ),
-                        ),
+                        bookingStatus == 2 ||
+                                bookingStatus == 3 ||
+                                bookingStatus == 4
+                            ? Expanded(
+                                flex: 1,
+                                child: Container(
+                                  width: 35,
+                                  height:
+                                      35, // Ensure the container is a circle
+                                  decoration: BoxDecoration(
+                                    color: Colors.green[50], // Background color
+                                    shape: BoxShape
+                                        .circle, // Makes the background circular
+                                  ),
+                                  child: IconButton(
+                                    onPressed: () {},
+                                    icon: FaIcon(
+                                      FontAwesomeIcons.whatsapp,
+                                      size: 18,
+                                    ),
+                                    color: Colors.green,
+                                    splashColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                  ),
+                                ),
+                              )
+                            : SizedBox.shrink()
                       ],
                     ),
-                    SizedBox(height: 10),
-                    Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 1,
-                          color: Colors.grey.shade300,
-                        ),
-                        color: Colors.yellow.shade50,
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FaIcon(
-                            FontAwesomeIcons.thumbtack,
-                            size: 14,
-                            color: Colors.orange,
-                          ),
-                          SizedBox(height: 5),
-                          SizedBox(
-                            width: double.infinity,
-                            child: Text(
-                              bookingNote,
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.normal,
-                                color: Colors.grey[700],
-                                fontSize: 12,
-                              ),
+                    SizedBox(height: 5),
+                    bookingRate == 'null'
+                        ? SizedBox.shrink()
+                        : Text(
+                            bookingEmail,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey[700],
+                              fontSize: 13,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
+                    bookingStatus == 2 ||
+                            bookingStatus == 3 ||
+                            bookingStatus == 4 ||
+                            bookingStatus == 6
+                        ? Column(
+                            children: [
+                              SizedBox(height: 10),
+                              Container(
+                                padding: EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.yellow.shade50,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    FaIcon(
+                                      FontAwesomeIcons.thumbtack,
+                                      size: 14,
+                                      color: Colors.orange,
+                                    ),
+                                    SizedBox(height: 5),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: Text(
+                                        bookingNote,
+                                        style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.grey[700],
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
+                        : SizedBox.shrink()
                   ],
                 ),
               ),

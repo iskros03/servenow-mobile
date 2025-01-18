@@ -8,6 +8,8 @@ import 'package:servenow_mobile/screens/home.dart';
 import 'package:servenow_mobile/screens/manage_service.dart';
 import 'package:servenow_mobile/screens/my_booking.dart';
 import 'package:servenow_mobile/screens/my_profile.dart';
+import 'package:servenow_mobile/screens/refund_booking_list.dart';
+import 'package:servenow_mobile/screens/refund_booking_summary.dart';
 import 'package:servenow_mobile/screens/review_list.dart';
 import 'package:servenow_mobile/screens/review_management.dart';
 import 'package:servenow_mobile/screens/review_summary.dart';
@@ -42,6 +44,8 @@ Future<void> main() async {
         '/review_summary': (context) => const ReviewSummary(),
         '/review_list': (context) => const ReviewList(),
         '/review_management': (context) => const ReviewManagement(),
+        '/refund_booking_summary': (context) => const RefundBookingSummary(),
+        '/refund_booking_list': (context) => const RefundBookingList(),
 
       }));
 }
