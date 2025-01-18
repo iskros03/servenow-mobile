@@ -64,7 +64,6 @@ class _AddServiceState extends State<AddService> {
 
       TaskerService taskerService = TaskerService();
       final response = await taskerService.createTaskerService(createService);
-      print(response['message']);
 
       if (response['statusCode'] == 201) {
         ScaffoldMessenger.of(context).showSnackBar(

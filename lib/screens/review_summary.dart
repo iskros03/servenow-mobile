@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:servenow_mobile/screens/review_list.dart';
-import 'package:servenow_mobile/services/tasker_booking.dart';
+import 'package:servenow_mobile/services/tasker_review.dart';
 
 class ReviewSummary extends StatefulWidget {
   const ReviewSummary({super.key});
@@ -12,7 +12,6 @@ class ReviewSummary extends StatefulWidget {
 
 class _ReviewSummaryState extends State<ReviewSummary> {
   List<dynamic> data = [];
-  List<dynamic> reply = [];
 
   dynamic rating5Count = 0;
   dynamic rating4Count = 0;
@@ -27,14 +26,12 @@ class _ReviewSummaryState extends State<ReviewSummary> {
   dynamic negrev = '0.0';
   dynamic neutralrev = '0.0';
 
-
   Future<void> _loadTaskerReviewList() async {
     try {
-      var response = await TaskerBooking().getReviewList();
+      var response = await TaskerReview().getReviewList();
       if (response['statusCode'] == 200) {
         setState(() {
           data = response['data'];
-          reply = response['reply'];
           rating5Count = response['rating5Count'] ?? 0;
           rating4Count = response['rating4Count'] ?? 0;
           rating3Count = response['rating3Count'] ?? 0;
@@ -123,14 +120,11 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                       ),
                       Spacer(),
                       IconButton(
-                          onPressed: () {
+                        onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ReviewList(
-                                reviewData: data,
-                                reviewReplyData: reply,
-                              ),
+                              builder: (context) => ReviewList(),
                             ),
                           );
                         },
@@ -296,13 +290,14 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                                   color: Colors.grey.shade700),
                             ),
                             Text(
-                              '$averageRating',
+                              '${averageRating.toStringAsFixed(2)}%',
                               style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade600),
-                            ),
+                                fontFamily: 'Inter',
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade600,
+                              ),
+                            )
                           ],
                         )),
                   ),
@@ -328,13 +323,14 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                                   color: Colors.grey.shade700),
                             ),
                             Text(
-                              '$csat %',
+                              '${double.parse(csat).toStringAsFixed(2)}%',
                               style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green.shade600),
-                            ),
+                                fontFamily: 'Inter',
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green.shade600,
+                              ),
+                            )
                           ],
                         )),
                   ),
@@ -365,13 +361,14 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                                   color: Colors.grey.shade700),
                             ),
                             Text(
-                              '$neutralrev %',
+                              '${double.parse(neutralrev).toStringAsFixed(2)}%',
                               style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade600),
-                            ),
+                                fontFamily: 'Inter',
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade600,
+                              ),
+                            )
                           ],
                         )),
                   ),
@@ -397,13 +394,14 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                                   color: Colors.grey.shade700),
                             ),
                             Text(
-                              '$negrev %',
+                              '${double.parse(negrev).toStringAsFixed(2)}%',
                               style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red.shade600),
-                            ),
+                                fontFamily: 'Inter',
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red.shade600,
+                              ),
+                            )
                           ],
                         )),
                   ),

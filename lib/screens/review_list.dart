@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:servenow_mobile/screens/review_management.dart';
+import 'package:servenow_mobile/services/tasker_review.dart';
 
 class ReviewList extends StatefulWidget {
-  final List<dynamic>? reviewData;
-  final List<dynamic>? reviewReplyData;
-
-  const ReviewList({super.key, this.reviewData, this.reviewReplyData});
+  const ReviewList({
+    super.key,
+  });
 
   @override
   State<ReviewList> createState() => _ReviewListState();
@@ -13,14 +15,31 @@ class ReviewList extends StatefulWidget {
 
 class _ReviewListState extends State<ReviewList> {
   List<dynamic> reviewData = [];
-  List<dynamic> reviewReplyData = [];
+  List<dynamic> reviewReply = [];
 
   @override
   void initState() {
     super.initState();
-    reviewData = widget.reviewData ?? [];
-    reviewReplyData = widget.reviewReplyData ?? [];
-    print(reviewData);
+    _loadTaskerReviewList();
+  }
+
+  void _loadTaskerReviewList() async {
+    try {
+      var response = await TaskerReview().getReviewList();
+      setState(() {
+        reviewData = response['data'];
+        reviewReply = response['reply'];
+      });
+    } catch (e) {
+      print('Error occurred: $e');
+    }
+  }
+
+  String convertDateTime(String originalDateTime) {
+    DateTime dateTime = DateTime.parse(originalDateTime);
+    String formattedDateTime =
+        DateFormat('d MMMM yyyy hh:mm a').format(dateTime);
+    return formattedDateTime;
   }
 
   Map<String, dynamic> getReviewStatus(dynamic status) {
@@ -93,19 +112,15 @@ class _ReviewListState extends State<ReviewList> {
                         children: [
                           Row(
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(7.5),
-                                    color: Colors.grey[50]),
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 10),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
                                 child: Text(
                                   review['booking_order_id'],
                                   style: TextStyle(
                                       fontFamily: 'Inter',
-                                      fontSize: 12,
+                                      fontSize: 13,
                                       fontWeight: FontWeight.normal,
-                                      color: Colors.grey[800]),
+                                      color: Colors.blue),
                                 ),
                               ),
                               Spacer(),
@@ -125,7 +140,7 @@ class _ReviewListState extends State<ReviewList> {
                                     style: TextStyle(
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 12,
+                                        fontSize: 10,
                                         color: getReviewStatus(
                                                 review['review_status'])[
                                             'textColor'])),
@@ -141,48 +156,55 @@ class _ReviewListState extends State<ReviewList> {
                                 (index) => FaIcon(
                                   FontAwesomeIcons.solidStar,
                                   color:
-                                      index < int.parse(review['review_rating'])  ? Colors.orange : Colors.grey,
+                                      index < int.parse(review['review_rating'])
+                                          ? Colors.orange
+                                          : Colors.grey,
                                   size: 16,
                                 ),
                               ),
                             ),
                           ),
                           SizedBox(height: 5),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Text(
-                              '16 January 2025 2:16 AM',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey[800]),
-                            ),
-                          ),
-                          SizedBox(height: 5),
                           Container(
                             width: double.infinity,
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(7.5),
-                                border: Border.all(
-                                    width: 1, color: Colors.grey.shade300)),
-                            child: Row(
+                                color: Colors.grey.shade50,
+                                borderRadius: BorderRadius.circular(7.5)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Isk Ros: ',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[600]),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "${review['client_firstname']} ${review['client_lastname']}",
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      convertDateTime(
+                                          review['review_date_time']),
+                                      style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.grey[600]),
+                                    ),
+                                  ],
                                 ),
+                                SizedBox(height: 5),
                                 Text(
                                   review['review_description'],
                                   style: TextStyle(
                                     fontFamily: 'Inter',
                                     fontSize: 13,
-                                    color: Colors.grey[600],
+                                    color: Colors.grey[800],
                                   ),
                                 ),
                               ],
@@ -194,16 +216,49 @@ class _ReviewListState extends State<ReviewList> {
                               Spacer(),
                               Container(
                                 width: 35,
-                                height: 35, // Ensure the container is a circle
+                                height: 35,
                                 decoration: BoxDecoration(
-                                  color: Colors.blue[50], // Background color
-                                  shape: BoxShape
-                                      .circle, // Makes the background circular
+                                  color: Colors.blue[50],
+                                  shape: BoxShape.circle,
                                 ),
                                 child: IconButton(
                                   onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, '/review_management');
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ReviewManagement(
+                                          reviewReply: reviewReply
+                                              .where((reply) =>
+                                                  reply['booking_id'] ==
+                                                  review['bookingID'])
+                                              .toList(), 
+                                          bookingOrderId:
+                                              review['booking_order_id'],
+                                          bookingId: review['bookingID'],
+                                          reviewRating: review['review_rating'],
+                                          clientFLName:
+                                              '${review['client_firstname']} ${review['client_lastname']}',
+                                          reviewDateTime: convertDateTime(
+                                              review['review_date_time']),
+                                          reviewStatus: review['review_status'],
+                                          reviewImageOne:
+                                              review['review_imageOne'],
+                                          reviewImageTwo:
+                                              review['review_imageTwo'],
+                                          reviewImageThree:
+                                              review['review_imageThree'],
+                                          reviewImageFour:
+                                              review['review_imageFour'],
+                                          reviewDescription:
+                                              review['review_description'],
+                                          reviewID: review['reviewID'],
+                                        ),
+                                      ),
+                                    ).then((result) {
+                                      if (result == true) {
+                                        _loadTaskerReviewList();
+                                      }
+                                    });
                                   },
                                   icon: FaIcon(
                                     FontAwesomeIcons.pen,

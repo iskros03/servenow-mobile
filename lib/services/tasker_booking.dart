@@ -145,43 +145,8 @@ class TaskerBooking {
           'totalCompletedAmount': data['totalCompletedAmount'],
           'totalCancelledAmount': data['totalCancelledAmount'],
           'totalFloatingAmount': data['totalFloatingAmount'],
-          'totalCompletedAmountThisMonth': data['totalCompletedAmountThisMonth'],
-        };
-      } else {
-        throw Exception('Failed to get booking list');
-      }
-    } catch (e) {
-      throw Exception("Failed to fetch API: $e");
-    }
-  }
-
-    Future<Map<String, dynamic>> getReviewList() async {
-    try {
-      final token = await TaskerAuth().getToken();
-      final url = Uri.parse('${dotenv.env['DOMAIN']}/api/get-review-list');
-      final response = await http.get(url, headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      });
-      if (response.body.isNotEmpty) {
-        final data = json.decode(response.body);
-        return {
-          'statusCode': response.statusCode,
-          'data': data['data'],
-          'reply': data['reply'],
-
-          'rating5Count': data['rating5Count'],
-          'rating4Count': data['rating4Count'],
-          'rating3Count': data['rating3Count'],
-          'rating2Count': data['rating2Count'],
-          'rating1Count': data['rating1Count'],
-          'totalreviewsbymonth': data['totalreviewsbymonth'],
-          'totalunreview': data['totalunreview'],
-          'averageRating': data['averageRating'],
-          'csat': data['csat'],
-          'negrev': data['negrev'],
-          'neutralrev': data['neutralrev'],
+          'totalCompletedAmountThisMonth':
+              data['totalCompletedAmountThisMonth'],
         };
       } else {
         throw Exception('Failed to get booking list');
