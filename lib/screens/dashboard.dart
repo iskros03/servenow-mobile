@@ -274,7 +274,7 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 5,
               child: Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(

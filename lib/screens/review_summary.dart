@@ -22,9 +22,9 @@ class _ReviewSummaryState extends State<ReviewSummary> {
   dynamic totalreviewsbyyear = 0;
   dynamic totalunreview = 0;
   dynamic averageRating = 0.0;
-  dynamic csat = '0.0';
-  dynamic negrev = '0.0';
-  dynamic neutralrev = '0.0';
+  dynamic csat = 0.0;
+  dynamic negrev = 0.0;
+  dynamic neutralrev = 0.0;
 
   Future<void> _loadTaskerReviewList() async {
     try {
@@ -44,6 +44,8 @@ class _ReviewSummaryState extends State<ReviewSummary> {
           csat = response['csat'] ?? '';
           negrev = response['negrev'] ?? '';
           neutralrev = response['neutralrev'] ?? '';
+
+
         });
       } else {
         print('Failed to load booking list: ${response['statusCode']}');
@@ -323,7 +325,7 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                                   color: Colors.grey.shade700),
                             ),
                             Text(
-                              '${double.parse(csat).toStringAsFixed(2)}%',
+                              '$csat%',
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 22,
@@ -361,7 +363,7 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                                   color: Colors.grey.shade700),
                             ),
                             Text(
-                              '${double.parse(neutralrev).toStringAsFixed(2)}%',
+                              '$neutralrev%',
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 22,
@@ -394,7 +396,7 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                                   color: Colors.grey.shade700),
                             ),
                             Text(
-                              '${double.parse(negrev).toStringAsFixed(2)}%',
+                              '$negrev%',
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 22,
