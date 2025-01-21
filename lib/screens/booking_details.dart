@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:servenow_mobile/services/tasker_booking.dart';
 import 'package:servenow_mobile/widgets/custom_ele_button.dart';
 
+import 'package:url_launcher/url_launcher.dart';
+
 class BookingDetails extends StatefulWidget {
   final dynamic bookingId;
   final dynamic bookingStatus;
@@ -17,6 +19,8 @@ class BookingDetails extends StatefulWidget {
   final dynamic bookingTask;
   final dynamic bookingRate;
   final dynamic bookingEmail;
+  final dynamic bookingLat;
+  final dynamic bookingLong;
 
   const BookingDetails(
       {super.key,
@@ -31,7 +35,9 @@ class BookingDetails extends StatefulWidget {
       this.bookingNote,
       this.bookingTask,
       this.bookingRate,
-      this.bookingEmail});
+      this.bookingEmail,
+      this.bookingLat,
+      this.bookingLong});
 
   @override
   State<BookingDetails> createState() => _BookingDetailsState();
@@ -52,6 +58,8 @@ class _BookingDetailsState extends State<BookingDetails> {
   dynamic bookingDate;
   dynamic bookingRate;
   dynamic bookingEmail;
+  dynamic bookingLat;
+  dynamic bookingLong;
 
   @override
   void initState() {
@@ -72,6 +80,12 @@ class _BookingDetailsState extends State<BookingDetails> {
     bookingNote = '${widget.bookingNote}';
     bookingRate = '${widget.bookingRate}';
     bookingEmail = '${widget.bookingEmail}';
+    
+    bookingLat = '${widget.bookingLat}';
+    bookingLong = '${widget.bookingLong}';
+
+    print(bookingLat);
+    print(bookingLong);
   }
 
   Future<void> _changeBookingStatus() async {
@@ -79,15 +93,16 @@ class _BookingDetailsState extends State<BookingDetails> {
     try {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Colors.grey[600],
+          backgroundColor: Colors.grey.shade200,
           content: Center(
             child: Text(
               'Loading...',
               style: TextStyle(
-                  fontSize: 13,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.normal,
-                  color: Colors.white),
+                fontFamily: 'Inter',
+                color: Colors.grey.shade800,
+                fontWeight: FontWeight.normal,
+                fontSize: 13,
+              ),
             ),
           ),
           duration: Duration(seconds: 3),
@@ -100,7 +115,15 @@ class _BookingDetailsState extends State<BookingDetails> {
       if (response['statusCode'] == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(response['data']['message']),
+            content: Text(
+              response['data']['message'],
+              style: TextStyle(
+                fontFamily: 'Inter',
+                color: Colors.white,
+                fontWeight: FontWeight.normal,
+                fontSize: 13,
+              ),
+            ),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 3),
           ),
@@ -154,8 +177,8 @@ class _BookingDetailsState extends State<BookingDetails> {
       case 6:
         return {
           'text': 'Completed',
-          'color': Colors.green[500],
-          'textColor': Colors.green[50]
+          'color': Colors.green[50],
+          'textColor': Colors.green[500]
         };
       case 7:
         return {
@@ -292,6 +315,32 @@ class _BookingDetailsState extends State<BookingDetails> {
     return dateFormat.format(parsedTime);
   }
 
+  void launchWhatsApp(String phoneNumber) async {
+    final Uri url = Uri.parse('https://wa.me/$phoneNumber');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Future<void> openWaze(double latitude, double longitude) async {
+    final Uri wazeUrl =
+        Uri.parse('waze://?ll=$latitude,$longitude&navigate=yes');
+    if (await canLaunchUrl(wazeUrl)) {
+      await launchUrl(wazeUrl);
+    } else {
+      // If Waze is not available, try opening it in Google Maps
+      final Uri googleMapsUrl =
+          Uri.parse('https://www.google.com/maps?q=$latitude,$longitude');
+      if (await canLaunchUrl(googleMapsUrl)) {
+        await launchUrl(googleMapsUrl);
+      } else {
+        throw 'Could not launch the map';
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -335,8 +384,8 @@ class _BookingDetailsState extends State<BookingDetails> {
                           style: TextStyle(
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.bold,
-                              color: Colors.grey[600],
-                              fontSize: 14),
+                              color: Colors.grey[700],
+                              fontSize: 13),
                         ),
                         Spacer(),
                         Container(
@@ -347,13 +396,14 @@ class _BookingDetailsState extends State<BookingDetails> {
                             borderRadius: BorderRadius.all(Radius.circular(8)),
                           ),
                           child: Text(
+                            textAlign: TextAlign.center,
                             getBookingStatus(bookingStatus)['text'],
                             style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.bold,
                                 color: getBookingStatus(
                                     bookingStatus)['textColor'],
-                                fontSize: 12),
+                                fontSize: 11),
                           ),
                         ),
                       ],
@@ -379,7 +429,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                       style: TextStyle(
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.normal,
-                          color: Colors.grey[600],
+                          color: Colors.grey[700],
                           fontSize: 13),
                     ),
                     SizedBox(height: 5),
@@ -404,7 +454,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                 fontSize: 13,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.normal,
-                                color: Colors.grey[600],
+                                color: Colors.grey[700],
                               ),
                             ),
                           ],
@@ -415,7 +465,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                             fontSize: 13,
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.normal,
-                            color: Colors.grey[600],
+                            color: Colors.grey[700],
                           ),
                         ),
                         Text(
@@ -424,7 +474,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                             fontSize: 13,
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.normal,
-                            color: Colors.grey[600],
+                            color: Colors.grey[700],
                           ),
                         ),
                       ],
@@ -447,9 +497,9 @@ class _BookingDetailsState extends State<BookingDetails> {
                           ),
                         ),
                         SizedBox(width: 25),
-                        bookingStatus == 2 ||
+                        (bookingStatus == 2 ||
                                 bookingStatus == 3 ||
-                                bookingStatus == 4
+                                bookingStatus == 4 ) && bookingLat != 'null' || bookingLong != 'null'
                             ? Expanded(
                                 flex: 1,
                                 child: Container(
@@ -463,7 +513,9 @@ class _BookingDetailsState extends State<BookingDetails> {
                                   ),
                                   child: Center(
                                     child: IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        openWaze(double.parse(bookingLat) , double.parse(bookingLong));
+                                      },
                                       icon: FaIcon(
                                         FontAwesomeIcons.locationArrow,
                                         size: 18,
@@ -511,7 +563,9 @@ class _BookingDetailsState extends State<BookingDetails> {
                                         .circle, // Makes the background circular
                                   ),
                                   child: IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      launchWhatsApp('$bookingCLientPhone');
+                                    },
                                     icon: FaIcon(
                                       FontAwesomeIcons.whatsapp,
                                       size: 18,
@@ -522,7 +576,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                   ),
                                 ),
                               )
-                            : SizedBox.shrink()
+                            : Expanded(flex: 1, child: SizedBox.shrink())
                       ],
                     ),
                     SizedBox(height: 5),
@@ -547,7 +601,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                               Container(
                                 padding: EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: Colors.yellow.shade50,
+                                  color: Colors.grey.shade50,
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8)),
                                 ),
@@ -585,6 +639,7 @@ class _BookingDetailsState extends State<BookingDetails> {
               bookingStatus == 2 || bookingStatus == 4
                   ? Row(
                       children: [
+                        SizedBox(width: 10),
                         Expanded(
                           child: CustomEleButton(
                               text: 'Unable To Serve',
@@ -614,6 +669,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                               borderColor: Colors.white,
                               fgColor: Colors.green),
                         ),
+                        SizedBox(width: 10),
                       ],
                     )
                   : SizedBox.shrink()

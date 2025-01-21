@@ -54,7 +54,6 @@ class _ReviewManagementState extends State<ReviewManagement> {
   dynamic reviewDescription;
   dynamic reviewID;
   dynamic bookingId;
-
   List? reviewReply;
 
   late List<String?> reviewImages;
@@ -172,7 +171,7 @@ class _ReviewManagementState extends State<ReviewManagement> {
           style: TextStyle(
             color: Colors.white,
             fontFamily: 'Inter',
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -208,7 +207,7 @@ class _ReviewManagementState extends State<ReviewManagement> {
                               fontFamily: 'Inter',
                               fontSize: 13,
                               fontWeight: FontWeight.normal,
-                              color: Colors.blue,
+                              color: Colors.grey.shade700,
                             ),
                           ),
                         ),
@@ -255,7 +254,7 @@ class _ReviewManagementState extends State<ReviewManagement> {
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.normal,
-                          color: Colors.grey[800],
+                          color: Colors.grey[700],
                           fontSize: 13,
                         ),
                       ),

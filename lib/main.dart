@@ -4,6 +4,9 @@ import 'package:servenow_mobile/screens/add_service.dart';
 import 'package:servenow_mobile/screens/booking_details.dart';
 import 'package:servenow_mobile/screens/booking_list.dart';
 import 'package:servenow_mobile/screens/booking_summary.dart';
+import 'package:servenow_mobile/screens/dashboard.dart';
+import 'package:servenow_mobile/screens/e_statement.dart';
+import 'package:servenow_mobile/screens/e_statement_list.dart';
 import 'package:servenow_mobile/screens/home.dart';
 import 'package:servenow_mobile/screens/manage_service.dart';
 import 'package:servenow_mobile/screens/my_booking.dart';
@@ -25,7 +28,7 @@ Future<void> main() async {
 
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/sign_in',
+      initialRoute: '/home',
       routes: {
         '/home': (context) => const Home(),
         '/sign_in': (context) => const SignIn(),
@@ -46,6 +49,8 @@ Future<void> main() async {
         '/review_management': (context) => const ReviewManagement(),
         '/refund_booking_summary': (context) => const RefundBookingSummary(),
         '/refund_booking_list': (context) => const RefundBookingList(),
-
+        '/dashboard': (context) => const Dashboard(),
+        '/e_statement': (context) => const EStatement(),
+        '/e_statement_list': (context) => const EStatementList(),
       }));
 }

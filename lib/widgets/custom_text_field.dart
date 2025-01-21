@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
-  final String labelText;
+  final String? labelText;
   final TextEditingController controller;
   final bool obscureText;
   final String? prefixText;
@@ -11,11 +11,10 @@ class CustomTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final Function()? onEyeTap;
   final int? maxLength;
-  final FocusNode? focusNode; // Add the FocusNode parameter
 
   const CustomTextField({
     super.key,
-    this.labelText = '',
+    this.labelText,
     required this.controller,
     this.obscureText = false,
     this.prefixText,
@@ -24,39 +23,40 @@ class CustomTextField extends StatelessWidget {
     this.inputFormatters,
     this.onEyeTap,
     this.maxLength,
-    this.focusNode, // Accept focusNode as an argument
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      focusNode: focusNode, // Attach the FocusNode here
-      style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: Colors.grey[600]),
+      style:
+          TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.grey[800]),
       obscureText: obscureText,
       maxLines: maxLines,
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
       maxLength: maxLength,
       decoration: InputDecoration(
-        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         filled: true,
         fillColor: Colors.white,
         hintText: labelText,
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 12, color: Colors.grey[400]),
+        hintStyle: TextStyle(
+            fontFamily: 'Inter', fontSize: 13, color: Colors.grey[500]),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          borderSide: BorderSide(color: Colors.grey[300] ?? Colors.grey, width: 1),
+          borderRadius: BorderRadius.all(Radius.circular(7.5)),
+          borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(5)),
-          borderSide: BorderSide(color: Colors.grey[500] ?? Colors.grey, width: 1),
+          borderSide: BorderSide(color: Colors.grey.shade500, width: 1),
         ),
         prefixText: prefixText,
         prefixStyle: TextStyle(
           color: Colors.grey[800],
-          fontSize: 12,
+          fontSize: 13,
           fontWeight: FontWeight.normal,
         ),
         suffixIcon: onEyeTap != null

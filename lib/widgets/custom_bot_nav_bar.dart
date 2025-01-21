@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomBotNavBar extends StatelessWidget {
   final int currentIndex;
@@ -17,26 +18,35 @@ class CustomBotNavBar extends StatelessWidget {
       elevation: 0,
       currentIndex: currentIndex,
       onTap: onTap,
-      selectedItemColor: const Color.fromRGBO(24, 52, 92, 1),
-      unselectedItemColor: const Color.fromARGB(125, 24, 52, 92),
+      selectedItemColor: Colors.grey.shade700,
+      unselectedItemColor: Colors.grey.shade400,
       type: BottomNavigationBarType.fixed,
-      selectedLabelStyle: const TextStyle(fontSize: 10),
-      unselectedLabelStyle: const TextStyle(fontSize: 10),
-      items: const <BottomNavigationBarItem>[
+      selectedLabelStyle: TextStyle(fontFamily: 'Inter', fontSize: 10),
+      unselectedLabelStyle: TextStyle(fontSize: 10),
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.dashboard),
+          icon: FaIcon(FontAwesomeIcons.hammer, size: 18),
+          label: 'Services',
+        ),
+        BottomNavigationBarItem(
+          icon: FaIcon(FontAwesomeIcons.calendarCheck, size: 18),
+          label: 'Bookings',
+        ),
+        BottomNavigationBarItem(
+          icon: FaIcon(FontAwesomeIcons.houseChimney, size: 18),
           label: 'Dashboard',
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.add_circle,
-            color: Color.fromRGBO(24, 52, 92, 1),
-          ),
-          label: 'Add Service',
+          icon: FaIcon(FontAwesomeIcons.gears, size: 18),
+          label: 'Preferences',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.account_circle),
-          label: 'Settings',
+          icon: FaIcon(FontAwesomeIcons.magnifyingGlassChart, size: 18),
+          label: 'Performance',
+        ),
+        BottomNavigationBarItem(
+          icon: FaIcon(FontAwesomeIcons.fileInvoiceDollar, size: 18),
+          label: 'e-Statement',
         ),
       ],
     );

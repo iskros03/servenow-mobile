@@ -4,7 +4,9 @@ import 'package:servenow_mobile/screens/review_list.dart';
 import 'package:servenow_mobile/services/tasker_review.dart';
 
 class ReviewSummary extends StatefulWidget {
-  const ReviewSummary({super.key});
+  final bool showLeadingIcon;
+
+  const ReviewSummary({super.key, this.showLeadingIcon = true});
 
   @override
   State<ReviewSummary> createState() => _ReviewSummaryState();
@@ -44,8 +46,6 @@ class _ReviewSummaryState extends State<ReviewSummary> {
           csat = response['csat'] ?? '';
           negrev = response['negrev'] ?? '';
           neutralrev = response['neutralrev'] ?? '';
-
-
         });
       } else {
         print('Failed to load booking list: ${response['statusCode']}');
@@ -74,16 +74,18 @@ class _ReviewSummaryState extends State<ReviewSummary> {
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'Inter',
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+          leading: widget.showLeadingIcon
+              ? IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              : null,
         ),
         body: Padding(
           padding: const EdgeInsets.all(20),
@@ -94,7 +96,6 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(7.5)),
                   child: Row(
@@ -114,14 +115,14 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                             data.length.toString(),
                             style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: 22,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey.shade600),
                           ),
                         ],
                       ),
                       Spacer(),
-                      IconButton(
+                      ElevatedButton(
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -130,17 +131,42 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                             ),
                           );
                         },
-                        icon: FaIcon(FontAwesomeIcons.eye),
-                        color: Colors.blue,
-                        style: IconButton.styleFrom().copyWith(
+                        style: ElevatedButton.styleFrom(
+                          elevation:
+                              2, // Adjust this value to control shadow intensity
+                          backgroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          shadowColor: Colors.grey.withOpacity(
+                              0.5), // Shadow color and transparency
+                        ).copyWith(
                           overlayColor:
                               WidgetStateProperty.all(Colors.transparent),
-                          shadowColor:
-                              WidgetStateProperty.all(Colors.transparent),
-                          surfaceTintColor:
-                              WidgetStateProperty.all(Colors.transparent),
                         ),
-                      )
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Review List',
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            FaIcon(
+                              FontAwesomeIcons.solidEye,
+                              color: Colors.blue,
+                              size: 14,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   )),
               const SizedBox(height: 10),
@@ -152,8 +178,41 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(7.5)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Total Unreview Booking',
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey.shade700),
+                            ),
+                            Text(
+                              '$totalunreview',
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red.shade600),
+                            ),
+                          ],
+                        )),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
+                        decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
@@ -179,7 +238,7 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                               '$totalreviewsbymonth',
                               style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 22,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey.shade600),
                             ),
@@ -192,8 +251,6 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
@@ -219,7 +276,7 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                               '$totalreviewsbyyear',
                               style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 22,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey.shade600),
                             ),
@@ -237,47 +294,6 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7.5)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Total Unreview Booking',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
-                            ),
-                            Text(
-                              '$totalunreview',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red.shade600),
-                            ),
-                          ],
-                        )),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(child: SizedBox.shrink())
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
@@ -295,7 +311,7 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                               '${averageRating.toStringAsFixed(2)}%',
                               style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: 22,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey.shade600,
                               ),
@@ -309,8 +325,6 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
@@ -328,7 +342,7 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                               '$csat%',
                               style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: 22,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.green.shade600,
                               ),
@@ -347,8 +361,6 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
@@ -366,7 +378,7 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                               '$neutralrev%',
                               style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: 22,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey.shade600,
                               ),
@@ -380,8 +392,6 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
@@ -399,7 +409,7 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                               '$negrev%',
                               style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: 22,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.red.shade600,
                               ),
@@ -414,7 +424,6 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(7.5)),
                   child: Row(
@@ -455,7 +464,6 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(7.5)),
                   child: Row(
@@ -496,7 +504,6 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(7.5)),
                   child: Row(
@@ -537,7 +544,6 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(7.5)),
                   child: Row(
@@ -578,7 +584,6 @@ class _ReviewSummaryState extends State<ReviewSummary> {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(7.5)),
                   child: Row(

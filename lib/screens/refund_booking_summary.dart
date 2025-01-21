@@ -58,11 +58,11 @@ class _RefundBookingSummaryState extends State<RefundBookingSummary> {
           centerTitle: true,
           elevation: 0,
           title: const Text(
-            'Refund Booking Summary',
+            'Refund Summary',
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'Inter',
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -82,7 +82,6 @@ class _RefundBookingSummaryState extends State<RefundBookingSummary> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(7.5)),
                   child: Row(
@@ -102,14 +101,14 @@ class _RefundBookingSummaryState extends State<RefundBookingSummary> {
                             totalRefund.toString(),
                             style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: 22,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey.shade600),
                           ),
                         ],
                       ),
                       Spacer(),
-                      IconButton(
+                      ElevatedButton(
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -120,17 +119,42 @@ class _RefundBookingSummaryState extends State<RefundBookingSummary> {
                             ),
                           );
                         },
-                        icon: FaIcon(FontAwesomeIcons.eye),
-                        color: Colors.blue,
-                        style: IconButton.styleFrom().copyWith(
+                        style: ElevatedButton.styleFrom(
+                          elevation:
+                              2, // Adjust this value to control shadow intensity
+                          backgroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          shadowColor: Colors.grey.withOpacity(
+                              0.5), // Shadow color and transparency
+                        ).copyWith(
                           overlayColor:
                               WidgetStateProperty.all(Colors.transparent),
-                          shadowColor:
-                              WidgetStateProperty.all(Colors.transparent),
-                          surfaceTintColor:
-                              WidgetStateProperty.all(Colors.transparent),
                         ),
-                      )
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Refund List',
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            FaIcon(
+                              FontAwesomeIcons.solidEye,
+                              color: Colors.blue,
+                              size: 14,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   )),
               const SizedBox(height: 10),
@@ -142,8 +166,6 @@ class _RefundBookingSummaryState extends State<RefundBookingSummary> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
@@ -161,7 +183,7 @@ class _RefundBookingSummaryState extends State<RefundBookingSummary> {
                               totalPendingRefund.toString(),
                               style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 22,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey.shade600),
                             ),
@@ -174,8 +196,6 @@ class _RefundBookingSummaryState extends State<RefundBookingSummary> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
@@ -193,7 +213,7 @@ class _RefundBookingSummaryState extends State<RefundBookingSummary> {
                               totalSelfRefund.toString(),
                               style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 22,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey.shade600),
                             ),
@@ -211,15 +231,13 @@ class _RefundBookingSummaryState extends State<RefundBookingSummary> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Total Refunds Amount',
+                              'Total Refunds Amount (RM)',
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 13,
@@ -230,7 +248,7 @@ class _RefundBookingSummaryState extends State<RefundBookingSummary> {
                               '(-) ${double.parse(totalApprovedAmount).toStringAsFixed(2)}',
                               style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: 22,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.red.shade600,
                               ),
@@ -244,15 +262,13 @@ class _RefundBookingSummaryState extends State<RefundBookingSummary> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Total Pending Amount',
+                              'Total Self-Refunded Amount RM)',
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 13,
@@ -260,12 +276,12 @@ class _RefundBookingSummaryState extends State<RefundBookingSummary> {
                                   color: Colors.grey.shade700),
                             ),
                             Text(
-                              '(~) ${double.parse(totalPendingAmount).toStringAsFixed(2)}',
+                              '(-) ${double.parse(totalPenalizedAmount).toStringAsFixed(2)}',
                               style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: 22,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.orange.shade600,
+                                color: Colors.red.shade600,
                               ),
                             )
                           ],
@@ -282,15 +298,13 @@ class _RefundBookingSummaryState extends State<RefundBookingSummary> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Total Self-Refunded Amount',
+                              'Total Pending Amount (RM)',
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 13,
@@ -298,19 +312,17 @@ class _RefundBookingSummaryState extends State<RefundBookingSummary> {
                                   color: Colors.grey.shade700),
                             ),
                             Text(
-                              '(-) ${double.parse(totalPenalizedAmount).toStringAsFixed(2)}',
+                              '(~) ${double.parse(totalPendingAmount).toStringAsFixed(2)}',
                               style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: 22,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.red.shade600,
+                                color: Colors.orange.shade600,
                               ),
                             )
                           ],
                         )),
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(child: SizedBox.shrink()),
                 ],
               ),
             ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomDropdownMenu extends StatelessWidget {
   final List<String> items;
@@ -46,7 +47,7 @@ class CustomDropdownMenu extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius:
                         BorderRadius.circular(10), // Apply border radius
-                    color: Colors.grey[400], // Line color
+                    color: Colors.grey[200], // Line color
                   ),
                   child: Divider(
                     color: Colors.transparent, // Make divider transparent
@@ -60,9 +61,22 @@ class CustomDropdownMenu extends StatelessWidget {
                   fontFamily: 'Inter',
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey[700],
+                  color: Colors.grey[600],
                 ),
               ),
+              SizedBox(height: 10),
+              Container(
+                  width: double.infinity, // Set width to 50
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.circular(10), // Apply border radius
+                    color: Colors.grey[300], // Line color
+                  ),
+                  child: Divider(
+                    color: Colors.transparent, // Make divider transparent
+                    thickness: 1, // Line thickness
+                    height: 1, // Space around the line
+                  )),
               Expanded(
                 child: ListView.builder(
                   itemCount: items.length,
@@ -98,15 +112,15 @@ class CustomDropdownMenu extends StatelessWidget {
           ? () => _showBottomSheet(context)
           : null, // Open bottom sheet only if enabled
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(7.5),
           border: Border.all(
             width: 1, // Use the borderWidth parameter
             color: isEnabled
                 ? Colors.grey[300]!
-                : Colors.grey[300]!, // Change color if disabled
+                : Colors.grey[100]!, // Change color if disabled
           ),
         ),
         child: Row(
@@ -119,7 +133,11 @@ class CustomDropdownMenu extends StatelessWidget {
                         ? Colors.grey[800]
                         : Colors.grey[400])), // Change text color if disabled
             Spacer(),
-            Icon(Icons.arrow_drop_down),
+            FaIcon(
+              FontAwesomeIcons.chevronDown,
+              size: 14,
+              color: Colors.grey.shade500,
+            ),
           ],
         ),
       ),

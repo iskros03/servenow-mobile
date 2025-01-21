@@ -49,8 +49,8 @@ class _RefundBookingListState extends State<RefundBookingList> {
       case 6:
         return {
           'text': 'Completed',
-          'color': Colors.green[500],
-          'textColor': Colors.green[50]
+          'color': Colors.green[50],
+          'textColor': Colors.green[500]
         };
       case 7:
         return {
@@ -153,10 +153,14 @@ class _RefundBookingListState extends State<RefundBookingList> {
                               bookingStartTime: booking['booking_time_start'],
                               bookingEndTime: booking['booking_time_end'],
                               bookingRate: booking['booking_rate'],
+                              bookingLat: booking['lat'],
+                              bookingLong: booking['long'],
                               bookingNote: booking['booking_note'] ??
                                   'Unavailable Note.',
+                                  
                             ),
                           ),
+                          
                         );
                       },
                       child: Column(
@@ -176,7 +180,7 @@ class _RefundBookingListState extends State<RefundBookingList> {
                                       fontFamily: 'Inter',
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal,
-                                      color: Colors.grey[800]),
+                                      color: Colors.grey[600]),
                                 ),
                               ),
                               Spacer(),
@@ -196,7 +200,7 @@ class _RefundBookingListState extends State<RefundBookingList> {
                                     style: TextStyle(
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 12,
+                                      fontSize: 11,
                                       color: getBookingStatus(
                                               booking['booking_status'])[
                                           'textColor'],
@@ -246,7 +250,7 @@ class _RefundBookingListState extends State<RefundBookingList> {
                                     color: Colors.grey[800],
                                   ),
                                 ),
-                                SizedBox(width: 10),
+                                Spacer(),
                                 Text(
                                   '${formatTime(booking['booking_time_start'])} - ${formatTime(booking['booking_time_end'])}',
                                   style: TextStyle(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:servenow_mobile/screens/booking_details.dart';
 import 'package:servenow_mobile/widgets/custom_dropdown_menu.dart';
@@ -6,13 +7,19 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:servenow_mobile/services/tasker_booking.dart';
 
 class MyBooking extends StatefulWidget {
-  const MyBooking({super.key});
+  final bool showLeadingIcon;
+
+  const MyBooking({super.key, this.showLeadingIcon = true});
 
   @override
   State<MyBooking> createState() => _MyBookingState();
 }
 
 class _MyBookingState extends State<MyBooking> {
+  bool isLoading = true; // Track loading state
+
+  bool preventLoading = false; // Track loading state
+
   late EventDataSource _dataSource;
 
   final List<String> viewType = ['Day', 'Month', 'List'];
@@ -49,6 +56,9 @@ class _MyBookingState extends State<MyBooking> {
   }
 
   Future<void> _loadUnavailableSlot() async {
+    setState(() {
+      isLoading = true; // Set loading to true before fetching data
+    });
     try {
       final taskerBooking = TaskerBooking();
       final bookingResponse = await taskerBooking.getUnavailableSlot();
@@ -66,10 +76,21 @@ class _MyBookingState extends State<MyBooking> {
       });
     } catch (e) {
       print("Error: $e");
+    } finally {
+      setState(() {
+        isLoading = false; // Set loading to false after fetching data
+      });
     }
   }
 
   Future<void> _loadBookings() async {
+    preventLoading == false
+        ? setState(() {
+            isLoading = false;
+          })
+        : setState(() {
+            isLoading = true;
+          });
     try {
       final taskerBooking = TaskerBooking();
       final bookingResponse = await taskerBooking.getTaskerBookingDetails();
@@ -92,6 +113,10 @@ class _MyBookingState extends State<MyBooking> {
       });
     } catch (e) {
       print("Error loading bookings: $e");
+    } finally {
+      setState(() {
+        isLoading = false; // Set loading to false after fetching data
+      });
     }
   }
 
@@ -100,7 +125,7 @@ class _MyBookingState extends State<MyBooking> {
   String? updateStartTime;
   String? updateEndTime;
 
-  void _updateBooking() async {
+  Future<void> _updateBooking() async {
     final updateBookingData = {
       'id': updateId,
       'date': updatedDate,
@@ -110,18 +135,19 @@ class _MyBookingState extends State<MyBooking> {
     try {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Colors.grey[800],
+          backgroundColor: Colors.grey.shade200,
           content: Center(
             child: Text(
               'Loading...',
               style: TextStyle(
-                  fontSize: 13,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.normal,
-                  color: Colors.white),
+                fontFamily: 'Inter',
+                color: Colors.grey.shade800,
+                fontWeight: FontWeight.normal,
+                fontSize: 13,
+              ),
             ),
           ),
-          duration: Duration(seconds: 2),
+          duration: Duration(seconds: 3),
         ),
       );
 
@@ -211,7 +237,6 @@ class _MyBookingState extends State<MyBooking> {
                         onPressed: () {
                           Navigator.of(context).pop();
                           _loadBookings();
-                          _loadUnavailableSlot();
                         },
                         style: ElevatedButton.styleFrom(
                           elevation: 0,
@@ -245,7 +270,10 @@ class _MyBookingState extends State<MyBooking> {
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).pop();
-                          _updateBooking();
+                          setState(() {
+                            preventLoading = false;
+                            _updateBooking();
+                          });
                         },
                         style: ElevatedButton.styleFrom(
                           elevation: 0,
@@ -292,23 +320,114 @@ class _MyBookingState extends State<MyBooking> {
         backgroundColor: const Color.fromRGBO(24, 52, 92, 1),
         centerTitle: true,
         title: const Text(
-          'My Booking',
+          'Bookings',
           style: TextStyle(
             color: Colors.white,
             fontFamily: 'Inter',
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: widget.showLeadingIcon
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            : null,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 0),
         child: Column(
           children: [
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/booking_summary');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      elevation:
+                          2, // Adjust this value to control shadow intensity
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      shadowColor: Colors.grey
+                          .withOpacity(0.5), // Shadow color and transparency
+                    ).copyWith(
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Booking Summary',
+                          style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey.shade600),
+                        ),
+                        SizedBox(width: 10),
+                        FaIcon(
+                          FontAwesomeIcons.solidEye,
+                          color: Colors.blue,
+                          size: 14,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/refund_booking_summary');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      elevation:
+                          2, // Adjust this value to control shadow intensity
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      shadowColor: Colors.grey
+                          .withOpacity(0.5), // Shadow color and transparency
+                    ).copyWith(
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Refund Summary',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        FaIcon(
+                          FontAwesomeIcons.solidEye,
+                          color: Colors.blue,
+                          size: 14,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
             CustomDropdownMenu(
               items: viewType,
               titleSelect: 'Select View Type',
@@ -361,305 +480,166 @@ class _MyBookingState extends State<MyBooking> {
                   });
                 },
               ),
-            viewTypeTitle == 'Day'
-                ? Column(
-                    children: [
-                      SizedBox(height: 10),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: (filteredBookingList).map((booking) {
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 10.0),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => BookingDetails(
-                                        bookingId: booking['id'],
-                                        bookingTask: booking['task'],
-                                        bookingStatus: booking['status'],
-                                        bookingClientName:
-                                            booking['client_name'],
-                                        bookingCLientPhone:
-                                            booking['client_phoneno'],
-                                        bookingClientAddress:
-                                            booking['address'],
-                                        bookingDate: booking['date'],
-                                        bookingStartTime: booking['startTime'],
-                                        bookingEndTime: booking['endTime'],
-                                        bookingRate: booking['booking_rate'],
-                                        bookingNote: booking['booking_note'] ??
-                                            'Unavailable Note.',
-                                      ),
-                                    ),
-                                  ).then((result) {
-                                    if (result == true) {
-                                      _loadBookings();
-                                    }
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 20),
-                                ).copyWith(
-                                  overlayColor: WidgetStateProperty.all(
-                                      Colors.transparent),
-                                  shadowColor: WidgetStateProperty.all(
-                                      Colors.transparent),
-                                  surfaceTintColor: WidgetStateProperty.all(
-                                      Colors.transparent),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        booking['status'] == 3 ||
-                                                booking['status'] == 6
-                                            ? Row(
-                                                children: [
-                                                  Text(
-                                                    textAlign: TextAlign.center,
-                                                    booking['status'] == 3
-                                                        ? 'Confirmed'
-                                                        : booking['status'] == 6
-                                                            ? 'Completed '
-                                                            : '',
-                                                    style: TextStyle(
-                                                        color: Colors.green,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 12,
-                                                        fontFamily: 'Inter'),
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                ],
-                                              )
-                                            : SizedBox.shrink(),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 15, vertical: 5),
-                                          decoration: BoxDecoration(
-                                              color: booking['status'] == 3 ||
-                                                      booking['status'] == 6
-                                                  ? Colors.grey.shade50
-                                                  : booking['color'],
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5))),
-                                          child: Text(
-                                            booking['title'],
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 12,
-                                                fontFamily: 'Inter',
-                                                color: booking['status'] == 3 ||
-                                                        booking['status'] == 6
-                                                    ? Colors.grey.shade500
-                                                    : Colors.white),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      '${booking['address']}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[600],
-                                        fontSize: 12,
-                                        fontFamily: 'Inter',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }).toList(),
+            isLoading // Check if loading
+                ? Expanded(
+                    child: Center(
+                        child: Text(
+                      'Loading...',
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 13,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey[800]),
+                    ) // Show loading indicator
                         ),
-                      ),
-                      SizedBox(height: 10),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.55,
-                        child: SfCalendar(
-                          controller: _calendarController,
-                          view: _getCalendarView(viewTypeTitle),
-                          selectionDecoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 2,
-                            ),
-                          ),
-                          minDate: minDate,
-                          maxDate: maxDate,
-                          dataSource: _dataSource,
-                          appointmentBuilder: appointmentBuilder,
-                          timeSlotViewSettings: const TimeSlotViewSettings(
-                            startHour: 7,
-                            endHour: 20,
-                            timeFormat: 'HH:00',
-                            timeIntervalHeight: 32.5,
-                          ),
-                          allowDragAndDrop: true,
-                          dragAndDropSettings: const DragAndDropSettings(
-                            indicatorTimeFormat: 'HH:00',
-                            showTimeIndicator: false,
-                            allowScroll: false,
-                          ),
-                          backgroundColor: Colors.white,
-                          showWeekNumber: false,
-                          showCurrentTimeIndicator: false,
-                          viewHeaderHeight: 0,
-                          headerStyle: CalendarHeaderStyle(
-                            backgroundColor: Colors.white,
-                            textStyle: TextStyle(
-                              fontFamily: 'Inter',
-                              color: Colors.grey[700],
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          // headerHeight: 0,
-                          onDragEnd: dragEnd,
-                        ),
-                      ),
-                    ],
                   )
-                : viewTypeTitle == 'Month' || viewTypeTitle == 'List'
+                : viewTypeTitle == 'Day' &&
+                        (filteredBookingList.isNotEmpty &&
+                            unavailableSlotList.isNotEmpty)
                     ? Column(
                         children: [
-                          SizedBox(height: 10),
+                          filteredBookingList.isNotEmpty
+                              ? SizedBox(height: 10)
+                              : SizedBox.shrink(),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
-                              children: (bookingsList).map((booking) {
+                              children: (filteredBookingList).map((booking) {
                                 return Padding(
                                   padding: const EdgeInsets.only(right: 10.0),
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => BookingDetails(
-                                            bookingId: booking['id'],
-                                            bookingTask: booking['task'],
-                                            bookingStatus: booking['status'],
-                                            bookingClientName:
-                                                booking['client_name'],
-                                            bookingCLientPhone:
-                                                booking['client_phoneno'],
-                                            bookingClientAddress:
-                                                booking['address'],
-                                            bookingDate: booking['date'],
-                                            bookingStartTime:
-                                                booking['startTime'],
-                                            bookingEndTime: booking['endTime'],
-                                            bookingNote:
-                                                booking['booking_note'] ??
-                                                    'No Task Note.',
+                                  child: SizedBox(
+                                    width: 350,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                BookingDetails(
+                                              bookingId: booking['id'],
+                                              bookingTask: booking['task'],
+                                              bookingStatus: booking['status'],
+                                              bookingClientName:
+                                                  booking['client_name'],
+                                              bookingCLientPhone:
+                                                  booking['client_phoneno'],
+                                              bookingClientAddress:
+                                                  booking['address'],
+                                              bookingDate: booking['date'],
+                                              bookingStartTime:
+                                                  booking['startTime'],
+                                              bookingEndTime:
+                                                  booking['endTime'],
+                                              bookingRate:
+                                                  booking['booking_rate'],
+                                              bookingLat: booking['lat'],
+                                              bookingLong: booking['long'],
+                                              bookingNote:
+                                                  booking['booking_note'] ??
+                                                      'Unavailable Note.',
+                                            ),
                                           ),
+                                        ).then((result) {
+                                          if (result == true) {
+                                            _loadBookings();
+                                          }
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
-                                      ).then((result) {
-                                        if (result == true) {
-                                          _loadBookings();
-                                        }
-                                      });
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 15),
+                                      ).copyWith(
+                                        overlayColor: WidgetStateProperty.all(
+                                            Colors.transparent),
+                                        shadowColor: WidgetStateProperty.all(
+                                            Colors.transparent),
+                                        surfaceTintColor:
+                                            WidgetStateProperty.all(
+                                                Colors.transparent),
                                       ),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 20),
-                                    ).copyWith(
-                                      overlayColor: WidgetStateProperty.all(
-                                          Colors.transparent),
-                                      shadowColor: WidgetStateProperty.all(
-                                          Colors.transparent),
-                                      surfaceTintColor: WidgetStateProperty.all(
-                                          Colors.transparent),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            booking['status'] == 3 ||
-                                                    booking['status'] == 6
-                                                ? Row(
-                                                    children: [
-                                                      Text(
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        booking['status'] == 3
-                                                            ? 'Confirmed'
-                                                            : booking['status'] ==
-                                                                    6
-                                                                ? 'Completed '
-                                                                : '',
-                                                        style: TextStyle(
-                                                            color: Colors.green,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 12,
-                                                            fontFamily:
-                                                                'Inter'),
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                    ],
-                                                  )
-                                                : SizedBox.shrink(),
-                                            Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 15, vertical: 5),
-                                              decoration: BoxDecoration(
-                                                  color: booking['status'] ==
-                                                              3 ||
-                                                          booking['status'] == 6
-                                                      ? Colors.grey.shade50
-                                                      : booking['color'],
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(5))),
-                                              child: Text(
-                                                booking['title'],
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 12,
-                                                    fontFamily: 'Inter',
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              booking['status'] == 3 ||
+                                                      booking['status'] == 6
+                                                  ? Row(
+                                                      children: [
+                                                        Text(
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          booking['status'] == 3
+                                                              ? 'Confirmed'
+                                                              : booking['status'] ==
+                                                                      6
+                                                                  ? 'Completed '
+                                                                  : '',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.green,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 12,
+                                                              fontFamily:
+                                                                  'Inter'),
+                                                        ),
+                                                        SizedBox(width: 10),
+                                                      ],
+                                                    )
+                                                  : SizedBox.shrink(),
+                                              Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 15,
+                                                    vertical: 5),
+                                                decoration: BoxDecoration(
                                                     color: booking['status'] ==
                                                                 3 ||
                                                             booking['status'] ==
                                                                 6
-                                                        ? Colors.grey.shade500
-                                                        : Colors.white),
+                                                        ? Colors.grey.shade50
+                                                        : booking['color'],
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                5))),
+                                                child: Text(
+                                                  booking['title'],
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 12,
+                                                      fontFamily: 'Inter',
+                                                      color: booking['status'] ==
+                                                                  3 ||
+                                                              booking['status'] ==
+                                                                  6
+                                                          ? Colors.grey.shade500
+                                                          : Colors.white),
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          '${booking['address']}',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey[600],
-                                            fontSize: 12,
-                                            fontFamily: 'Inter',
+                                            ],
                                           ),
-                                        ),
-                                      ],
+                                          SizedBox(height: 5),
+                                          Text(
+                                            '${booking['address']}',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              color: Colors.grey[600],
+                                              fontSize: 12,
+                                              fontFamily: 'Inter',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -668,15 +648,15 @@ class _MyBookingState extends State<MyBooking> {
                           ),
                           SizedBox(height: 10),
                           SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.55,
+                            height: MediaQuery.of(context).size.height * 0.475,
                             child: SfCalendar(
                               controller: _calendarController,
                               view: _getCalendarView(viewTypeTitle),
                               selectionDecoration: BoxDecoration(
-                                color: Colors.orange.withOpacity(0.3),
+                                color: Colors.transparent,
                                 borderRadius: BorderRadius.circular(5),
                                 border: Border.all(
-                                  color: Colors.orange,
+                                  color: Colors.grey,
                                   width: 2,
                                 ),
                               ),
@@ -688,7 +668,7 @@ class _MyBookingState extends State<MyBooking> {
                                 startHour: 7,
                                 endHour: 20,
                                 timeFormat: 'HH:00',
-                                timeIntervalHeight: 32.5,
+                                timeIntervalHeight: 30,
                               ),
                               allowDragAndDrop: true,
                               dragAndDropSettings: const DragAndDropSettings(
@@ -710,13 +690,233 @@ class _MyBookingState extends State<MyBooking> {
                                 ),
                                 textAlign: TextAlign.center,
                               ),
-                              // headerHeight: 0,
+                              headerHeight: 0,
                               onDragEnd: dragEnd,
                             ),
                           ),
                         ],
                       )
-                    : SizedBox.shrink()
+                    : viewTypeTitle == 'Month' || viewTypeTitle == 'List'
+                        ? Column(
+                            children: [
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: (bookingsList).map((booking) {
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 10.0),
+                                      child: SizedBox(
+                                        width: 350,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BookingDetails(
+                                                  bookingId: booking['id'],
+                                                  bookingTask: booking['task'],
+                                                  bookingStatus:
+                                                      booking['status'],
+                                                  bookingClientName:
+                                                      booking['client_name'],
+                                                  bookingCLientPhone:
+                                                      booking['client_phoneno'],
+                                                  bookingClientAddress:
+                                                      booking['address'],
+                                                  bookingLat: booking['lat'],
+                                                  bookingLong: booking['long'],
+                                                  bookingDate: booking['date'],
+                                                  bookingStartTime:
+                                                      booking['startTime'],
+                                                  bookingEndTime:
+                                                      booking['endTime'],
+                                                  bookingNote:
+                                                      booking['booking_note'] ??
+                                                          'No Task Note.',
+                                                ),
+                                              ),
+                                            ).then((result) {
+                                              if (result == true) {
+                                                _loadBookings();
+                                              }
+                                            });
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            elevation: 0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 15, vertical: 15),
+                                          ).copyWith(
+                                            overlayColor:
+                                                WidgetStateProperty.all(
+                                                    Colors.transparent),
+                                            shadowColor:
+                                                WidgetStateProperty.all(
+                                                    Colors.transparent),
+                                            surfaceTintColor:
+                                                WidgetStateProperty.all(
+                                                    Colors.transparent),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  booking['status'] == 3 ||
+                                                          booking['status'] == 6
+                                                      ? Row(
+                                                          children: [
+                                                            Text(
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              booking['status'] ==
+                                                                      3
+                                                                  ? 'Confirmed'
+                                                                  : booking['status'] ==
+                                                                          6
+                                                                      ? 'Completed '
+                                                                      : '',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .green,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 12,
+                                                                  fontFamily:
+                                                                      'Inter'),
+                                                            ),
+                                                            SizedBox(width: 10),
+                                                          ],
+                                                        )
+                                                      : SizedBox.shrink(),
+                                                  Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 15,
+                                                            vertical: 5),
+                                                    decoration: BoxDecoration(
+                                                        color: booking['status'] ==
+                                                                    3 ||
+                                                                booking['status'] ==
+                                                                    6
+                                                            ? Colors
+                                                                .grey.shade50
+                                                            : booking['color'],
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    5))),
+                                                    child: Text(
+                                                      booking['title'],
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 12,
+                                                          fontFamily: 'Inter',
+                                                          color: booking['status'] ==
+                                                                      3 ||
+                                                                  booking['status'] ==
+                                                                      6
+                                                              ? Colors
+                                                                  .grey.shade500
+                                                              : Colors.white),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(height: 5),
+                                              Text(
+                                                '${booking['address']}',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.grey[600],
+                                                  fontSize: 12,
+                                                  fontFamily: 'Inter',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.55,
+                                child: SfCalendar(
+                                  controller: _calendarController,
+                                  view: _getCalendarView(viewTypeTitle),
+                                  selectionDecoration: BoxDecoration(
+                                    color: Colors.orange.withOpacity(0.3),
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                      color: Colors.orange,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  minDate: minDate,
+                                  maxDate: maxDate,
+                                  dataSource: _dataSource,
+                                  appointmentBuilder: appointmentBuilder,
+                                  timeSlotViewSettings:
+                                      const TimeSlotViewSettings(
+                                    startHour: 7,
+                                    endHour: 20,
+                                    timeFormat: 'HH:00',
+                                    timeIntervalHeight: 32.5,
+                                  ),
+                                  allowDragAndDrop: true,
+                                  dragAndDropSettings:
+                                      const DragAndDropSettings(
+                                    indicatorTimeFormat: 'HH:00',
+                                    showTimeIndicator: false,
+                                    allowScroll: false,
+                                  ),
+                                  backgroundColor: Colors.white,
+                                  showWeekNumber: false,
+                                  showCurrentTimeIndicator: false,
+                                  viewHeaderHeight: 0,
+                                  headerStyle: CalendarHeaderStyle(
+                                    backgroundColor: Colors.white,
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Inter',
+                                      color: Colors.grey[700],
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  // headerHeight: 0,
+                                  onDragEnd: dragEnd,
+                                ),
+                              ),
+                            ],
+                          )
+                        : Expanded(
+                            child: Center(
+                              child: Text(
+                                "You have no bookings yet.",
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                            ),
+                          ),
           ],
         ),
       ),
@@ -778,7 +978,7 @@ class _MyBookingState extends State<MyBooking> {
                           appointment.recurrenceId == 6
                       ? Colors.grey[500]
                       : Colors.white,
-              fontWeight: FontWeight.normal,
+              fontWeight: FontWeight.bold,
               fontSize: 12,
               fontFamily: 'Inter',
             ),
@@ -793,7 +993,7 @@ class _MyBookingState extends State<MyBooking> {
                           appointment.recurrenceId == 6
                       ? Colors.grey[500]
                       : Colors.white,
-              fontWeight: FontWeight.normal,
+              fontWeight: FontWeight.bold,
               fontSize: 12,
               fontFamily: 'Inter',
             ),
@@ -1048,7 +1248,7 @@ class WeekButtonsState extends State<WeekButtons> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
+                    borderRadius: BorderRadius.circular(7.5),
                     side: BorderSide(
                       color: isSelected ? Colors.grey.shade300 : Colors.white,
                       width: 1,
@@ -1082,7 +1282,7 @@ class WeekButtonsState extends State<WeekButtons> {
                         fontFamily: 'Inter',
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey[800],
+                        color: Colors.grey[700],
                       ),
                     ),
                   ],

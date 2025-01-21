@@ -52,8 +52,8 @@ class _BookingListState extends State<BookingList> {
       case 6:
         return {
           'text': 'Completed',
-          'color': Colors.green[500],
-          'textColor': Colors.green[50]
+          'color': Colors.green[50],
+          'textColor': Colors.green[500]
         };
       case 7:
         return {
@@ -99,7 +99,7 @@ class _BookingListState extends State<BookingList> {
           style: TextStyle(
             color: Colors.white,
             fontFamily: 'Inter',
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -156,10 +156,13 @@ class _BookingListState extends State<BookingList> {
                               bookingStartTime: booking['booking_time_start'],
                               bookingEndTime: booking['booking_time_end'],
                               bookingRate: booking['booking_rate'],
+                              bookingLat: booking['lat'],
+                              bookingLong: booking['long'],
                               bookingNote: booking['booking_note'] ??
                                   'Unavailable Note.',
                             ),
                           ),
+
                         );
                       },
                       child: Column(
@@ -179,11 +182,12 @@ class _BookingListState extends State<BookingList> {
                                       fontFamily: 'Inter',
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal,
-                                      color: Colors.grey[800]),
+                                      color: Colors.grey.shade600),
                                 ),
                               ),
                               Spacer(),
                               Container(
+                                width: 100,
                                 decoration: BoxDecoration(
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(7.5)),
@@ -199,7 +203,7 @@ class _BookingListState extends State<BookingList> {
                                     style: TextStyle(
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 12,
+                                      fontSize: 11,
                                       color: getBookingStatus(
                                               booking['booking_status'])[
                                           'textColor'],
@@ -249,7 +253,7 @@ class _BookingListState extends State<BookingList> {
                                     color: Colors.grey[800],
                                   ),
                                 ),
-                                SizedBox(width: 10),
+                                Spacer(),
                                 Text(
                                   '${formatTime(booking['booking_time_start'])} - ${formatTime(booking['booking_time_end'])}',
                                   style: TextStyle(

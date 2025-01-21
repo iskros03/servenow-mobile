@@ -15,7 +15,6 @@ class UpdateTimeslotAvailability extends StatefulWidget {
 
 class _UpdateTimeslotAvailabilityState
     extends State<UpdateTimeslotAvailability> {
-
   dynamic taskerSlotId;
   dynamic taskerSlotStatus;
   String? availabilityTitle;
@@ -25,7 +24,7 @@ class _UpdateTimeslotAvailabilityState
   void initState() {
     super.initState();
     taskerSlotId = '${widget.slotId}';
-    taskerSlotStatus = widget.slotStatus;  // Assuming slotStatus is 0 or 1.
+    taskerSlotStatus = widget.slotStatus; // Assuming slotStatus is 0 or 1.
     availabilityTitle = taskerSlotStatus == 1 ? 'Available' : 'Unavailable';
     selectedAvailability = taskerSlotStatus; // Set it to 0 or 1
   }
@@ -37,12 +36,23 @@ class _UpdateTimeslotAvailabilityState
 
   Future<void> changeTimeSlotAvailablility() async {
     try {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Update service...'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     backgroundColor: Colors.grey.shade200,
+      //     content: Center(
+      //       child: Text(
+      //         'Loading...',
+      //         style: TextStyle(
+      //           fontFamily: 'Inter',
+      //           color: Colors.grey.shade800,
+      //           fontWeight: FontWeight.normal,
+      //           fontSize: 13,
+      //         ),
+      //       ),
+      //     ),
+      //     duration: Duration(seconds: 3),
+      //   ),
+      // );
 
       TaskerService taskerService = TaskerService();
       final response = await taskerService.changeTimeSlotAvailablility(
@@ -51,7 +61,17 @@ class _UpdateTimeslotAvailabilityState
       if (response['statusCode'] == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(response['data']['data']),
+            content: Center(
+              child: Text(
+                response['data']['data'],
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  color: Colors.white,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 13,
+                ),
+              ),
+            ),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 3),
           ),
@@ -98,23 +118,6 @@ class _UpdateTimeslotAvailabilityState
             Navigator.pop(context, true);
           },
         ),
-        actions: [
-          TextButton(
-            style: const ButtonStyle(
-              splashFactory: NoSplash.splashFactory,
-            ),
-            onPressed: changeTimeSlotAvailablility,
-            child: Text(
-              'Save',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                color: Colors.orange[300],
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-              ),
-            ),
-          ),
-        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(20),
@@ -151,6 +154,7 @@ class _UpdateTimeslotAvailabilityState
                           selectedAvailability = 0;
                           availabilityTitle = 'Unavailable';
                         }
+                        changeTimeSlotAvailablility();
                       });
                     },
                   ),

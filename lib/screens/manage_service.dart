@@ -80,21 +80,41 @@ class _ManageServiceState extends State<ManageService> {
     };
     try {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Update service...'),
-          duration: Duration(seconds: 2),
+        SnackBar(
+          backgroundColor: Colors.grey.shade200,
+          content: Center(
+            child: Text(
+              'Loading...',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                color: Colors.grey.shade800,
+                fontWeight: FontWeight.normal,
+                fontSize: 13,
+              ),
+            ),
+          ),
+          duration: Duration(seconds: 3),
         ),
       );
 
       TaskerService taskerService = TaskerService();
       final response =
           await taskerService.updateTaskerService(serviceId, updateService);
-      // print(response['data']['message']);
 
       if (response['statusCode'] == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(response['data']['message']),
+            content: Center(
+              child: Text(
+                response['data']['message'],
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  color: Colors.white,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 13,
+                ),
+              ),
+            ),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 3),
           ),
@@ -274,11 +294,11 @@ class _ManageServiceState extends State<ManageService> {
         centerTitle: true,
         elevation: 0,
         title: const Text(
-          'Update Service Details',
+          'Service Management',
           style: TextStyle(
             color: Colors.white,
             fontFamily: 'Inter',
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -324,10 +344,10 @@ class _ManageServiceState extends State<ManageService> {
                     child: Text(
                       'Service Type',
                       style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 13,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.normal,
-                          color: Colors.grey[800]),
+                          color: Colors.grey[700]),
                     ),
                   ),
                   CustomDropdownMenu(
@@ -335,8 +355,7 @@ class _ManageServiceState extends State<ManageService> {
                     titleSelect: 'Service Type',
                     items: serviceType
                         .map((serviceTypeName) =>
-                            serviceTypeName['servicetype_name']
-                                .toString())
+                            serviceTypeName['servicetype_name'].toString())
                         .toList(),
                     onSelected: (selectedValue) {
                       setState(() {
@@ -366,10 +385,10 @@ class _ManageServiceState extends State<ManageService> {
                       child: Text(
                         'Rate',
                         style: TextStyle(
-                            color: Colors.grey[800],
+                            color: Colors.grey[700],
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.normal,
-                            fontSize: 12),
+                            fontSize: 13),
                       ),
                     ),
                     CustomTextField(
@@ -395,10 +414,10 @@ class _ManageServiceState extends State<ManageService> {
                         child: Text(
                           'Rate Type',
                           style: TextStyle(
-                              color: Colors.grey[800],
+                              color: Colors.grey[700],
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.normal,
-                              fontSize: 12),
+                              fontSize: 13),
                         ),
                       ),
                       CustomDropdownMenu(
@@ -430,10 +449,10 @@ class _ManageServiceState extends State<ManageService> {
                     child: Text(
                       'Service Description',
                       style: TextStyle(
-                          color: Colors.grey[800],
+                          color: Colors.grey[700],
                           fontWeight: FontWeight.normal,
                           fontFamily: 'Inter',
-                          fontSize: 12),
+                          fontSize: 13),
                     ),
                   ),
                   CustomTextField(

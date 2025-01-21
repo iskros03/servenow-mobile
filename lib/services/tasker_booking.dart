@@ -184,4 +184,43 @@ class TaskerBooking {
       throw Exception("Failed to fetch API: $e");
     }
   }
+
+  Future<Map<String, dynamic>> getDashboard() async {
+    try {
+      final token = await TaskerAuth().getToken();
+      final url = Uri.parse('${dotenv.env['DOMAIN']}/api/get-tasker-dashboard');
+      final response = await http.get(url, headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      });
+      if (response.body.isNotEmpty) {
+        final data = json.decode(response.body);
+        return {
+          'statusCode': response.statusCode,
+          'books': data['books'],
+          'confirmBookingData': data['confirmBookingData'],
+
+          'totalearningsAll': data['totalearningsAll'],
+          'totalearningsThisMonth': data['totalearningsThisMonth'],
+          'totalearningsThisYear': data['totalearningsThisYear'],
+          'totalBookingCount': data['totalBookingCount'],
+          'totalPenaltyCount': data['totalPenaltyCount'],
+          'totalAVGrating': data['totalAVGrating'],
+          
+          'thismonthcompleted': data['thismonthcompleted'],
+          'thismonthfloating': data['thismonthfloating'],
+          'thismonthCancelled': data['thismonthCancelled'],
+          'thisyearcompleted': data['thisyearcompleted'],
+          'thisyearfloating': data['thisyearfloating'],
+          'thisyearCancelled': data['thisyearCancelled'],
+
+        };
+      } else {
+        throw Exception('Failed to get dashboard');
+      }
+    } catch (e) {
+      throw Exception("Failed to fetch API: $e");
+    }
+  }
 }

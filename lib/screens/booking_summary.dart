@@ -73,7 +73,7 @@ class _BookingSummaryState extends State<BookingSummary> {
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'Inter',
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -93,7 +93,6 @@ class _BookingSummaryState extends State<BookingSummary> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(7.5)),
                   child: Row(
@@ -113,14 +112,14 @@ class _BookingSummaryState extends State<BookingSummary> {
                             '$totalBooking',
                             style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: 22,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey.shade600),
                           ),
                         ],
                       ),
                       Spacer(),
-                      IconButton(
+                      ElevatedButton(
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -131,17 +130,42 @@ class _BookingSummaryState extends State<BookingSummary> {
                             ),
                           );
                         },
-                        icon: FaIcon(FontAwesomeIcons.eye),
-                        color: Colors.blue,
-                        style: IconButton.styleFrom().copyWith(
+                        style: ElevatedButton.styleFrom(
+                          elevation:
+                              2, // Adjust this value to control shadow intensity
+                          backgroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          shadowColor: Colors.grey.withOpacity(
+                              0.5), // Shadow color and transparency
+                        ).copyWith(
                           overlayColor:
                               WidgetStateProperty.all(Colors.transparent),
-                          shadowColor:
-                              WidgetStateProperty.all(Colors.transparent),
-                          surfaceTintColor:
-                              WidgetStateProperty.all(Colors.transparent),
                         ),
-                      )
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Booking List',
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            FaIcon(
+                              FontAwesomeIcons.solidEye,
+                              color: Colors.blue,
+                              size: 14,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   )),
               const SizedBox(height: 10),
@@ -153,8 +177,6 @@ class _BookingSummaryState extends State<BookingSummary> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
@@ -172,7 +194,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                               '$totalCompleted',
                               style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 22,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey.shade600),
                             ),
@@ -185,8 +207,6 @@ class _BookingSummaryState extends State<BookingSummary> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
@@ -204,7 +224,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                               '$totalConfirmed',
                               style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 22,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey.shade600),
                             ),
@@ -222,8 +242,6 @@ class _BookingSummaryState extends State<BookingSummary> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
@@ -241,7 +259,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                               '$totalUnpaid',
                               style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 22,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey.shade600),
                             ),
@@ -254,8 +272,6 @@ class _BookingSummaryState extends State<BookingSummary> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
@@ -273,7 +289,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                               '$totalCancelled',
                               style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 22,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey.shade600),
                             ),
@@ -291,8 +307,6 @@ class _BookingSummaryState extends State<BookingSummary> {
                       Container(
                         padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
@@ -302,9 +316,9 @@ class _BookingSummaryState extends State<BookingSummary> {
                               'Monthly Booking Amounts by Status',
                               style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 12,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
+                                  color: Colors.grey.shade800),
                             )),
                             Row(
                               children: [
@@ -313,7 +327,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                   style: TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 12,
-                                      fontWeight: FontWeight.normal,
+                                      fontWeight: FontWeight.bold,
                                       color: Colors.green.shade700),
                                 ),
                                 SizedBox(width: 10),
@@ -322,7 +336,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                   style: TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 12,
-                                      fontWeight: FontWeight.normal,
+                                      fontWeight: FontWeight.bold,
                                       color: Colors.orange.shade700),
                                 ),
                                 SizedBox(width: 10),
@@ -331,15 +345,15 @@ class _BookingSummaryState extends State<BookingSummary> {
                                   style: TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 12,
-                                      fontWeight: FontWeight.normal,
+                                      fontWeight: FontWeight.bold,
                                       color: Colors.red.shade700),
                                 ),
                               ],
                             ),
                             Spacer(),
                             SizedBox(
-                              width: 275,
-                              height: 225,
+                              width: 250,
+                              height: 250,
                               child: BarChart(
                                 BarChartData(
                                   alignment: BarChartAlignment.spaceAround,
@@ -350,7 +364,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                         child: Text(
                                           'Amount (RM)',
                                           style: TextStyle(
-                                            color: Colors.grey.shade600,
+                                            color: Colors.grey.shade800,
                                             fontFamily: 'Inter',
                                             fontSize: 12,
                                             fontWeight: FontWeight.normal,
@@ -411,7 +425,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                                         ?[0] ??
                                                     '0.0') ??
                                             0.0,
-                                        color: Colors.red.withOpacity(0.35),
+                                        color: Colors.red.withOpacity(0.5),
                                       )
                                     ]),
                                     BarChartGroupData(x: 1, barRods: [
@@ -426,7 +440,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                                         ?[0] ??
                                                     '0.0') ??
                                             0.0,
-                                        color: Colors.green.withOpacity(0.35),
+                                        color: Colors.green.withOpacity(0.5),
                                       )
                                     ]),
                                     BarChartGroupData(x: 2, barRods: [
@@ -441,7 +455,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                                         ?[0] ??
                                                     '0.0') ??
                                             0.0,
-                                        color: Colors.orange.withOpacity(0.35),
+                                        color: Colors.orange.withOpacity(0.5),
                                       )
                                     ]),
                                   ],
@@ -456,7 +470,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                 fontFamily: 'Inter',
                                 fontSize: 12,
                                 fontWeight: FontWeight.normal,
-                                color: Colors.grey.shade700,
+                                color: Colors.grey.shade800,
                               ),
                             )
                           ],
@@ -466,8 +480,6 @@ class _BookingSummaryState extends State<BookingSummary> {
                       Container(
                         padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(7.5)),
                         child: Column(
@@ -477,9 +489,9 @@ class _BookingSummaryState extends State<BookingSummary> {
                               'Yearly Booking Amounts by Status',
                               style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 12,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
+                                  color: Colors.grey.shade800),
                             )),
                             Row(
                               children: [
@@ -488,7 +500,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                   style: TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 12,
-                                      fontWeight: FontWeight.normal,
+                                      fontWeight: FontWeight.bold,
                                       color: Colors.green.shade700),
                                 ),
                                 SizedBox(width: 10),
@@ -497,7 +509,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                   style: TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 12,
-                                      fontWeight: FontWeight.normal,
+                                      fontWeight: FontWeight.bold,
                                       color: Colors.orange.shade700),
                                 ),
                                 SizedBox(width: 10),
@@ -506,15 +518,15 @@ class _BookingSummaryState extends State<BookingSummary> {
                                   style: TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 12,
-                                      fontWeight: FontWeight.normal,
+                                      fontWeight: FontWeight.bold,
                                       color: Colors.red.shade700),
                                 ),
                               ],
                             ),
                             Spacer(),
                             SizedBox(
-                              width: 275,
-                              height: 225,
+                              width: 250,
+                              height: 250,
                               child: BarChart(
                                 BarChartData(
                                   alignment: BarChartAlignment.spaceAround,
@@ -525,7 +537,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                         child: Text(
                                           'Amount (RM)',
                                           style: TextStyle(
-                                            color: Colors.grey.shade600,
+                                            color: Colors.grey.shade800,
                                             fontFamily: 'Inter',
                                             fontSize: 12,
                                             fontWeight: FontWeight.normal,
@@ -583,7 +595,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                                         ?[0] ??
                                                     '0.0') ??
                                             0.0,
-                                        color: Colors.red.withOpacity(0.35),
+                                        color: Colors.red.withOpacity(0.5),
                                       )
                                     ]),
                                     BarChartGroupData(x: 1, barRods: [
@@ -598,7 +610,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                                         ?[0] ??
                                                     '0.0') ??
                                             0.0,
-                                        color: Colors.green.withOpacity(0.35),
+                                        color: Colors.green.withOpacity(0.5),
                                       )
                                     ]),
                                     BarChartGroupData(x: 2, barRods: [
@@ -613,7 +625,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                                         ?[0] ??
                                                     '0.0') ??
                                             0.0,
-                                        color: Colors.orange.withOpacity(0.35),
+                                        color: Colors.orange.withOpacity(0.5),
                                       )
                                     ]),
                                   ],
@@ -628,7 +640,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                                   fontFamily: 'Inter',
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
+                                  color: Colors.grey.shade800),
                             )
                           ],
                         ),
@@ -643,7 +655,6 @@ class _BookingSummaryState extends State<BookingSummary> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(7.5)),
                   child: Row(
@@ -661,7 +672,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                         '(+) RM $totalCompletedAmount',
                         style: TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 18,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.green.shade600),
                       ),
@@ -673,7 +684,6 @@ class _BookingSummaryState extends State<BookingSummary> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(7.5)),
                   child: Row(
@@ -691,7 +701,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                         '(~) RM $totalCancelledAmount',
                         style: TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 18,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.orange.shade600),
                       ),
@@ -703,7 +713,6 @@ class _BookingSummaryState extends State<BookingSummary> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(7.5)),
                   child: Row(
@@ -721,7 +730,7 @@ class _BookingSummaryState extends State<BookingSummary> {
                         '(-) RM $totalFloatingAmount',
                         style: TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 18,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.red.shade600),
                       ),

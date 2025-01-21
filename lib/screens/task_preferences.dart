@@ -8,8 +8,9 @@ import 'package:intl/intl.dart';
 import 'package:servenow_mobile/widgets/custom_ele_button.dart';
 
 class TaskPreferences extends StatefulWidget {
-  final dynamic taskerStatus;
-  const TaskPreferences({super.key, this.taskerStatus});
+  final bool showLeadingIcon;
+
+  const TaskPreferences({super.key, this.showLeadingIcon = true});
 
   @override
   State<TaskPreferences> createState() => _TaskPreferencesState();
@@ -32,6 +33,8 @@ class _TaskPreferencesState extends State<TaskPreferences> {
   int workingRadius = 0;
   int? workingStatus;
 
+  int taskerStatus = 0;
+
   List<Map<String, dynamic>> timeSlots = [];
   bool isLoading = false;
 
@@ -42,8 +45,6 @@ class _TaskPreferencesState extends State<TaskPreferences> {
 
   int _selectedTabIndex = 0;
 
-  dynamic taskerStatus;
-
   @override
   void initState() {
     super.initState();
@@ -53,7 +54,6 @@ class _TaskPreferencesState extends State<TaskPreferences> {
     DateTime firstDate = DateTime.now(); // Today
     selectedDate = DateFormat('yyyy-MM-dd').format(firstDate);
     _getTimeSlot('$selectedDate');
-    taskerStatus = '${widget.taskerStatus}';
   }
 
   void fetchStateNames() async {
@@ -70,7 +70,6 @@ class _TaskPreferencesState extends State<TaskPreferences> {
       if (taskerData['tasker_workingloc_state'] != null) {
         fetchAreaNames(taskerData['tasker_workingloc_state']!);
       }
-      print(taskerData['tasker_workingloc_state']);
     } catch (e) {
       print('Error: $e');
     } finally {
@@ -109,16 +108,12 @@ class _TaskPreferencesState extends State<TaskPreferences> {
       await Future.delayed(const Duration(seconds: 1));
       var data = await taskerUser.getTaskerData();
 
-      if (data.isEmpty) {
-        throw Exception('No data found');
-      }
-
       workingLocState = data[0]['tasker_workingloc_state'];
       workingLocArea = data[0]['tasker_workingloc_area'];
       selectedWorkingTypeValue = data[0]['tasker_worktype'];
       workingRadius = data[0]['working_radius'];
-
       workingStatus = data[0]['tasker_working_status'];
+      taskerStatus = data[0]['tasker_status'];
 
       if (workingStatus == 1) {
         isPublic = true;
@@ -129,13 +124,12 @@ class _TaskPreferencesState extends State<TaskPreferences> {
       initialTaskerData = {
         'tasker_workingloc_state': data[0]['tasker_workingloc_state'],
         'tasker_workingloc_area': data[0]['tasker_workingloc_area'],
-        'working_radius': data[0]['working_radius'],
+        'working_radius': data[0]['working_radius'].toString(),
         'tasker_worktype': data[0]['tasker_worktype'].toString(),
       };
       return initialTaskerData;
     } catch (e) {
-      print('Error occurred: $e');
-      return {'error': 'Failed to load tasker data'};
+      return {'Error': '$e'};
     } finally {
       setState(() {
         isLoading = false;
@@ -153,16 +147,19 @@ class _TaskPreferencesState extends State<TaskPreferences> {
     try {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Colors.grey[600],
-          content: Text(
-            'Saving...',
-            style: TextStyle(
+          backgroundColor: Colors.grey.shade200,
+          content: Center(
+            child: Text(
+              'Loading...',
+              style: TextStyle(
                 fontFamily: 'Inter',
-                color: Colors.white,
+                color: Colors.grey.shade800,
+                fontWeight: FontWeight.normal,
                 fontSize: 13,
-                fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
-          duration: Duration(seconds: 1),
+          duration: Duration(seconds: 3),
         ),
       );
 
@@ -183,7 +180,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                     fontFamily: 'Inter',
                     color: Colors.white,
                     fontSize: 13,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.normal),
               ),
             ),
             duration: Duration(seconds: 3),
@@ -330,8 +327,8 @@ class _TaskPreferencesState extends State<TaskPreferences> {
     }
   }
 
-  Map<String, dynamic> getTaskerStatus(dynamic taskerStaus) {
-    switch (taskerStaus) {
+  Map<String, dynamic> getTaskerStatus(int taskerStatus) {
+    switch (taskerStatus) {
       case 0:
         return {
           'text': 'Incomplete Profile',
@@ -379,16 +376,18 @@ class _TaskPreferencesState extends State<TaskPreferences> {
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'Inter',
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+          leading: widget.showLeadingIcon
+              ? IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              : null,
           bottom: TabBar(
             onTap: (index) {
               setState(() {
@@ -457,125 +456,106 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                                 color: Colors.grey[600]),
                           ))
                         : timeSlots.isNotEmpty
-                            ? Stack(
-                                children: [
-                                  Theme(
-                                    data: ThemeData(
-                                      highlightColor: Colors.grey[300],
-                                    ),
-                                    child: Scrollbar(
-                                      thumbVisibility: true,
-                                      radius: Radius.circular(8.0),
-                                      thickness: 5.0,
-                                      child: ListView.builder(
-                                        itemCount: timeSlots.length,
-                                        itemBuilder: (context, index) {
-                                          final timeSlot = timeSlots[index];
-                                          int status = timeSlot['slot_status'];
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 3.5),
-                                            child: Container(
-                                              height: 40,
+                            ? Scrollbar(
+                                thumbVisibility: true,
+                                radius: Radius.circular(8.0),
+                                thickness: 5.0,
+                                child: ListView.builder(
+                                  itemCount: timeSlots.length,
+                                  itemBuilder: (context, index) {
+                                    final timeSlot = timeSlots[index];
+                                    int status = timeSlot['slot_status'];
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 1.5),
+                                      child: Container(
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(7.5)),
+                                          color: Colors.white,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(width: 10),
+                                            Container(
+                                              width: 100,
                                               decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  width: 1.5,
+                                                  color: getSlotStatus(
+                                                      status)['color'],
+                                                ),
                                                 borderRadius: BorderRadius.all(
-                                                    Radius.circular(7.5)),
-                                                color: Colors.white,
+                                                    Radius.circular(5)),
+                                                color: getSlotStatus(
+                                                    status)['color'],
                                               ),
-                                              child: Row(
-                                                children: [
-                                                  SizedBox(width: 10),
-                                                  Container(
-                                                    width: 100,
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                        width: 1.5,
-                                                        color: getSlotStatus(
-                                                            status)['color'],
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  5)),
-                                                      color: getSlotStatus(
-                                                          status)['color'],
-                                                    ),
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        vertical: 2.5),
-                                                    child: Text(
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      getSlotStatus(
-                                                          status)['text'],
-                                                      style: TextStyle(
-                                                        fontFamily: 'Inter',
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 10,
-                                                        color: getSlotStatus(
-                                                                status)[
-                                                            'textColor'],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 75,
-                                                    child: Text(
-                                                      textAlign: TextAlign.end,
-                                                      formatTime(
-                                                          timeSlot['time'] ??
-                                                              '00:00:00'),
-                                                      style: TextStyle(
-                                                          fontFamily: 'Inter',
-                                                          fontSize: 13,
-                                                          color:
-                                                              Colors.grey[800]),
-                                                    ),
-                                                  ),
-                                                  Spacer(),
-                                                  timeSlot['slot_status'] == 2
-                                                      ? SizedBox.shrink()
-                                                      : SizedBox(
-                                                          height: 35,
-                                                          child: IconButton(
-                                                              onPressed: () {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder: (context) => UpdateTimeslotAvailability(
-                                                                            slotStatus: timeSlot[
-                                                                                'slot_status'],
-                                                                            slotId:
-                                                                                timeSlot['taskerTimeSlotID']))).then(
-                                                                    (result) {
-                                                                  if (result ==
-                                                                      true) {
-                                                                    print(
-                                                                        'true');
-                                                                    _getTimeSlot(
-                                                                        selectedDate
-                                                                            .toString());
-                                                                  }
-                                                                });
-                                                              },
-                                                              icon: FaIcon(
-                                                                FontAwesomeIcons
-                                                                    .pen,
-                                                                size: 15,
-                                                                color:
-                                                                    Colors.grey,
-                                                              )),
-                                                        ),
-                                                ],
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 2.5),
+                                              child: Text(
+                                                textAlign: TextAlign.center,
+                                                getSlotStatus(status)['text'],
+                                                style: TextStyle(
+                                                  fontFamily: 'Inter',
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 10,
+                                                  color: getSlotStatus(
+                                                      status)['textColor'],
+                                                ),
                                               ),
                                             ),
-                                          );
-                                        },
+                                            SizedBox(
+                                              width: 75,
+                                              child: Text(
+                                                textAlign: TextAlign.end,
+                                                formatTime(timeSlot['time'] ??
+                                                    '00:00:00'),
+                                                style: TextStyle(
+                                                    fontFamily: 'Inter',
+                                                    fontSize: 13,
+                                                    color: Colors.grey[800]),
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            timeSlot['slot_status'] == 2
+                                                ? SizedBox.shrink()
+                                                : SizedBox(
+                                                    height: 35,
+                                                    child: IconButton(
+                                                        onPressed: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) => UpdateTimeslotAvailability(
+                                                                      slotStatus:
+                                                                          timeSlot[
+                                                                              'slot_status'],
+                                                                      slotId: timeSlot[
+                                                                          'taskerTimeSlotID']))).then(
+                                                              (result) {
+                                                            if (result ==
+                                                                true) {
+                                                              print('true');
+                                                              _getTimeSlot(
+                                                                  selectedDate
+                                                                      .toString());
+                                                            }
+                                                          });
+                                                        },
+                                                        icon: FaIcon(
+                                                          FontAwesomeIcons.pen,
+                                                          size: 15,
+                                                          color: Colors.grey,
+                                                        )),
+                                                  ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ],
+                                    );
+                                  },
+                                ),
                               )
                             : Container(
                                 decoration: BoxDecoration(
@@ -640,7 +620,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                             fontSize: 13,
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.bold,
-                            color: Colors.grey[800],
+                            color: Colors.grey[700],
                           ),
                         ),
                         Spacer(),
@@ -648,17 +628,16 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                           padding: EdgeInsets.symmetric(
                               horizontal: 10, vertical: 2.5),
                           decoration: BoxDecoration(
-                            color: getTaskerStatus(
-                                int.parse(taskerStatus))['color'],
+                            color: getTaskerStatus(taskerStatus)['color'],
                             borderRadius: BorderRadius.all(Radius.circular(8)),
                           ),
                           child: Text(
-                            getTaskerStatus(int.parse(taskerStatus))['text'],
+                            getTaskerStatus(taskerStatus)['text'],
                             style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.bold,
-                                color: getTaskerStatus(
-                                    int.parse(taskerStatus))['textColor'],
+                                color:
+                                    getTaskerStatus(taskerStatus)['textColor'],
                                 fontSize: 10),
                           ),
                         ),
@@ -682,7 +661,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                             fontSize: 13,
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.bold,
-                            color: Colors.grey[800],
+                            color: Colors.grey[700],
                           ),
                         ),
                         Spacer(),
@@ -727,7 +706,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Inter',
-                                color: Colors.grey[800]),
+                                color: Colors.grey[700]),
                           ),
                         ),
                         Expanded(
@@ -771,7 +750,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Inter',
-                              color: Colors.grey[800]),
+                              color: Colors.grey[700]),
                         ),
                         const SizedBox(height: 10),
                         Container(
@@ -1028,5 +1007,3 @@ String formatTime(String time) {
   final parsedTime = timeFormat.parse(time);
   return dateFormat.format(parsedTime);
 }
-
-

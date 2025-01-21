@@ -56,9 +56,20 @@ class _AddServiceState extends State<AddService> {
     };
     try {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Loading...'),
-          duration: Duration(seconds: 2),
+        SnackBar(
+          backgroundColor: Colors.grey.shade200,
+          content: Center(
+            child: Text(
+              'Loading...',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                color: Colors.grey.shade800,
+                fontWeight: FontWeight.normal,
+                fontSize: 13,
+              ),
+            ),
+          ),
+          duration: Duration(seconds: 3),
         ),
       );
 
@@ -68,7 +79,15 @@ class _AddServiceState extends State<AddService> {
       if (response['statusCode'] == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(response['data']['message']),
+            content: Text(
+              response['data']['message'],
+              style: TextStyle(
+                fontFamily: 'Inter',
+                color: Colors.white,
+                fontWeight: FontWeight.normal,
+                fontSize: 13,
+              ),
+            ),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 3),
           ),
@@ -102,7 +121,7 @@ class _AddServiceState extends State<AddService> {
           style: TextStyle(
             color: Colors.white,
             fontFamily: 'Inter',
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -125,7 +144,7 @@ class _AddServiceState extends State<AddService> {
               'Add',
               style: TextStyle(
                 fontFamily: 'Inter',
-                color: Colors.orange[300],
+                color: Colors.orange.shade300,
                 fontWeight: FontWeight.bold,
                 fontSize: 13,
               ),
@@ -149,10 +168,10 @@ class _AddServiceState extends State<AddService> {
                     child: Text(
                       'State',
                       style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 13,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.normal,
-                          color: Colors.grey[800]),
+                          color: Colors.grey[700]),
                     ),
                   ),
                   CustomDropdownMenu(
@@ -160,8 +179,7 @@ class _AddServiceState extends State<AddService> {
                     titleSelect: 'Service Type',
                     items: serviceType
                         .map((serviceTypeName) =>
-                            serviceTypeName['servicetype_name']
-                                .toString())
+                            serviceTypeName['servicetype_name'].toString())
                         .toList(),
                     onSelected: (selectedValue) {
                       setState(() {
@@ -170,8 +188,7 @@ class _AddServiceState extends State<AddService> {
                                     service['servicetype_name'] ==
                                     selectedValue)[
                             'id']; // Get the ID based on selected name
-                        serviceTypeTitle =
-                            selectedValue; // Update the title
+                        serviceTypeTitle = selectedValue; // Update the title
                       });
                     },
                   ),
@@ -194,18 +211,18 @@ class _AddServiceState extends State<AddService> {
                           child: Text(
                             'Rate',
                             style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.normal,
-                                color: Colors.grey[800]),
+                                color: Colors.grey[700]),
                           ),
                         ),
                         CustomTextField(
                           controller: serviceRateController,
                           obscureText: false,
                           prefixText: 'RM ',
-                          keyboardType: TextInputType.numberWithOptions(
-                              decimal: true),
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(
                                 RegExp(r'^\d+\.?\d{0,2}')),
@@ -225,10 +242,10 @@ class _AddServiceState extends State<AddService> {
                         child: Text(
                           'Rate Type',
                           style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 13,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.normal,
-                              color: Colors.grey[800]),
+                              color: Colors.grey[700]),
                         ),
                       ),
                       CustomDropdownMenu(
@@ -264,10 +281,10 @@ class _AddServiceState extends State<AddService> {
                       child: Text(
                         'Service Description',
                         style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 13,
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.normal,
-                            color: Colors.grey[800]),
+                            color: Colors.grey[700]),
                       ),
                     ),
                     CustomTextField(
