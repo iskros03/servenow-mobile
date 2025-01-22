@@ -28,7 +28,7 @@ Future<void> main() async {
 
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/home',
+      initialRoute: '/sign_in',
       routes: {
         '/home': (context) => const Home(),
         '/sign_in': (context) => const SignIn(),

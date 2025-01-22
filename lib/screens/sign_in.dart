@@ -39,7 +39,16 @@ class _SignInState extends State<SignIn> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(errorMessage),
+            content: Center(
+              child: Text(
+                errorMessage,
+                style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white),
+              ),
+            ),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 3),
           ),
@@ -52,7 +61,15 @@ class _SignInState extends State<SignIn> {
       if (!emailRegex.hasMatch(email)) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Please enter a valid email address.'),
+            content: Center(
+                child: Text(
+              'Please enter a valid email address.',
+              style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.normal,
+                  color: Colors.white),
+            )),
             backgroundColor: Colors.red,
             duration: Duration(seconds: 3),
           ),
@@ -62,16 +79,19 @@ class _SignInState extends State<SignIn> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Colors.grey[800],
-          content: Text(
-            'Sign In...',
-            style: TextStyle(
-                fontSize: 14,
+          backgroundColor: Colors.grey.shade200,
+          content: Center(
+            child: Text(
+              'Login...',
+              style: TextStyle(
                 fontFamily: 'Inter',
+                color: Colors.grey.shade800,
                 fontWeight: FontWeight.normal,
-                color: Colors.white),
+                fontSize: 13,
+              ),
+            ),
           ),
-          duration: Duration(seconds: 2),
+          duration: Duration(seconds: 3),
         ),
       );
 
@@ -87,13 +107,15 @@ class _SignInState extends State<SignIn> {
         final errorMessage = data['data']['error'];
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              errorMessage,
-              style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.normal,
-                  color: Colors.white),
+            content: Center(
+              child: Text(
+                errorMessage,
+                style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white),
+              ),
             ),
             backgroundColor: Colors.red,
             duration: Duration(seconds: 3),
@@ -103,13 +125,15 @@ class _SignInState extends State<SignIn> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Error: ${e.toString()}',
-            style: TextStyle(
-                fontSize: 14,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.normal,
-                color: Colors.white),
+          content: Center(
+            child: Text(
+              'Error: ${e.toString()}',
+              style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.normal,
+                  color: Colors.white),
+            ),
           ),
           backgroundColor: Colors.red,
           duration: Duration(seconds: 3),

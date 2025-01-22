@@ -113,7 +113,7 @@ class _EStatementState extends State<EStatement> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'To Be Released Amount',
+                            'Released Amount',
                             style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 13,
@@ -292,7 +292,7 @@ class _EStatementState extends State<EStatement> {
                         ),
                         SizedBox(height: 10),
                         SizedBox(
-                          height: 150,
+                          height: 140,
                           child: BarChart(
                             BarChartData(
                               alignment: BarChartAlignment.spaceAround,
@@ -448,7 +448,7 @@ class _EStatementState extends State<EStatement> {
                         ),
                         SizedBox(height: 10),
                         SizedBox(
-                          height: 150,
+                          height: 140,
                           child: BarChart(
                             BarChartData(
                               alignment: BarChartAlignment.spaceAround,

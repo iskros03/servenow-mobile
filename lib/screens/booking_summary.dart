@@ -45,7 +45,6 @@ class _BookingSummaryState extends State<BookingSummary> {
           totalCompletedAmountThisMonth =
               response['totalCompletedAmountThisMonth'];
         });
-        print(monthlyChartData);
       } else {
         print('Failed to load booking list: ${response['statusCode']}');
       }
@@ -299,356 +298,356 @@ class _BookingSummaryState extends State<BookingSummary> {
                 ],
               ),
               SizedBox(height: 10),
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7.5)),
-                        child: Column(
-                          children: [
-                            Center(
-                                child: Text(
-                              'Monthly Booking Amounts by Status',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade800),
-                            )),
-                            Row(
-                              children: [
-                                Text(
-                                  'Completed',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.green.shade700),
-                                ),
-                                SizedBox(width: 10),
-                                Text(
-                                  'Floating',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.orange.shade700),
-                                ),
-                                SizedBox(width: 10),
-                                Text(
-                                  'Cancelled',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.red.shade700),
-                                ),
-                              ],
-                            ),
-                            Spacer(),
-                            SizedBox(
-                              width: 250,
-                              height: 250,
-                              child: BarChart(
-                                BarChartData(
-                                  alignment: BarChartAlignment.spaceAround,
-                                  barTouchData: BarTouchData(enabled: false),
-                                  titlesData: FlTitlesData(
-                                    leftTitles: AxisTitles(
-                                      axisNameWidget: SizedBox(
-                                        child: Text(
-                                          'Amount (RM)',
-                                          style: TextStyle(
-                                            color: Colors.grey.shade800,
-                                            fontFamily: 'Inter',
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-                                      sideTitles: SideTitles(
-                                        showTitles: true,
-                                        reservedSize: 35,
-                                        getTitlesWidget: (value, meta) {
-                                          return Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: Text(
-                                              value.toInt().toString(),
-                                              style: TextStyle(
-                                                fontFamily: 'Inter',
-                                                fontSize: 12,
-                                                color: Colors.grey.shade600,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    bottomTitles: AxisTitles(
-                                      axisNameWidget: Container(),
-                                    ),
-                                    topTitles: AxisTitles(
-                                      axisNameWidget: Container(),
-                                      sideTitles: SideTitles(showTitles: false),
-                                    ),
-                                    rightTitles: AxisTitles(
-                                      axisNameWidget: Container(),
-                                      sideTitles: SideTitles(showTitles: false),
-                                    ),
-                                  ),
-                                  borderData: FlBorderData(show: false),
-                                  gridData: FlGridData(
-                                    getDrawingHorizontalLine: (value) {
-                                      return FlLine(
-                                        color: Colors.grey.shade300,
-                                        strokeWidth: 1,
-                                      );
-                                    },
-                                    drawVerticalLine: false,
-                                  ),
-                                  barGroups: [
-                                    BarChartGroupData(x: 0, barRods: [
-                                      BarChartRodData(
-                                        borderRadius: BorderRadius.only(),
-                                        borderSide: BorderSide(
-                                            width: 1, color: Colors.red),
-                                        width: 50,
-                                        fromY: 0,
-                                        toY: double.tryParse(
-                                                monthlyChartData['cancelled']
-                                                        ?[0] ??
-                                                    '0.0') ??
-                                            0.0,
-                                        color: Colors.red.withOpacity(0.5),
-                                      )
-                                    ]),
-                                    BarChartGroupData(x: 1, barRods: [
-                                      BarChartRodData(
-                                        borderRadius: BorderRadius.only(),
-                                        borderSide: BorderSide(
-                                            width: 1, color: Colors.green),
-                                        width: 50,
-                                        fromY: 0,
-                                        toY: double.tryParse(
-                                                monthlyChartData['completed']
-                                                        ?[0] ??
-                                                    '0.0') ??
-                                            0.0,
-                                        color: Colors.green.withOpacity(0.5),
-                                      )
-                                    ]),
-                                    BarChartGroupData(x: 2, barRods: [
-                                      BarChartRodData(
-                                        borderRadius: BorderRadius.only(),
-                                        borderSide: BorderSide(
-                                            width: 1, color: Colors.orange),
-                                        width: 50,
-                                        fromY: 0,
-                                        toY: double.tryParse(
-                                                monthlyChartData['floating']
-                                                        ?[0] ??
-                                                    '0.0') ??
-                                            0.0,
-                                        color: Colors.orange.withOpacity(0.5),
-                                      )
-                                    ]),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Text(
-                              monthlyChartData['labels'] != null
-                                  ? monthlyChartData['labels'][0] ?? ''
-                                  : '',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 12,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.grey.shade800,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7.5)),
-                        child: Column(
-                          children: [
-                            Center(
-                                child: Text(
-                              'Yearly Booking Amounts by Status',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade800),
-                            )),
-                            Row(
-                              children: [
-                                Text(
-                                  'Completed',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.green.shade700),
-                                ),
-                                SizedBox(width: 10),
-                                Text(
-                                  'Floating',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.orange.shade700),
-                                ),
-                                SizedBox(width: 10),
-                                Text(
-                                  'Cancelled',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.red.shade700),
-                                ),
-                              ],
-                            ),
-                            Spacer(),
-                            SizedBox(
-                              width: 250,
-                              height: 250,
-                              child: BarChart(
-                                BarChartData(
-                                  alignment: BarChartAlignment.spaceAround,
-                                  barTouchData: BarTouchData(enabled: false),
-                                  titlesData: FlTitlesData(
-                                    leftTitles: AxisTitles(
-                                      axisNameWidget: SizedBox(
-                                        child: Text(
-                                          'Amount (RM)',
-                                          style: TextStyle(
-                                            color: Colors.grey.shade800,
-                                            fontFamily: 'Inter',
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-                                      sideTitles: SideTitles(
-                                        showTitles: true,
-                                        reservedSize: 35,
-                                        getTitlesWidget: (value, meta) {
-                                          return Text(
-                                            value.toInt().toString(),
-                                            style: TextStyle(
-                                              fontFamily: 'Inter',
-                                              fontSize: 12,
-                                              color: Colors.grey.shade600,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    bottomTitles: AxisTitles(
-                                      axisNameWidget: Container(),
-                                    ),
-                                    topTitles: AxisTitles(
-                                      axisNameWidget: Container(),
-                                      sideTitles: SideTitles(showTitles: false),
-                                    ),
-                                    rightTitles: AxisTitles(
-                                      axisNameWidget: Container(),
-                                      sideTitles: SideTitles(showTitles: false),
-                                    ),
-                                  ),
-                                  borderData: FlBorderData(show: false),
-                                  gridData: FlGridData(
-                                    getDrawingHorizontalLine: (value) {
-                                      return FlLine(
-                                        color: Colors.grey.shade300,
-                                        strokeWidth: 1,
-                                      );
-                                    },
-                                    drawVerticalLine: false,
-                                  ),
-                                  barGroups: [
-                                    BarChartGroupData(x: 0, barRods: [
-                                      BarChartRodData(
-                                        borderRadius: BorderRadius.only(),
-                                        borderSide: BorderSide(
-                                            width: 1, color: Colors.red),
-                                        width: 50,
-                                        fromY: 0,
-                                        toY: double.tryParse(
-                                                monthlyChartData['cancelled']
-                                                        ?[0] ??
-                                                    '0.0') ??
-                                            0.0,
-                                        color: Colors.red.withOpacity(0.5),
-                                      )
-                                    ]),
-                                    BarChartGroupData(x: 1, barRods: [
-                                      BarChartRodData(
-                                        borderRadius: BorderRadius.only(),
-                                        borderSide: BorderSide(
-                                            width: 1, color: Colors.green),
-                                        width: 50,
-                                        fromY: 0,
-                                        toY: double.tryParse(
-                                                monthlyChartData['completed']
-                                                        ?[0] ??
-                                                    '0.0') ??
-                                            0.0,
-                                        color: Colors.green.withOpacity(0.5),
-                                      )
-                                    ]),
-                                    BarChartGroupData(x: 2, barRods: [
-                                      BarChartRodData(
-                                        borderRadius: BorderRadius.only(),
-                                        borderSide: BorderSide(
-                                            width: 1, color: Colors.orange),
-                                        width: 50,
-                                        fromY: 0,
-                                        toY: double.tryParse(
-                                                yearlyChartData['floating']
-                                                        ?[0] ??
-                                                    '0.0') ??
-                                            0.0,
-                                        color: Colors.orange.withOpacity(0.5),
-                                      )
-                                    ]),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Text(
-                              yearlyChartData['labels'] != null
-                                  ? yearlyChartData['labels'][0].toString()
-                                  : '',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade800),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              // Expanded(
+              //   child: SingleChildScrollView(
+              //     scrollDirection: Axis.horizontal,
+              //     child: Row(
+              //       children: [
+              //         Container(
+              //           padding: EdgeInsets.all(10),
+              //           decoration: BoxDecoration(
+              //               color: Colors.white,
+              //               borderRadius: BorderRadius.circular(7.5)),
+              //           child: Column(
+              //             children: [
+              //               Center(
+              //                   child: Text(
+              //                 'Monthly Booking Amounts by Status',
+              //                 style: TextStyle(
+              //                     fontFamily: 'Inter',
+              //                     fontSize: 13,
+              //                     fontWeight: FontWeight.normal,
+              //                     color: Colors.grey.shade800),
+              //               )),
+              //               Row(
+              //                 children: [
+              //                   Text(
+              //                     'Completed',
+              //                     style: TextStyle(
+              //                         fontFamily: 'Inter',
+              //                         fontSize: 12,
+              //                         fontWeight: FontWeight.bold,
+              //                         color: Colors.green.shade700),
+              //                   ),
+              //                   SizedBox(width: 10),
+              //                   Text(
+              //                     'Floating',
+              //                     style: TextStyle(
+              //                         fontFamily: 'Inter',
+              //                         fontSize: 12,
+              //                         fontWeight: FontWeight.bold,
+              //                         color: Colors.orange.shade700),
+              //                   ),
+              //                   SizedBox(width: 10),
+              //                   Text(
+              //                     'Cancelled',
+              //                     style: TextStyle(
+              //                         fontFamily: 'Inter',
+              //                         fontSize: 12,
+              //                         fontWeight: FontWeight.bold,
+              //                         color: Colors.red.shade700),
+              //                   ),
+              //                 ],
+              //               ),
+              //               Spacer(),
+              //               SizedBox(
+              //                 width: 250,
+              //                 height: 250,
+              //                 child: BarChart(
+              //                   BarChartData(
+              //                     alignment: BarChartAlignment.spaceAround,
+              //                     barTouchData: BarTouchData(enabled: false),
+              //                     titlesData: FlTitlesData(
+              //                       leftTitles: AxisTitles(
+              //                         axisNameWidget: SizedBox(
+              //                           child: Text(
+              //                             'Amount (RM)',
+              //                             style: TextStyle(
+              //                               color: Colors.grey.shade800,
+              //                               fontFamily: 'Inter',
+              //                               fontSize: 12,
+              //                               fontWeight: FontWeight.normal,
+              //                             ),
+              //                           ),
+              //                         ),
+              //                         sideTitles: SideTitles(
+              //                           showTitles: true,
+              //                           reservedSize: 35,
+              //                           getTitlesWidget: (value, meta) {
+              //                             return Padding(
+              //                               padding: const EdgeInsets.all(5.0),
+              //                               child: Text(
+              //                                 value.toInt().toString(),
+              //                                 style: TextStyle(
+              //                                   fontFamily: 'Inter',
+              //                                   fontSize: 12,
+              //                                   color: Colors.grey.shade600,
+              //                                   fontWeight: FontWeight.normal,
+              //                                 ),
+              //                               ),
+              //                             );
+              //                           },
+              //                         ),
+              //                       ),
+              //                       bottomTitles: AxisTitles(
+              //                         axisNameWidget: Container(),
+              //                       ),
+              //                       topTitles: AxisTitles(
+              //                         axisNameWidget: Container(),
+              //                         sideTitles: SideTitles(showTitles: false),
+              //                       ),
+              //                       rightTitles: AxisTitles(
+              //                         axisNameWidget: Container(),
+              //                         sideTitles: SideTitles(showTitles: false),
+              //                       ),
+              //                     ),
+              //                     borderData: FlBorderData(show: false),
+              //                     gridData: FlGridData(
+              //                       getDrawingHorizontalLine: (value) {
+              //                         return FlLine(
+              //                           color: Colors.grey.shade300,
+              //                           strokeWidth: 1,
+              //                         );
+              //                       },
+              //                       drawVerticalLine: false,
+              //                     ),
+              //                     barGroups: [
+              //                       BarChartGroupData(x: 0, barRods: [
+              //                         BarChartRodData(
+              //                           borderRadius: BorderRadius.only(),
+              //                           borderSide: BorderSide(
+              //                               width: 1, color: Colors.red),
+              //                           width: 50,
+              //                           fromY: 0,
+              //                           toY: double.tryParse(
+              //                                   monthlyChartData['cancelled']
+              //                                           ?[0] ??
+              //                                       '0.0') ??
+              //                               0.0,
+              //                           color: Colors.red.withOpacity(0.5),
+              //                         )
+              //                       ]),
+              //                       BarChartGroupData(x: 1, barRods: [
+              //                         BarChartRodData(
+              //                           borderRadius: BorderRadius.only(),
+              //                           borderSide: BorderSide(
+              //                               width: 1, color: Colors.green),
+              //                           width: 50,
+              //                           fromY: 0,
+              //                           toY: double.tryParse(
+              //                                   monthlyChartData['completed']
+              //                                           ?[0] ??
+              //                                       '0.0') ??
+              //                               0.0,
+              //                           color: Colors.green.withOpacity(0.5),
+              //                         )
+              //                       ]),
+              //                       BarChartGroupData(x: 2, barRods: [
+              //                         BarChartRodData(
+              //                           borderRadius: BorderRadius.only(),
+              //                           borderSide: BorderSide(
+              //                               width: 1, color: Colors.orange),
+              //                           width: 50,
+              //                           fromY: 0,
+              //                           toY: double.tryParse(
+              //                                   monthlyChartData['floating']
+              //                                           ?[0] ??
+              //                                       '0.0') ??
+              //                               0.0,
+              //                           color: Colors.orange.withOpacity(0.5),
+              //                         )
+              //                       ]),
+              //                     ],
+              //                   ),
+              //                 ),
+              //               ),
+              //               Text(
+              //                 monthlyChartData['labels'] != null
+              //                     ? monthlyChartData['labels'][0] ?? ''
+              //                     : '',
+              //                 style: TextStyle(
+              //                   fontFamily: 'Inter',
+              //                   fontSize: 12,
+              //                   fontWeight: FontWeight.normal,
+              //                   color: Colors.grey.shade800,
+              //                 ),
+              //               )
+              //             ],
+              //           ),
+              //         ),
+              //         const SizedBox(width: 10),
+              //         Container(
+              //           padding: EdgeInsets.all(10),
+              //           decoration: BoxDecoration(
+              //               color: Colors.white,
+              //               borderRadius: BorderRadius.circular(7.5)),
+              //           child: Column(
+              //             children: [
+              //               Center(
+              //                   child: Text(
+              //                 'Yearly Booking Amounts by Status',
+              //                 style: TextStyle(
+              //                     fontFamily: 'Inter',
+              //                     fontSize: 13,
+              //                     fontWeight: FontWeight.normal,
+              //                     color: Colors.grey.shade800),
+              //               )),
+              //               Row(
+              //                 children: [
+              //                   Text(
+              //                     'Completed',
+              //                     style: TextStyle(
+              //                         fontFamily: 'Inter',
+              //                         fontSize: 12,
+              //                         fontWeight: FontWeight.bold,
+              //                         color: Colors.green.shade700),
+              //                   ),
+              //                   SizedBox(width: 10),
+              //                   Text(
+              //                     'Floating',
+              //                     style: TextStyle(
+              //                         fontFamily: 'Inter',
+              //                         fontSize: 12,
+              //                         fontWeight: FontWeight.bold,
+              //                         color: Colors.orange.shade700),
+              //                   ),
+              //                   SizedBox(width: 10),
+              //                   Text(
+              //                     'Cancelled',
+              //                     style: TextStyle(
+              //                         fontFamily: 'Inter',
+              //                         fontSize: 12,
+              //                         fontWeight: FontWeight.bold,
+              //                         color: Colors.red.shade700),
+              //                   ),
+              //                 ],
+              //               ),
+              //               Spacer(),
+              //               SizedBox(
+              //                 width: 250,
+              //                 height: 250,
+              //                 child: BarChart(
+              //                   BarChartData(
+              //                     alignment: BarChartAlignment.spaceAround,
+              //                     barTouchData: BarTouchData(enabled: false),
+              //                     titlesData: FlTitlesData(
+              //                       leftTitles: AxisTitles(
+              //                         axisNameWidget: SizedBox(
+              //                           child: Text(
+              //                             'Amount (RM)',
+              //                             style: TextStyle(
+              //                               color: Colors.grey.shade800,
+              //                               fontFamily: 'Inter',
+              //                               fontSize: 12,
+              //                               fontWeight: FontWeight.normal,
+              //                             ),
+              //                           ),
+              //                         ),
+              //                         sideTitles: SideTitles(
+              //                           showTitles: true,
+              //                           reservedSize: 35,
+              //                           getTitlesWidget: (value, meta) {
+              //                             return Text(
+              //                               value.toInt().toString(),
+              //                               style: TextStyle(
+              //                                 fontFamily: 'Inter',
+              //                                 fontSize: 12,
+              //                                 color: Colors.grey.shade600,
+              //                                 fontWeight: FontWeight.normal,
+              //                               ),
+              //                             );
+              //                           },
+              //                         ),
+              //                       ),
+              //                       bottomTitles: AxisTitles(
+              //                         axisNameWidget: Container(),
+              //                       ),
+              //                       topTitles: AxisTitles(
+              //                         axisNameWidget: Container(),
+              //                         sideTitles: SideTitles(showTitles: false),
+              //                       ),
+              //                       rightTitles: AxisTitles(
+              //                         axisNameWidget: Container(),
+              //                         sideTitles: SideTitles(showTitles: false),
+              //                       ),
+              //                     ),
+              //                     borderData: FlBorderData(show: false),
+              //                     gridData: FlGridData(
+              //                       getDrawingHorizontalLine: (value) {
+              //                         return FlLine(
+              //                           color: Colors.grey.shade300,
+              //                           strokeWidth: 1,
+              //                         );
+              //                       },
+              //                       drawVerticalLine: false,
+              //                     ),
+              //                     barGroups: [
+              //                       BarChartGroupData(x: 0, barRods: [
+              //                         BarChartRodData(
+              //                           borderRadius: BorderRadius.only(),
+              //                           borderSide: BorderSide(
+              //                               width: 1, color: Colors.red),
+              //                           width: 50,
+              //                           fromY: 0,
+              //                           toY: double.tryParse(
+              //                                   monthlyChartData['cancelled']
+              //                                           ?[0] ??
+              //                                       '0.0') ??
+              //                               0.0,
+              //                           color: Colors.red.withOpacity(0.5),
+              //                         )
+              //                       ]),
+              //                       BarChartGroupData(x: 1, barRods: [
+              //                         BarChartRodData(
+              //                           borderRadius: BorderRadius.only(),
+              //                           borderSide: BorderSide(
+              //                               width: 1, color: Colors.green),
+              //                           width: 50,
+              //                           fromY: 0,
+              //                           toY: double.tryParse(
+              //                                   monthlyChartData['completed']
+              //                                           ?[0] ??
+              //                                       '0.0') ??
+              //                               0.0,
+              //                           color: Colors.green.withOpacity(0.5),
+              //                         )
+              //                       ]),
+              //                       BarChartGroupData(x: 2, barRods: [
+              //                         BarChartRodData(
+              //                           borderRadius: BorderRadius.only(),
+              //                           borderSide: BorderSide(
+              //                               width: 1, color: Colors.orange),
+              //                           width: 50,
+              //                           fromY: 0,
+              //                           toY: double.tryParse(
+              //                                   yearlyChartData['floating']
+              //                                           ?[0] ??
+              //                                       '0.0') ??
+              //                               0.0,
+              //                           color: Colors.orange.withOpacity(0.5),
+              //                         )
+              //                       ]),
+              //                     ],
+              //                   ),
+              //                 ),
+              //               ),
+              //               Text(
+              //                 yearlyChartData['labels'] != null
+              //                     ? yearlyChartData['labels'][0].toString()
+              //                     : '',
+              //                 style: TextStyle(
+              //                     fontFamily: 'Inter',
+              //                     fontSize: 12,
+              //                     fontWeight: FontWeight.normal,
+              //                     color: Colors.grey.shade800),
+              //               )
+              //             ],
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
               SizedBox(height: 10),
               Container(
                   width: double.infinity,
