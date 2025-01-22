@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:servenow_mobile/services/tasker_auth.dart';
 import 'package:servenow_mobile/services/tasker_user.dart';
 import 'package:servenow_mobile/widgets/custom_dropdown_menu.dart';
 import 'package:servenow_mobile/widgets/custom_text_field.dart';
@@ -18,19 +17,15 @@ class _MyProfileState extends State<MyProfile> {
   List<String> states = [];
   List<String> areas = [];
 
-  int _selectedTabIndex = 0;
-
   TextEditingController firstnameController = TextEditingController();
   TextEditingController lastnameController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
   TextEditingController bioController = TextEditingController();
-  TextEditingController oldPasswordController = TextEditingController();
-  TextEditingController newPasswordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController icController = TextEditingController();
-  String? birthdate; // Birthdate
-  String? photo; // Photo
-  String? email;
+  String birthdate = ''; // Birthdate
+  String photo = '';
+  String email = '';
+  int taskerStatus = 0;
 
   // Address
   TextEditingController addressLineOneController = TextEditingController();
@@ -121,6 +116,7 @@ class _MyProfileState extends State<MyProfile> {
       addressPostalCodeController.text = data[0]['tasker_address_poscode'];
       addressState = data[0]['tasker_address_state'];
       addressArea = data[0]['tasker_address_area'];
+      taskerStatus = data[0]['tasker_status'];
 
       initialTaskerData = {
         'tasker_firstname': data[0]['tasker_firstname'],
@@ -131,6 +127,7 @@ class _MyProfileState extends State<MyProfile> {
         'tasker_bio': data[0]['tasker_bio'],
         'tasker_icno': data[0]['tasker_icno'],
         'tasker_dob': data[0]['tasker_dob'],
+        'tasker_status': data[0]['tasker_status'],
         // Address
         'tasker_address_one': data[0]['tasker_address_one'],
         'tasker_address_two': data[0]['tasker_address_two'],
@@ -168,8 +165,6 @@ class _MyProfileState extends State<MyProfile> {
       return;
     }
 
- 
-
     // Prepare the updated data
     final updatedData = {
       'tasker_firstname': firstnameController.text.trim(),
@@ -206,7 +201,6 @@ class _MyProfileState extends State<MyProfile> {
         ),
       );
 
-      // Update tasker data
       TaskerUser taskerUser = TaskerUser();
       final taskerData = await taskerUser.getTaskerData();
       String taskerID = taskerData[0]['id'].toString();
@@ -256,51 +250,6 @@ class _MyProfileState extends State<MyProfile> {
     }
   }
 
-  void _savePassword() async {
-    final updatedPassword = {
-      'oldPass': oldPasswordController.text,
-      'newPass': newPasswordController.text,
-      'renewPass': confirmPasswordController.text,
-    };
-    try {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Saving profile...'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-
-      TaskerUser taskerUser = TaskerUser();
-      TaskerAuth taskerAuth = TaskerAuth();
-      final taskerData = await taskerUser.getTaskerData();
-      String taskerID = taskerData[0]['id'].toString();
-      final response =
-          await taskerAuth.updateTaskerPassword(taskerID, updatedPassword);
-
-      final responseData = response['data'];
-
-      if (response['statusCode'] == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(responseData['message']),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 3),
-          ),
-        );
-      } else {
-        throw responseData['message'];
-      }
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('$error'),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 3),
-        ),
-      );
-    }
-  }
-
   @override
   void dispose() {
     firstnameController.dispose();
@@ -309,11 +258,7 @@ class _MyProfileState extends State<MyProfile> {
     icController.removeListener(() {});
     icController.dispose();
     bioController.dispose();
-    oldPasswordController.dispose();
-    newPasswordController.dispose();
-    confirmPasswordController.dispose();
 
-    // Address
     addressLineOneController.dispose();
     addressLineTwoController.dispose();
     addressPostalCodeController.dispose();
@@ -329,7 +274,7 @@ class _MyProfileState extends State<MyProfile> {
         appBar: AppBar(
           backgroundColor: Color.fromRGBO(24, 52, 92, 1),
           title: Text(
-            'Edit Profile',
+            'Personal Details',
             style: TextStyle(
                 color: Colors.white,
                 fontFamily: 'Inter',
@@ -347,34 +292,12 @@ class _MyProfileState extends State<MyProfile> {
               Navigator.pop(context);
             },
           ),
-          bottom: TabBar(
-            onTap: (index) {
-              setState(() {
-                _selectedTabIndex = index;
-              });
-            },
-            indicatorColor: Colors.orange[300],
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white,
-            labelStyle: const TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 13.0,
-                fontWeight: FontWeight.bold),
-            unselectedLabelStyle: const TextStyle(
-                fontSize: 13.0,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.bold),
-            tabs: const [
-              Tab(text: 'Personal Info'),
-              Tab(text: 'Password'),
-            ],
-          ),
           actions: [
             TextButton(
               style: const ButtonStyle(
                 splashFactory: NoSplash.splashFactory,
               ),
-              onPressed: _selectedTabIndex == 0 ? _saveProfile : _savePassword,
+              onPressed: _saveProfile,
               child: Text(
                 'Save',
                 style: TextStyle(
@@ -387,298 +310,285 @@ class _MyProfileState extends State<MyProfile> {
             ),
           ],
         ),
-        body: TabBarView(
-          children: [
-            // Personal Info Tab
-            SingleChildScrollView(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 20),
-                    //   child: Center(
-                    //     child: Container(
-                    //       decoration: BoxDecoration(
-                    //         shape: BoxShape.circle,
-                    //         border: Border.all(
-                    //           color: Colors.grey.shade500,
-                    //           width: 1.5,
-                    //         ),
-                    //       ),
-                    //       child: CircleAvatar(
-                    //         radius: 45,
-                    //         backgroundImage: NetworkImage(
-                    //             'https://servenow.com.my/storage/$photo'
-                    //             ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text(
-                        'Biodata',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Inter',
-                            color: Colors.grey[800]),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    _buildTextField(
-                        'First Name', firstnameController, 'Enter first name'),
-                    SizedBox(height: 10),
-                    _buildTextField(
-                        'Last Name', lastnameController, 'Enter last name'),
-                    SizedBox(height: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: _buildTextField(
-                                'IC Number', icController, 'Enter IC Number',
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                maxLength: 12),
-                          ),
-                          const SizedBox(width: 15),
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(12),
-                                  child: Text(
-                                    'Birthdate',
-                                    style: TextStyle(
-                                        color: Colors.grey[800],
-                                        fontSize: 12,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.normal),
-                                  ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(vertical: 20),
+                //   child: Center(
+                //     child: Container(
+                //       decoration: BoxDecoration(
+                //         shape: BoxShape.circle,
+                //         border: Border.all(
+                //           color: Colors.grey.shade500,
+                //           width: 1.5,
+                //         ),
+                //       ),
+                //       child: CircleAvatar(
+                //         radius: 45,
+                //         backgroundImage: NetworkImage(
+                //             'https://servenow.com.my/storage/$photo'
+                //             ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    'Biodata',
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                        color: Colors.grey[800]),
+                  ),
+                ),
+                SizedBox(height: 10),
+                _buildTextField(
+                    'First Name', firstnameController, 'Enter first name'),
+                SizedBox(height: 10),
+                _buildTextField(
+                    'Last Name', lastnameController, 'Enter last name'),
+                SizedBox(height: 10),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: Row(
+                    children: [
+                      taskerStatus == 2
+                          ? Expanded(
+                              flex: 3,
+                              child: Container(
+                                padding: const EdgeInsets.all(12.5),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[100],
+                                  border:
+                                      Border.all(color: Colors.grey.shade100),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(12.5),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[100],
-                                    border:
-                                        Border.all(color: Colors.grey.shade100),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Text(
-                                    '$birthdate',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 14,
-                                        color: Colors.grey[500]),
-                                  ),
+                                child: Text(
+                                  birthdate,
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 14,
+                                      color: Colors.grey[500]),
                                 ),
-                              ],
+                              ),
+                            )
+                          : Expanded(
+                              flex: 3,
+                              child: _buildTextField(
+                                  'IC Number', icController, 'Enter IC Number',
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                  maxLength: 12),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 50),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text(
-                        'Contact',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Inter',
-                            color: Colors.grey[800]),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(12),
-                            child: Text(
-                              'Email',
-                              style: TextStyle(
-                                  color: Colors.grey[800],
-                                  fontFamily: 'Inter',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal),
-                            ),
-                          ),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(12.5),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              border: Border.all(color: Colors.grey.shade100),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              '$email',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 14,
-                                  color: Colors.grey[500]),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    _buildTextField(
-                      'Mobile',
-                      mobileController,
-                      'Enter your mobile',
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    _buildTextField('Bio', bioController, 'Enter bio',
-                        maxLines: 3),
-                    SizedBox(height: 50),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text(
-                        'Address',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Inter',
-                            color: Colors.grey[800]),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    _buildTextField('Address Line 1', addressLineOneController,
-                        'Enter Address Line 1'),
-                    SizedBox(height: 10),
-                    _buildTextField('Address Line 2', addressLineTwoController,
-                        'Enter Address Line 2'),
-                    SizedBox(height: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 4,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(12),
-                                  child: Text(
-                                    'State',
-                                    style: TextStyle(
-                                        color: Colors.grey[800],
-                                        fontFamily: 'Inter',
-                                        fontSize: 12),
-                                  ),
-                                ),
-                                CustomDropdownMenu(
-                                  items: states,
-                                  titleSelect: 'Select State',
-                                  titleValue: addressState ?? 'Select State',
-                                  onSelected: (selectedValue) {
-                                    setState(() {
-                                      addressState = selectedValue;
-                                      addressArea = null;
-                                    });
-                                    fetchAreaNames(selectedValue);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 15),
-                          Expanded(
-                            flex: 3,
-                            child: _buildTextField(
-                                'Postal Code',
-                                addressPostalCodeController,
-                                'Enter Postal Code'),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(12),
-                            child: Text(
-                              'Area',
-                              style: TextStyle(
-                                color: Colors.grey[800],
-                                fontFamily: 'Inter',
-                                fontSize: 12,
+                      const SizedBox(width: 15),
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(12),
+                              child: Text(
+                                'Birthdate',
+                                style: TextStyle(
+                                    color: Colors.grey[800],
+                                    fontSize: 12,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.normal),
                               ),
                             ),
-                          ),
-                          CustomDropdownMenu(
-                            items: areas,
-                            titleSelect: 'Select Area',
-                            titleValue: addressArea ?? 'Select Area',
-                            onSelected: (selectedValue) {
-                              setState(() {
-                                addressArea = selectedValue;
-                              });
-                            },
-                            isEnabled: states.isNotEmpty,
-                          ),
-                        ],
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(12.5),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                border: Border.all(color: Colors.grey.shade100),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                birthdate,
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 14,
+                                    color: Colors.grey[500]),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 50),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    'Contact',
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                        color: Colors.grey[800]),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        child: Text(
+                          'Email',
+                          style: TextStyle(
+                              color: Colors.grey[800],
+                              fontFamily: 'Inter',
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12.5),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          border: Border.all(color: Colors.grey.shade100),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          email,
+                          style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 14,
+                              color: Colors.grey[500]),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                _buildTextField(
+                  'Mobile',
+                  mobileController,
+                  'Enter your mobile',
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
                   ],
                 ),
-              ),
-            ),
-            // Password Tab
-            SingleChildScrollView(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildTextField('Old Password', oldPasswordController,
-                        'Enter old password',
-                        obscureText: true),
-                    SizedBox(height: 10),
-                    _buildTextField('New Password', newPasswordController,
-                        'Enter new password',
-                        obscureText: true),
-                    SizedBox(height: 10),
-                    _buildTextField('Confirm Password',
-                        confirmPasswordController, 'Enter confirm password',
-                        obscureText: true),
-                  ],
+                SizedBox(height: 10),
+                _buildTextField('Bio', bioController, 'Enter bio', maxLines: 3),
+                SizedBox(height: 50),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    'Address',
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                        color: Colors.grey[800]),
+                  ),
                 ),
-              ),
+                SizedBox(height: 10),
+                _buildTextField('Address Line 1', addressLineOneController,
+                    'Enter Address Line 1'),
+                SizedBox(height: 10),
+                _buildTextField('Address Line 2', addressLineTwoController,
+                    'Enter Address Line 2'),
+                SizedBox(height: 10),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 4,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(12),
+                              child: Text(
+                                'State',
+                                style: TextStyle(
+                                    color: Colors.grey[800],
+                                    fontFamily: 'Inter',
+                                    fontSize: 12),
+                              ),
+                            ),
+                            CustomDropdownMenu(
+                              items: states,
+                              titleSelect: 'Select State',
+                              titleValue: addressState ?? 'Select State',
+                              onSelected: (selectedValue) {
+                                setState(() {
+                                  addressState = selectedValue;
+                                  addressArea = null;
+                                });
+                                fetchAreaNames(selectedValue);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        flex: 3,
+                        child: _buildTextField('Postal Code',
+                            addressPostalCodeController, 'Enter Postal Code'),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        child: Text(
+                          'Area',
+                          style: TextStyle(
+                            color: Colors.grey[800],
+                            fontFamily: 'Inter',
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                      CustomDropdownMenu(
+                        items: areas,
+                        titleSelect: 'Select Area',
+                        titleValue: addressArea ?? 'Select Area',
+                        onSelected: (selectedValue) {
+                          setState(() {
+                            addressArea = selectedValue;
+                          });
+                        },
+                        isEnabled: states.isNotEmpty,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

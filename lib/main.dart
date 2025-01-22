@@ -4,6 +4,7 @@ import 'package:servenow_mobile/screens/add_service.dart';
 import 'package:servenow_mobile/screens/booking_details.dart';
 import 'package:servenow_mobile/screens/booking_list.dart';
 import 'package:servenow_mobile/screens/booking_summary.dart';
+import 'package:servenow_mobile/screens/change_password.dart';
 import 'package:servenow_mobile/screens/dashboard.dart';
 import 'package:servenow_mobile/screens/e_statement.dart';
 import 'package:servenow_mobile/screens/e_statement_list.dart';
@@ -28,7 +29,7 @@ Future<void> main() async {
 
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/home',
+      initialRoute: '/sign_in',
       routes: {
         '/home': (context) => const Home(),
         '/sign_in': (context) => const SignIn(),
@@ -52,5 +53,6 @@ Future<void> main() async {
         '/dashboard': (context) => const Dashboard(),
         '/e_statement': (context) => const EStatement(),
         '/e_statement_list': (context) => const EStatementList(),
+        '/change_password': (context) => const ChangePassword(),
       }));
 }

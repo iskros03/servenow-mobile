@@ -708,7 +708,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                               horizontal: 10, vertical: 2.5),
                           decoration: BoxDecoration(
                             color: getTaskerStatus(taskerStatus)['color'],
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            borderRadius: BorderRadius.all(Radius.circular(7.5)),
                           ),
                           child: Text(
                             getTaskerStatus(taskerStatus)['text'],

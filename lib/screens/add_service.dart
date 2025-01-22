@@ -100,7 +100,17 @@ class _AddServiceState extends State<AddService> {
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: ${error.toString()}'),
+          content: Center(
+            child: Text(
+              'Error: ${error.toString()}',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                color: Colors.white,
+                fontWeight: FontWeight.normal,
+                fontSize: 13,
+              ),
+            ),
+          ),
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 3),
         ),
