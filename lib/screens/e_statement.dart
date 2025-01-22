@@ -118,59 +118,67 @@ class _EStatementState extends State<EStatement> {
                                 fontFamily: 'Inter',
                                 fontSize: 13,
                                 fontWeight: FontWeight.normal,
-                                color: Colors.grey.shade700),
+                                color: Colors.grey.shade800),
                           ),
                           Text(
                             '(~) RM $tobeReleased',
                             style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.orange.shade600),
                           ),
+                           Text(
+                            'Pending Payouts',
+                            style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 11,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.grey.shade700),
+                          ),
                         ],
                       ),
-                      Spacer(),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/e_statement_list');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          elevation:
-                              2, // Adjust this value to control shadow intensity
-                          backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 20),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          shadowColor: Colors.grey.withOpacity(
-                              0.5), // Shadow color and transparency
-                        ).copyWith(
-                          overlayColor:
-                              WidgetStateProperty.all(Colors.transparent),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'e-Statement List',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey.shade600,
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            FaIcon(
-                              FontAwesomeIcons.solidEye,
-                              color: Colors.blue,
-                              size: 14,
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Spacer(),
+                      // ElevatedButton(
+                      //   onPressed: () {
+                      //     Navigator.pushNamed(context, '/e_statement_list');
+                      //   },
+                      //   style: ElevatedButton.styleFrom(
+                      //     elevation:
+                      //         2, // Adjust this value to control shadow intensity
+                      //     backgroundColor: Colors.white,
+                      //     padding: const EdgeInsets.symmetric(
+                      //         vertical: 12, horizontal: 20),
+                      //     shape: RoundedRectangleBorder(
+                      //       borderRadius: BorderRadius.circular(8.0),
+                      //     ),
+                      //     shadowColor: Colors.grey.withOpacity(
+                      //         0.5), // Shadow color and transparency
+                      //   ).copyWith(
+                      //     overlayColor:
+                      //         WidgetStateProperty.all(Colors.transparent),
+                      //   ),
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     children: [
+                      //       Text(
+                      //         'e-Statement List',
+                      //         style: TextStyle(
+                      //           fontFamily: 'Inter',
+                      //           fontSize: 12,
+                      //           fontWeight: FontWeight.bold,
+                      //           color: Colors.grey.shade600,
+                      //         ),
+                      //       ),
+                      //       SizedBox(width: 10),
+                      //       FaIcon(
+                      //         FontAwesomeIcons.solidEye,
+                      //         color: Colors.blue,
+                      //         size: 14,
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   )),
               const SizedBox(height: 10),
@@ -193,13 +201,13 @@ class _EStatementState extends State<EStatement> {
                                   fontFamily: 'Inter',
                                   fontSize: 13,
                                   fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
+                                  color: Colors.grey.shade800),
                             ),
                             Text(
                               'RM $releasedthisyear',
                               style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 18,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.green.shade600),
                             ),
@@ -207,7 +215,7 @@ class _EStatementState extends State<EStatement> {
                               'Yearly Amount Earned',
                               style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   fontWeight: FontWeight.normal,
                                   color: Colors.grey.shade600),
                             ),
@@ -226,18 +234,18 @@ class _EStatementState extends State<EStatement> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Confirmed Booking',
+                              'Total Earnings',
                               style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 13,
                                   fontWeight: FontWeight.normal,
-                                  color: Colors.grey.shade700),
+                                  color: Colors.grey.shade800),
                             ),
                             Text(
                               'RM $releasedAll',
                               style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 18,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.red.shade600),
                             ),
@@ -245,7 +253,7 @@ class _EStatementState extends State<EStatement> {
                               'All Amount Earned',
                               style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   fontWeight: FontWeight.normal,
                                   color: Colors.grey.shade600),
                             ),

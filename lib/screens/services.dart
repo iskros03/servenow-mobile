@@ -35,6 +35,16 @@ class _ServicesState extends State<Services> {
     } catch (e) {
       print('Error occurred: $e');
     }
+
+    print(serviceType);
+  }
+
+  Future<void> _refresh() async {
+    setState(() {
+      _loadTaskerServiceList();
+      _loadTaskerServiceType();
+      isLoading = false;
+    });
   }
 
   void _loadTaskerServiceList() async {
@@ -138,6 +148,12 @@ class _ServicesState extends State<Services> {
                 },
               )
             : null,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh, size: 20, color: Colors.white),
+            onPressed: _refresh,
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -148,10 +164,17 @@ class _ServicesState extends State<Services> {
               children: [
                 Row(
                   children: [
-                    Expanded(
-                      child: SizedBox.shrink(),
-                    ),
                     SizedBox(width: 10),
+                    Text(
+                      'Total Service: ${services.length}',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 13,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                    Spacer(),
                     IconButton(
                       onPressed: () {
                         Navigator.push(
@@ -169,20 +192,20 @@ class _ServicesState extends State<Services> {
                         size: 20,
                       ),
                       style: ElevatedButton.styleFrom(
-                          elevation:
-                              2, // Adjust this value to control shadow intensity
-                          backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 20),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          shadowColor: Colors.grey.withOpacity(
-                              0.5), // Shadow color and transparency
-                        ).copyWith(
-                          overlayColor:
-                              WidgetStateProperty.all(Colors.transparent),
+                        elevation:
+                            2, // Adjust this value to control shadow intensity
+                        backgroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 20),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
+                        shadowColor: Colors.grey
+                            .withOpacity(0.5), // Shadow color and transparency
+                      ).copyWith(
+                        overlayColor:
+                            WidgetStateProperty.all(Colors.transparent),
+                      ),
                     ),
                   ],
                 ),
@@ -251,8 +274,8 @@ class _ServicesState extends State<Services> {
                                           style: TextStyle(
                                               fontFamily: 'Inter',
                                               fontSize: 13,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.grey[700]),
+                                              fontWeight: FontWeight.normal,
+                                              color: Colors.grey[800]),
                                         ),
                                         Row(
                                           children: [
@@ -273,7 +296,7 @@ class _ServicesState extends State<Services> {
                                                 fontFamily: 'Inter',
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.grey,
+                                                color: Colors.grey.shade700,
                                               ),
                                             ),
                                           ],
@@ -319,76 +342,76 @@ class _ServicesState extends State<Services> {
                                               ),
                                             ),
                                             Spacer(),
-                                            IconButton(
-                                                color:
-                                                    service['service_status'] ==
-                                                            0
-                                                        ? Colors.grey.shade300
-                                                        : Colors.blueGrey,
-                                                style: ButtonStyle(
-                                                        tapTargetSize:
-                                                            MaterialTapTargetSize
-                                                                .shrinkWrap)
-                                                    .copyWith(
-                                                  overlayColor:
-                                                      WidgetStateProperty.all(
-                                                          Colors.transparent),
-                                                  shadowColor:
-                                                      WidgetStateProperty.all(
-                                                          Colors.transparent),
-                                                  surfaceTintColor:
-                                                      WidgetStateProperty.all(
-                                                          Colors.transparent),
-                                                ),
-                                                onPressed: () {
-                                                  if (service[
-                                                          'service_status'] !=
-                                                      0) {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ManageService(
-                                                          serviceIdSingle:
-                                                              service['id'],
-                                                          serviceTypeId: service[
-                                                              'service_type_id'],
-                                                          serviceTypeSingle:
-                                                              getServiceTypeName(
-                                                                  service[
-                                                                      'service_type_id']),
-                                                          serviceRateSingle:
-                                                              service[
-                                                                  'service_rate'],
-                                                          serviceStatusSingle:
-                                                              service[
-                                                                  'service_status'],
-                                                          serviceDescSingle:
-                                                              service[
-                                                                  'service_desc'],
-                                                          serviceRateTypeSingle:
-                                                              service[
-                                                                  'service_rate_type'],
-                                                        ),
-                                                      ),
-                                                    ).then((result) {
-                                                      if (result == true) {
-                                                        _loadTaskerServiceList();
-                                                      }
-                                                    });
-                                                  }
-                                                },
-                                                icon: FaIcon(
-                                                  FontAwesomeIcons.pen,
-                                                  size: 18,
-                                                  color:
-                                                      service['service_status'] ==
-                                                              0
-                                                          ? Colors.deepOrange
-                                                              .shade50
-                                                          : Colors.deepOrange
-                                                              .shade300,
-                                                ))
+                                            // IconButton(
+                                            //     color:
+                                            //         service['service_status'] ==
+                                            //                 0
+                                            //             ? Colors.grey.shade300
+                                            //             : Colors.blueGrey,
+                                            //     style: ButtonStyle(
+                                            //             tapTargetSize:
+                                            //                 MaterialTapTargetSize
+                                            //                     .shrinkWrap)
+                                            //         .copyWith(
+                                            //       overlayColor:
+                                            //           WidgetStateProperty.all(
+                                            //               Colors.transparent),
+                                            //       shadowColor:
+                                            //           WidgetStateProperty.all(
+                                            //               Colors.transparent),
+                                            //       surfaceTintColor:
+                                            //           WidgetStateProperty.all(
+                                            //               Colors.transparent),
+                                            //     ),
+                                            //     onPressed: () {
+                                            //       if (service[
+                                            //               'service_status'] !=
+                                            //           0) {
+                                            //         Navigator.push(
+                                            //           context,
+                                            //           MaterialPageRoute(
+                                            //             builder: (context) =>
+                                            //                 ManageService(
+                                            //               serviceIdSingle:
+                                            //                   service['id'],
+                                            //               serviceTypeId: service[
+                                            //                   'service_type_id'],
+                                            //               serviceTypeSingle:
+                                            //                   getServiceTypeName(
+                                            //                       service[
+                                            //                           'service_type_id']),
+                                            //               serviceRateSingle:
+                                            //                   service[
+                                            //                       'service_rate'],
+                                            //               serviceStatusSingle:
+                                            //                   service[
+                                            //                       'service_status'],
+                                            //               serviceDescSingle:
+                                            //                   service[
+                                            //                       'service_desc'],
+                                            //               serviceRateTypeSingle:
+                                            //                   service[
+                                            //                       'service_rate_type'],
+                                            //             ),
+                                            //           ),
+                                            //         ).then((result) {
+                                            //           if (result == true) {
+                                            //             _loadTaskerServiceList();
+                                            //           }
+                                            //         });
+                                            //       }
+                                            //     },
+                                            //     icon: FaIcon(
+                                            //       FontAwesomeIcons.pen,
+                                            //       size: 18,
+                                            //       color:
+                                            //           service['service_status'] ==
+                                            //                   0
+                                            //               ? Colors.deepOrange
+                                            //                   .shade50
+                                            //               : Colors.deepOrange
+                                            //                   .shade300,
+                                            //     ))
                                           ],
                                         ),
                                       ],

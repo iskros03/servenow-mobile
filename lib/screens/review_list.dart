@@ -66,6 +66,12 @@ class _ReviewListState extends State<ReviewList> {
     }
   }
 
+  Future<void> _refresh() async {
+    setState(() {
+      _loadTaskerReviewList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,6 +95,12 @@ class _ReviewListState extends State<ReviewList> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh, size: 20, color: Colors.white),
+            onPressed: _refresh,
+          ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(20),
@@ -96,237 +108,237 @@ class _ReviewListState extends State<ReviewList> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: ListView.builder(
-                itemCount: reviewData.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final review = reviewData[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      ).copyWith(
-                        overlayColor:
-                            WidgetStateProperty.all(Colors.transparent),
-                        shadowColor:
-                            WidgetStateProperty.all(Colors.transparent),
-                        surfaceTintColor:
-                            WidgetStateProperty.all(Colors.transparent),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BookingDetails(
-                              bookingId: review['booking_id'],
-                              bookingTask: review['servicetype_name'],
-                              bookingEmail: review['client_email'],
-                              bookingStatus: review['booking_status'],
-                              bookingClientName: review['client_firstname'] +
-                                  ' ' +
-                                  review['client_lastname'],
-                              bookingCLientPhone: review['client_phoneno'],
-                              bookingClientAddress: review['booking_address'],
-                              bookingDate: review['booking_date'],
-                              bookingStartTime: review['booking_time_start'],
-                              bookingEndTime: review['booking_time_end'],
-                              bookingRate: review['booking_rate'],
-                              bookingLat: review['booking_latitude'],
-                              bookingLong: review['booking_longitude'],
-                              bookingNote:
-                                  review['booking_note'] ?? 'Unavailable Note.',
-                            ),
+              child: Scrollbar(
+                thumbVisibility: true,
+                radius: Radius.circular(7.5),
+                thickness: 2.5,
+                child: ListView.builder(
+                  itemCount: reviewData.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final review = reviewData[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        );
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(7.5),
-                                    color: Colors.grey[50]),
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 10),
-                                child: Text(
-                                  review['booking_order_id'],
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.grey.shade600),
-                                ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
+                        ).copyWith(
+                          overlayColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                          shadowColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                          surfaceTintColor:
+                              WidgetStateProperty.all(Colors.transparent),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BookingDetails(
+                                bookingId: review['booking_id'],
+                                bookingTask: review['servicetype_name'],
+                                bookingEmail: review['client_email'],
+                                bookingStatus: review['booking_status'],
+                                bookingClientName: review['client_firstname'] +
+                                    ' ' +
+                                    review['client_lastname'],
+                                bookingCLientPhone: review['client_phoneno'],
+                                bookingClientAddress: review['booking_address'],
+                                bookingDate: review['booking_date'],
+                                bookingStartTime: review['booking_time_start'],
+                                bookingEndTime: review['booking_time_end'],
+                                bookingRate: review['booking_rate'],
+                                bookingLat: review['booking_latitude'],
+                                bookingLong: review['booking_longitude'],
+                                bookingNote: review['booking_note'] ??
+                                    'Unavailable Note.',
                               ),
-                              Spacer(),
-                              Container(
-                                width: 100,
-                                decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(5)),
-                                    color: getReviewStatus(
-                                        review['review_status'])['color']),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 2.5),
-                                child: Text(
-                                    getReviewStatus(
-                                        review['review_status'])['text'],
-                                    textAlign: TextAlign.center,
+                            ),
+                          );
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7.5),
+                                      color: Colors.grey[50]),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 10),
+                                  child: Text(
+                                    review['booking_order_id'],
                                     style: TextStyle(
                                         fontFamily: 'Inter',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11,
-                                        color: getReviewStatus(
-                                                review['review_status'])[
-                                            'textColor'])),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 5),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              children: List.generate(
-                                5,
-                                (index) => FaIcon(
-                                  FontAwesomeIcons.solidStar,
-                                  color:
-                                      index < int.parse(review['review_rating'])
-                                          ? Colors.orange
-                                          : Colors.grey,
-                                  size: 16,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            decoration: BoxDecoration(
-                                color: Colors.grey.shade50,
-                                borderRadius: BorderRadius.circular(7.5)),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "${review['client_firstname']} ${review['client_lastname']}",
-                                      style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 13,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.normal,
-                                        color: Colors.grey[600],
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      convertDateTime(
-                                          review['review_date_time']),
+                                        color: Colors.grey.shade600),
+                                  ),
+                                ),
+                                Spacer(),
+                                Container(
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(5)),
+                                      color: getReviewStatus(
+                                          review['review_status'])['color']),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 2.5),
+                                  child: Text(
+                                      getReviewStatus(
+                                          review['review_status'])['text'],
+                                      textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontFamily: 'Inter',
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.normal,
-                                          color: Colors.grey[600]),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 5),
-                                Text(
-                                  review['review_description'],
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 13,
-                                    color: Colors.grey[800],
-                                  ),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 11,
+                                          color: getReviewStatus(
+                                                  review['review_status'])[
+                                              'textColor'])),
                                 ),
                               ],
                             ),
-                          ),
-                          SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Spacer(),
-                              IconButton(
-                                style: ElevatedButton.styleFrom(
-                                  elevation:
-                                      2, // Adjust this value to control shadow intensity
-                                  backgroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 12, horizontal: 20),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
+                            SizedBox(height: 5),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                children: List.generate(
+                                  5,
+                                  (index) => FaIcon(
+                                    FontAwesomeIcons.solidStar,
+                                    color: index <
+                                            int.parse(review['review_rating'])
+                                        ? Colors.orange
+                                        : Colors.grey,
+                                    size: 16,
                                   ),
-                                  shadowColor: Colors.grey.withOpacity(
-                                      0.5), // Shadow color and transparency
-                                ).copyWith(
-                                  overlayColor: WidgetStateProperty.all(
-                                      Colors.transparent),
                                 ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ReviewManagement(
-                                        reviewReply: reviewReply
-                                            .where((reply) =>
-                                                reply['booking_id'] ==
-                                                review['bookingID'])
-                                            .toList(),
-                                        bookingOrderId:
-                                            review['booking_order_id'],
-                                        bookingId: review['bookingID'],
-                                        reviewRating: review['review_rating'],
-                                        clientFLName:
-                                            '${review['client_firstname']} ${review['client_lastname']}',
-                                        reviewDateTime: convertDateTime(
-                                            review['review_date_time']),
-                                        reviewStatus: review['review_status'],
-                                        reviewImageOne:
-                                            review['review_imageOne'],
-                                        reviewImageTwo:
-                                            review['review_imageTwo'],
-                                        reviewImageThree:
-                                            review['review_imageThree'],
-                                        reviewImageFour:
-                                            review['review_imageFour'],
-                                        reviewDescription:
-                                            review['review_description'],
-                                        reviewID: review['reviewID'],
-                                      ),
-                                    ),
-                                  ).then((result) {
-                                    if (result == true) {
-                                      _loadTaskerReviewList();
-                                    }
-                                  });
-                                },
-                                icon: FaIcon(
-                                  FontAwesomeIcons.pen,
-                                  size: 15,
-                                  color: Colors.blue, // Icon color
-                                ),
-                                splashColor: Colors
-                                    .transparent, // Removes the splash effect
-                                highlightColor: Colors
-                                    .transparent, // Removes the highlight effect
                               ),
-                            ],
-                          ),
-                        ],
+                            ),
+                            SizedBox(height: 5),
+                            Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                  color: Colors.grey.shade50,
+                                  borderRadius: BorderRadius.circular(7.5)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${review['client_firstname']} ${review['client_lastname']}",
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  Text(
+                                    convertDateTime(review['review_date_time']),
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.grey[600]),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    review['review_description'],
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      color: Colors.grey[800],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Spacer(),
+                                IconButton(
+                                  style: ElevatedButton.styleFrom(
+                                    elevation:
+                                        2, // Adjust this value to control shadow intensity
+                                    backgroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 20),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    shadowColor: Colors.grey.withOpacity(
+                                        0.5), // Shadow color and transparency
+                                  ).copyWith(
+                                    overlayColor: WidgetStateProperty.all(
+                                        Colors.transparent),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ReviewManagement(
+                                          reviewReply: reviewReply
+                                              .where((reply) =>
+                                                  reply['booking_id'] ==
+                                                  review['bookingID'])
+                                              .toList(),
+                                          bookingOrderId:
+                                              review['booking_order_id'],
+                                          bookingId: review['bookingID'],
+                                          reviewRating: review['review_rating'],
+                                          clientFLName:
+                                              '${review['client_firstname']} ${review['client_lastname']}',
+                                          reviewDateTime: convertDateTime(
+                                              review['review_date_time']),
+                                          reviewStatus: review['review_status'],
+                                          reviewImageOne:
+                                              review['review_imageOne'],
+                                          reviewImageTwo:
+                                              review['review_imageTwo'],
+                                          reviewImageThree:
+                                              review['review_imageThree'],
+                                          reviewImageFour:
+                                              review['review_imageFour'],
+                                          reviewDescription:
+                                              review['review_description'],
+                                          reviewID: review['reviewID'],
+                                        ),
+                                      ),
+                                    ).then((result) {
+                                      if (result == true) {
+                                        _loadTaskerReviewList();
+                                      }
+                                    });
+                                  },
+                                  icon: FaIcon(
+                                    FontAwesomeIcons.pen,
+                                    size: 15,
+                                    color: Colors.blue, // Icon color
+                                  ),
+                                  splashColor: Colors
+                                      .transparent, // Removes the splash effect
+                                  highlightColor: Colors
+                                      .transparent, // Removes the highlight effect
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ],

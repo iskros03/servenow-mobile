@@ -21,8 +21,8 @@ class CustomBotNavBar extends StatelessWidget {
       selectedItemColor: Colors.grey.shade700,
       unselectedItemColor: Colors.grey.shade400,
       type: BottomNavigationBarType.fixed,
-      selectedLabelStyle: TextStyle(fontFamily: 'Inter', fontSize: 10),
-      unselectedLabelStyle: TextStyle(fontSize: 10),
+      selectedLabelStyle: TextStyle(fontFamily: 'Inter', fontSize: 9),
+      unselectedLabelStyle: TextStyle(fontFamily: 'Inter',fontSize: 9),
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: FaIcon(FontAwesomeIcons.hammer, size: 18),

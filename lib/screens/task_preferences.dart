@@ -442,6 +442,14 @@ class _TaskPreferencesState extends State<TaskPreferences> {
     }
   }
 
+  Future<void> _refresh() async {
+    setState(() {
+      taskerDataFuture = _loadTaskerData();
+      fetchStateNames();
+      _getTimeSlot('$selectedDate');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -495,7 +503,11 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                   ? () {}
                   : _saveWorkingPreferredLocation,
               child: _selectedTabIndex == 0
-                  ? SizedBox.shrink()
+                  ? IconButton(
+                      icon: const Icon(Icons.refresh,
+                          size: 20, color: Colors.white),
+                      onPressed: _refresh,
+                    )
                   : Text(
                       'Save',
                       style: TextStyle(
@@ -708,7 +720,8 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                               horizontal: 10, vertical: 2.5),
                           decoration: BoxDecoration(
                             color: getTaskerStatus(taskerStatus)['color'],
-                            borderRadius: BorderRadius.all(Radius.circular(7.5)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(7.5)),
                           ),
                           child: Text(
                             getTaskerStatus(taskerStatus)['text'],

@@ -11,11 +11,8 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  final ScrollController _listViewController = ScrollController();
-
   @override
   void dispose() {
-    _listViewController.dispose();
     super.dispose();
   }
 
@@ -80,6 +77,12 @@ class _DashboardState extends State<Dashboard> {
     _loadTaskerDashboard();
   }
 
+  Future<void> _refresh() async {
+    setState(() {
+      _loadTaskerDashboard();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,776 +99,842 @@ class _DashboardState extends State<Dashboard> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        leading: TextButton(
+          style: const ButtonStyle(
+            splashFactory: NoSplash.splashFactory,
+          ),
+          onPressed: () {},
+          child: IconButton(
+            icon: FaIcon(
+              FontAwesomeIcons.user,
+              size: 16,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/settings');
+            },
+          ),
+        ),
         actions: [
-          TextButton(
-            style: const ButtonStyle(
-              splashFactory: NoSplash.splashFactory,
-            ),
-            onPressed: () {},
-            child: IconButton(
-              icon: FaIcon(
-                FontAwesomeIcons.user,
-                size: 16,
-                color: Colors.orange,
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/settings');
-              },
-            ),
+          IconButton(
+            icon: const Icon(Icons.refresh, size: 20, color: Colors.white),
+            onPressed: _refresh,
           ),
         ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7.5),
-                    color: Colors.white),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(
-                      width: 100,
-                      height: 50,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Total Earnings',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
-                                  fontFamily: 'Inter',
-                                  color: Colors.grey.shade800)),
-                          Text('RM $totalearningsAll',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade600)),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: 100,
-                      height: 50,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Your Rank Level',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
-                                  fontFamily: 'Inter',
-                                  color: Colors.grey.shade800)),
-                          Text('Elite Tasker',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade600)),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: 100,
-                      height: 50,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text('Satisfication',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
-                                  fontFamily: 'Inter',
-                                  color: Colors.grey.shade800)),
-                          SizedBox(height: 15),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(
-                              5,
-                              (index) => FaIcon(
-                                FontAwesomeIcons.solidStar,
-                                color:
-                                    index < double.parse(totalAVGrating).round()
-                                        ? Colors.orange
-                                        : Colors.grey.shade300,
-                                size: 12,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 7.5),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7.5),
-                    color: Colors.white),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 100,
-                          child: Column(
-                            children: [
-                              Text('RM $totalearningsThisMonth',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[600])),
-                              Text('This Month',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.normal,
-                                      fontFamily: 'Inter',
-                                      color: Colors.grey[800])),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 100,
-                          child: Column(
-                            children: [
-                              Text('RM $totalearningsThisYear',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[600])),
-                              Text('This Year',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.normal,
-                                      fontFamily: 'Inter',
-                                      color: Colors.grey[800])),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 100,
-                          child: Column(
-                            children: [
-                              Text('$totalBookingCount / 20',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[600])),
-                              Text('Bookings',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.normal,
-                                      fontFamily: 'Inter',
-                                      color: Colors.grey[800])),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 100,
-                          child: Column(
-                            children: [
-                              Text('0',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.red[700])),
-                              Text('Penalty',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.normal,
-                                      fontFamily: 'Inter',
-                                      color: Colors.grey[800])),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 100,
-                          child: Column(
-                            children: [
-                              Text('$totalAVGrating / 5.0',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.orange[700])),
-                              Text('Average Rating',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.normal,
-                                      fontFamily: 'Inter',
-                                      color: Colors.grey[800])),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 100,
-                          child: Column(
-                            children: [
-                              Text('Happy',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.green[700])),
-                              Text('Verdict',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.normal,
-                                      fontFamily: 'Inter',
-                                      color: Colors.grey[800])),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 7.5),
-              Expanded(
-                child: Container(
-                  height: 200,
-                  padding: EdgeInsets.all(10),
+        child: RefreshIndicator(
+          onRefresh: _refresh,
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7.5),
-                    color: Colors.white,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                      borderRadius: BorderRadius.circular(7.5),
+                      color: Colors.white),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text(
-                        'Confirm Booking',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Inter',
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      confirmBookingData.isEmpty
-                          ? Expanded(
-                              child: Center(
-                              child: Text(
-                                "You don't have confirm booking.",
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  fontFamily: 'Inter',
-                                  color: Colors.grey[800],
-                                ),
-                              ),
-                            ))
-                          : Expanded(
-                              child: Scrollbar(
-                                thumbVisibility: true,
-                                radius: Radius.circular(7.5),
-                                thickness: 2.5,
-                                child: ListView.builder(
-                                  controller: _listViewController,
-                                  itemCount: filteredBooks.length,
-                                  itemBuilder: (context, index) {
-                                    final booking = filteredBooks[index];
-                                    return Column(
-                                      children: [
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            elevation: 1,
-                                            backgroundColor: Colors.white,
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 5, horizontal: 20),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                            ),
-                                            shadowColor:
-                                                Colors.grey.withOpacity(0.5),
-                                          ).copyWith(
-                                            overlayColor:
-                                                WidgetStateProperty.all(
-                                                    Colors.transparent),
-                                          ),
-                                          onPressed: () {
-                                            var matchingBooking =
-                                                confirmBookingData.firstWhere(
-                                              (confirm) =>
-                                                  confirm['booking_order_id'] ==
-                                                  booking['booking_order_id'],
-                                              orElse: () => null,
-                                            );
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BookingDetails(
-                                                  bookingId: booking[
-                                                      'booking_order_id'],
-                                                  bookingTask: booking[
-                                                      'servicetype_name'],
-                                                  bookingEmail:
-                                                      booking['client_email'],
-                                                  bookingStatus:
-                                                      booking['booking_status'],
-                                                  bookingClientName: booking[
-                                                          'client_firstname'] +
-                                                      ' ' +
-                                                      booking[
-                                                          'client_lastname'],
-                                                  bookingCLientPhone:
-                                                      booking['client_phoneno'],
-                                                  bookingClientAddress: booking[
-                                                      'booking_address'],
-                                                  bookingDate:
-                                                      booking['booking_date'],
-                                                  bookingStartTime: booking[
-                                                      'booking_time_start'],
-                                                  bookingEndTime: booking[
-                                                      'booking_time_end'],
-                                                  bookingRate:
-                                                      booking['booking_rate'],
-                                                  bookingLat: matchingBooking[
-                                                          'booking_latitude'],
-                                                  bookingLong: matchingBooking[
-                                                          'booking_longitude'],
-                                                  bookingNote:
-                                                      booking['booking_note'] ??
-                                                          'Unavailable Note.',
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                '${index + 1}.',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontFamily: 'Inter',
-                                                  color: Colors.grey.shade800,
-                                                ),
-                                              ),
-                                              SizedBox(width: 10),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    booking['booking_order_id']!
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      fontFamily: 'Inter',
-                                                      color: Colors.blue,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    booking[
-                                                        'servicetype_name']!,
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      fontFamily: 'Inter',
-                                                      color:
-                                                          Colors.grey.shade800,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Spacer(),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                children: [
-                                                  Text(
-                                                    booking['booking_date']!,
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      fontFamily: 'Inter',
-                                                      color:
-                                                          Colors.grey.shade800,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    '${booking['booking_time_start']} - ${booking['booking_time_end']}',
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      fontFamily: 'Inter',
-                                                      color:
-                                                          Colors.grey.shade800,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        if (index != filteredBooks.length - 1)
-                                          SizedBox(height: 7.5),
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 7.5),
-              Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(7.5)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Montly Revenue by Status',
-                        style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade700),
-                      ),
-                      SizedBox(height: 7.5),
-                      SingleChildScrollView(
-                        primary: false,
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
+                      SizedBox(
+                        width: 100,
+                        height: 50,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              width: 175,
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade50,
-                                borderRadius: BorderRadius.circular(7.5),
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Complete Booking',
-                                        style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey.shade600),
-                                      ),
-                                      SizedBox(width: 10),
-                                      FaIcon(
-                                        FontAwesomeIcons.solidCircleCheck,
-                                        size: 18,
-                                        color: Colors.green,
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    '$thismonthcompleted',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade600),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Container(
-                              width: 175,
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade50,
-                                borderRadius: BorderRadius.circular(7.5),
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Floating Booking',
-                                        style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey.shade600),
-                                      ),
-                                      SizedBox(width: 10),
-                                      FaIcon(
-                                        FontAwesomeIcons.ghost,
-                                        size: 18,
-                                        color: Colors.orange,
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    '$thismonthfloating',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade600),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Container(
-                              width: 175,
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade50,
-                                borderRadius: BorderRadius.circular(7.5),
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Cancelled Booking',
-                                        style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey.shade600),
-                                      ),
-                                      SizedBox(width: 10),
-                                      FaIcon(
-                                        FontAwesomeIcons.solidCircleXmark,
-                                        size: 18,
-                                        color: Colors.red,
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    '$thismonthCancelled',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade600),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            ElevatedButton(
-                              onPressed: () {  },
-                              child: Text(
-                                'Cancelled Booking',
+                            Text('Total Earnings',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Inter',
+                                    color: Colors.grey.shade800)),
+                            Text('RM $totalearningsAll',
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontFamily: 'Inter',
-                                    fontSize: 12,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey.shade600),
+                                    color: Colors.grey.shade600)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 100,
+                        height: 50,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Your Rank Level',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Inter',
+                                    color: Colors.grey.shade800)),
+                            Text('Elite Tasker',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey.shade600)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 100,
+                        height: 50,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text('Satisfication',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Inter',
+                                    color: Colors.grey.shade800)),
+                            SizedBox(height: 15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(
+                                5,
+                                (index) => FaIcon(
+                                  FontAwesomeIcons.solidStar,
+                                  color: index <
+                                          double.parse(totalAVGrating).round()
+                                      ? Colors.orange
+                                      : Colors.grey.shade300,
+                                  size: 12,
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
                     ],
-                  )),
-              SizedBox(height: 10),
-              Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  ),
+                ),
+                SizedBox(height: 7.5),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(7.5)),
+                      borderRadius: BorderRadius.circular(7.5),
+                      color: Colors.white),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Yearly Revenue by Status',
-                        style: TextStyle(
-                            fontFamily: 'Inter',
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 100,
+                            child: Column(
+                              children: [
+                                Text('RM $totalearningsThisMonth',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[600])),
+                                Text('This Month',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: 'Inter',
+                                        color: Colors.grey[800])),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 100,
+                            child: Column(
+                              children: [
+                                Text('RM $totalearningsThisYear',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[600])),
+                                Text('This Year',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: 'Inter',
+                                        color: Colors.grey[800])),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 100,
+                            child: Column(
+                              children: [
+                                Text('$totalBookingCount / 20',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[600])),
+                                Text('Bookings',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: 'Inter',
+                                        color: Colors.grey[800])),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 100,
+                            child: Column(
+                              children: [
+                                Text('0',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red[700])),
+                                Text('Penalty',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: 'Inter',
+                                        color: Colors.grey[800])),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 100,
+                            child: Column(
+                              children: [
+                                Text('$totalAVGrating / 5.0',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.orange[700])),
+                                Text('Average Rating',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: 'Inter',
+                                        color: Colors.grey[800])),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 100,
+                            child: Column(
+                              children: [
+                                Text('Happy',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.green[700])),
+                                Text('Verdict',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: 'Inter',
+                                        color: Colors.grey[800])),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 7.5),
+                Expanded(
+                  child: Container(
+                    height: 200,
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7.5),
+                      color: Colors.white,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Confirm Booking',
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade700),
-                      ),
-                      SizedBox(height: 7.5),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 175,
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade50,
-                                borderRadius: BorderRadius.circular(7.5),
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Complete Booking',
-                                        style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey.shade600),
-                                      ),
-                                      SizedBox(width: 10),
-                                      FaIcon(
-                                        FontAwesomeIcons.solidCircleCheck,
-                                        size: 18,
-                                        color: Colors.green,
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    '$thisyearcompleted',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade600),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Container(
-                              width: 175,
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade50,
-                                borderRadius: BorderRadius.circular(7.5),
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Floating Booking',
-                                        style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey.shade600),
-                                      ),
-                                      SizedBox(width: 10),
-                                      FaIcon(
-                                        FontAwesomeIcons.ghost,
-                                        size: 18,
-                                        color: Colors.orange,
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    '$thisyearfloating',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade600),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Container(
-                              width: 175,
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade50,
-                                borderRadius: BorderRadius.circular(7.5),
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Cancelled Booking',
-                                        style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey.shade600),
-                                      ),
-                                      SizedBox(width: 10),
-                                      FaIcon(
-                                        FontAwesomeIcons.solidCircleXmark,
-                                        size: 18,
-                                        color: Colors.red,
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    '$thisyearCancelled',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade600),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                            fontFamily: 'Inter',
+                            color: Colors.grey[700],
+                          ),
                         ),
-                      ),
-                    ],
-                  )),
-            ],
+                        SizedBox(height: 5),
+                        confirmBookingData.isEmpty
+                            ? Expanded(
+                                child: Center(
+                                child: Text(
+                                  "You don't have confirm booking.",
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Inter',
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
+                              ))
+                            : Expanded(
+                                child: Scrollbar(
+                                  thumbVisibility: true,
+                                  radius: Radius.circular(7.5),
+                                  thickness: 2.5,
+                                  child: ListView.builder(
+                                    itemCount: filteredBooks.length,
+                                    itemBuilder: (context, index) {
+                                      final booking = filteredBooks[index];
+                                      return Column(
+                                        children: [
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              elevation: 1,
+                                              backgroundColor: Colors.white,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 5,
+                                                      horizontal: 20),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              shadowColor:
+                                                  Colors.grey.withOpacity(0.5),
+                                            ).copyWith(
+                                              overlayColor:
+                                                  WidgetStateProperty.all(
+                                                      Colors.transparent),
+                                            ),
+                                            onPressed: () {
+                                              var matchingBooking =
+                                                  confirmBookingData.firstWhere(
+                                                (confirm) =>
+                                                    confirm[
+                                                        'booking_order_id'] ==
+                                                    booking['booking_order_id'],
+                                                orElse: () => null,
+                                              );
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BookingDetails(
+                                                    bookingId: booking[
+                                                        'booking_order_id'],
+                                                    bookingTask: booking[
+                                                        'servicetype_name'],
+                                                    bookingEmail:
+                                                        booking['client_email'],
+                                                    bookingStatus: booking[
+                                                        'booking_status'],
+                                                    bookingClientName: booking[
+                                                            'client_firstname'] +
+                                                        ' ' +
+                                                        booking[
+                                                            'client_lastname'],
+                                                    bookingCLientPhone: booking[
+                                                        'client_phoneno'],
+                                                    bookingClientAddress:
+                                                        booking[
+                                                            'booking_address'],
+                                                    bookingDate:
+                                                        booking['booking_date'],
+                                                    bookingStartTime: booking[
+                                                        'booking_time_start'],
+                                                    bookingEndTime: booking[
+                                                        'booking_time_end'],
+                                                    bookingRate:
+                                                        booking['booking_rate'],
+                                                    bookingLat: matchingBooking[
+                                                        'booking_latitude'],
+                                                    bookingLong: matchingBooking[
+                                                        'booking_longitude'],
+                                                    bookingNote: booking[
+                                                            'booking_note'] ??
+                                                        'Unavailable Note.',
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  '${index + 1}.',
+                                                  style: TextStyle(
+                                                    fontSize: 11,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    fontFamily: 'Inter',
+                                                    color: Colors.grey.shade800,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      booking['booking_order_id']!
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontSize: 11,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        fontFamily: 'Inter',
+                                                        color: Colors.blue,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      booking[
+                                                          'servicetype_name']!,
+                                                      style: TextStyle(
+                                                        fontSize: 11,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        fontFamily: 'Inter',
+                                                        color: Colors
+                                                            .grey.shade800,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Spacer(),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    Text(
+                                                      booking['booking_date']!,
+                                                      style: TextStyle(
+                                                        fontSize: 11,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        fontFamily: 'Inter',
+                                                        color: Colors
+                                                            .grey.shade800,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '${booking['booking_time_start']} - ${booking['booking_time_end']}',
+                                                      style: TextStyle(
+                                                        fontSize: 11,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        fontFamily: 'Inter',
+                                                        color: Colors
+                                                            .grey.shade800,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          if (index != filteredBooks.length - 1)
+                                            SizedBox(height: 7.5),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 7.5),
+                Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(7.5)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Montly Revenue by Status',
+                          style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey.shade700),
+                        ),
+                        SizedBox(height: 7.5),
+                        SingleChildScrollView(
+                          primary: false,
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 175,
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade50,
+                                  borderRadius: BorderRadius.circular(7.5),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Complete Booking',
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.grey.shade600),
+                                        ),
+                                        SizedBox(width: 10),
+                                        FaIcon(
+                                          FontAwesomeIcons.solidCircleCheck,
+                                          size: 18,
+                                          color: Colors.green,
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      '$thismonthcompleted',
+                                      style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey.shade600),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Container(
+                                width: 175,
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade50,
+                                  borderRadius: BorderRadius.circular(7.5),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Floating Booking',
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.grey.shade600),
+                                        ),
+                                        SizedBox(width: 10),
+                                        FaIcon(
+                                          FontAwesomeIcons.ghost,
+                                          size: 18,
+                                          color: Colors.orange,
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      '$thismonthfloating',
+                                      style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey.shade600),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Container(
+                                width: 175,
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade50,
+                                  borderRadius: BorderRadius.circular(7.5),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Cancelled Booking',
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.grey.shade600),
+                                        ),
+                                        SizedBox(width: 10),
+                                        FaIcon(
+                                          FontAwesomeIcons.solidCircleXmark,
+                                          size: 18,
+                                          color: Colors.red,
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      '$thismonthCancelled',
+                                      style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey.shade600),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                      context, '/booking_summary');
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 20),
+                                ).copyWith(
+                                  overlayColor: WidgetStateProperty.all(
+                                      Colors.transparent),
+                                  shadowColor: WidgetStateProperty.all(
+                                      Colors.transparent),
+                                  surfaceTintColor: WidgetStateProperty.all(
+                                      Colors.transparent),
+                                ),
+                                child: Text(
+                                  'View More',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.blue.shade600),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )),
+                SizedBox(height: 10),
+                Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(7.5)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Yearly Revenue by Status',
+                          style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey.shade700),
+                        ),
+                        SizedBox(height: 7.5),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 175,
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade50,
+                                  borderRadius: BorderRadius.circular(7.5),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Complete Booking',
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.grey.shade600),
+                                        ),
+                                        SizedBox(width: 10),
+                                        FaIcon(
+                                          FontAwesomeIcons.solidCircleCheck,
+                                          size: 18,
+                                          color: Colors.green,
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      '$thisyearcompleted',
+                                      style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey.shade600),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Container(
+                                width: 175,
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade50,
+                                  borderRadius: BorderRadius.circular(7.5),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Floating Booking',
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.grey.shade600),
+                                        ),
+                                        SizedBox(width: 10),
+                                        FaIcon(
+                                          FontAwesomeIcons.ghost,
+                                          size: 18,
+                                          color: Colors.orange,
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      '$thisyearfloating',
+                                      style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey.shade600),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Container(
+                                width: 175,
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade50,
+                                  borderRadius: BorderRadius.circular(7.5),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Cancelled Booking',
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.grey.shade600),
+                                        ),
+                                        SizedBox(width: 10),
+                                        FaIcon(
+                                          FontAwesomeIcons.solidCircleXmark,
+                                          size: 18,
+                                          color: Colors.red,
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      '$thisyearCancelled',
+                                      style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey.shade600),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                      context, '/booking_summary');
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 20),
+                                ).copyWith(
+                                  overlayColor: WidgetStateProperty.all(
+                                      Colors.transparent),
+                                  shadowColor: WidgetStateProperty.all(
+                                      Colors.transparent),
+                                  surfaceTintColor: WidgetStateProperty.all(
+                                      Colors.transparent),
+                                ),
+                                child: Text(
+                                  'View More',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.blue.shade600),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )),
+              ],
+            ),
           ),
         ),
       ),

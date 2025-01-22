@@ -26,6 +26,7 @@ class _MyProfileState extends State<MyProfile> {
   String photo = '';
   String email = '';
   int taskerStatus = 0;
+  String icNum = '';
 
   // Address
   TextEditingController addressLineOneController = TextEditingController();
@@ -117,6 +118,7 @@ class _MyProfileState extends State<MyProfile> {
       addressState = data[0]['tasker_address_state'];
       addressArea = data[0]['tasker_address_area'];
       taskerStatus = data[0]['tasker_status'];
+      icNum = data[0]['tasker_icno'];
 
       initialTaskerData = {
         'tasker_firstname': data[0]['tasker_firstname'],
@@ -363,21 +365,37 @@ class _MyProfileState extends State<MyProfile> {
                       taskerStatus == 2
                           ? Expanded(
                               flex: 3,
-                              child: Container(
-                                padding: const EdgeInsets.all(12.5),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[100],
-                                  border:
-                                      Border.all(color: Colors.grey.shade100),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Text(
-                                  birthdate,
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 14,
-                                      color: Colors.grey[500]),
-                                ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(12),
+                                    child: Text(
+                                      'IC Number',
+                                      style: TextStyle(
+                                          color: Colors.grey[800],
+                                          fontSize: 12,
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.normal),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.all(12.5),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[100],
+                                      border: Border.all(
+                                          color: Colors.grey.shade100),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text(
+                                      icNum,
+                                      style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 14,
+                                          color: Colors.grey[500]),
+                                    ),
+                                  ),
+                                ],
                               ),
                             )
                           : Expanded(

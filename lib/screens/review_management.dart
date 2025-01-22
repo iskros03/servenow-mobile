@@ -72,7 +72,17 @@ class _ReviewManagementState extends State<ReviewManagement> {
       if (response['statusCode'] == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Center(child: Text(response['data']['message'])),
+            content: Center(
+              child: Text(
+                response['data']['message'],
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  color: Colors.white,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 13,
+                ),
+              ),
+            ),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 3),
           ),
@@ -308,34 +318,30 @@ class _ReviewManagementState extends State<ReviewManagement> {
                     const SizedBox(height: 10),
                     Container(
                       width: double.infinity,
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                           color: Colors.grey.shade50,
                           borderRadius: BorderRadius.circular(7.5)),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Text(
-                                clientFLName,
-                                style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                              Spacer(),
-                              Text(
-                                reviewDateTime,
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.grey[600]),
-                              ),
-                            ],
+                          Text(
+                            clientFLName,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 11,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          Text(
+                            reviewDateTime,
+                            style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 11,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.grey[600]),
                           ),
                           SizedBox(height: 5),
                           Text(
@@ -353,7 +359,6 @@ class _ReviewManagementState extends State<ReviewManagement> {
                 ),
               ),
             ),
-        
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 20,
@@ -379,7 +384,6 @@ class _ReviewManagementState extends State<ReviewManagement> {
                           final reply = widget.reviewReply![index];
                           return Column(
                             children: [
-                              
                               Container(
                                 width: double.infinity,
                                 padding: EdgeInsets.symmetric(
@@ -389,32 +393,26 @@ class _ReviewManagementState extends State<ReviewManagement> {
                                   borderRadius: BorderRadius.circular(7.5),
                                 ),
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'You',
-                                          style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.normal,
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          convertDateTime(
-                                              reply['reply_date_time']),
-                                          style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.normal,
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                      ],
+                                    Text(
+                                      'You',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    Text(
+                                      convertDateTime(
+                                          reply['reply_date_time']),
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.grey[600],
+                                      ),
                                     ),
                                     SizedBox(height: 5),
                                     Text(
@@ -461,7 +459,6 @@ class _ReviewManagementState extends State<ReviewManagement> {
                 ),
               ),
             ),
-        
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
               child: Row(
