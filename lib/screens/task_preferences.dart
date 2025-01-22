@@ -192,7 +192,16 @@ class _TaskPreferencesState extends State<TaskPreferences> {
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('$error'),
+          content: Center(
+            child: Text(
+              '$error',
+              style: TextStyle(
+                  fontFamily: 'Inter',
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.normal),
+            ),
+          ),
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 3),
         ),
@@ -212,12 +221,12 @@ class _TaskPreferencesState extends State<TaskPreferences> {
             backgroundColor: Colors.green,
             content: Center(
               child: Text(
-                response['message'],
+                response['data']['message'],
                 style: TextStyle(
                     fontFamily: 'Inter',
                     color: Colors.white,
                     fontSize: 13,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.normal),
               ),
             ),
             duration: Duration(seconds: 3),
@@ -229,12 +238,12 @@ class _TaskPreferencesState extends State<TaskPreferences> {
             backgroundColor: Colors.red,
             content: Center(
               child: Text(
-                response['message'],
+                response['data']['message'],
                 style: TextStyle(
                     fontFamily: 'Inter',
                     color: Colors.white,
                     fontSize: 13,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.normal),
               ),
             ),
             duration: Duration(seconds: 3),
@@ -242,16 +251,78 @@ class _TaskPreferencesState extends State<TaskPreferences> {
         );
       }
     } catch (e) {
-      print("Error: $e");
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: Center(
+          child: Text(
+            'Error $e',
+            style: TextStyle(
+                fontFamily: 'Inter',
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.normal),
+          ),
+        ),
+        duration: Duration(seconds: 3),
+      );
     }
   }
 
   void _changeTaskerVisibility() async {
     try {
       TaskerService taskerService = TaskerService();
-      await taskerService.changeTaskerVisibility();
+      final response = await taskerService.changeTaskerVisibility();
+
+      if (response['statusCode'] == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Center(
+              child: Text(
+                response['data']['message'],
+                style: TextStyle(
+                    fontFamily: 'Inter',
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.normal),
+              ),
+            ),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Center(
+              child: Text(
+                response['data']['message'],
+                style: TextStyle(
+                    fontFamily: 'Inter',
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.normal),
+              ),
+            ),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
     } catch (e) {
-      print("Error: $e");
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: Center(
+          child: Text(
+            'Error $e',
+            style: TextStyle(
+                fontFamily: 'Inter',
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.normal),
+          ),
+        ),
+        duration: Duration(seconds: 3),
+      );
     }
   }
 
@@ -268,7 +339,16 @@ class _TaskPreferencesState extends State<TaskPreferences> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error generating time slots: $e'),
+          content: Center(
+            child: Text(
+              'Error generating time slots: $e',
+              style: TextStyle(
+                  fontFamily: 'Inter',
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.normal),
+            ),
+          ),
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 3),
         ),
@@ -421,7 +501,7 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                       style: TextStyle(
                         fontFamily: 'Inter',
                         color: Colors.orange[300],
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.normal,
                         fontSize: 13,
                       ),
                     ),
@@ -610,7 +690,6 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(5),
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
                     ),
                     child: Row(
                       children: [
@@ -651,7 +730,6 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(5),
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
                     ),
                     child: Row(
                       children: [
@@ -679,8 +757,8 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                               });
                             },
                             activeColor: Colors.white,
-                            inactiveThumbColor: Colors.greenAccent,
-                            activeTrackColor: Colors.greenAccent,
+                            inactiveThumbColor: Color.fromRGBO(24, 52, 92, 1),
+                            activeTrackColor: Color.fromRGBO(24, 52, 92, 1),
                             inactiveTrackColor: Colors.white,
                           ),
                         ),
@@ -692,8 +770,6 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 10),
                     decoration: BoxDecoration(
-                        border:
-                            Border.all(width: 1, color: Colors.grey.shade300),
                         color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(7.5))),
                     child: Row(
@@ -737,10 +813,9 @@ class _TaskPreferencesState extends State<TaskPreferences> {
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(7.5)),
-                        border:
-                            Border.all(width: 1, color: Colors.grey.shade300)),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(7.5)),
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

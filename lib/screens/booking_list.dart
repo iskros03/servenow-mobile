@@ -114,165 +114,185 @@ class _BookingListState extends State<BookingList> {
         padding: EdgeInsets.all(20),
         child: Column(
           children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: bookingData.length,
-                itemBuilder: (context, index) {
-                  final booking = bookingData[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      ).copyWith(
-                        overlayColor:
-                            WidgetStateProperty.all(Colors.transparent),
-                        shadowColor:
-                            WidgetStateProperty.all(Colors.transparent),
-                        surfaceTintColor:
-                            WidgetStateProperty.all(Colors.transparent),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BookingDetails(
-                              bookingId: booking['bookingID'],
-                              bookingTask: booking['servicetype_name'],
-                              bookingEmail: booking['client_email'],
-                              bookingStatus: booking['booking_status'],
-                              bookingClientName: booking['client_firstname'] +
-                                  ' ' +
-                                  booking['client_lastname'],
-                              bookingCLientPhone: booking['client_phoneno'],
-                              bookingClientAddress: booking['booking_address'],
-                              bookingDate: booking['booking_date'],
-                              bookingStartTime: booking['booking_time_start'],
-                              bookingEndTime: booking['booking_time_end'],
-                              bookingRate: booking['booking_rate'],
-                              bookingLat: booking['lat'],
-                              bookingLong: booking['long'],
-                              bookingNote: booking['booking_note'] ??
-                                  'Unavailable Note.',
+            bookingData.isEmpty
+                ? Expanded(
+                    child: Center(
+                    child: Text(
+                      'You have no bookings yet.',
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 13,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey[700]),
+                    ),
+                  ))
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: bookingData.length,
+                      itemBuilder: (context, index) {
+                        final booking = bookingData[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                            ).copyWith(
+                              overlayColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                              shadowColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                              surfaceTintColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BookingDetails(
+                                    bookingId: booking['bookingID'],
+                                    bookingTask: booking['servicetype_name'],
+                                    bookingEmail: booking['client_email'],
+                                    bookingStatus: booking['booking_status'],
+                                    bookingClientName:
+                                        booking['client_firstname'] +
+                                            ' ' +
+                                            booking['client_lastname'],
+                                    bookingCLientPhone:
+                                        booking['client_phoneno'],
+                                    bookingClientAddress:
+                                        booking['booking_address'],
+                                    bookingDate: booking['booking_date'],
+                                    bookingStartTime:
+                                        booking['booking_time_start'],
+                                    bookingEndTime: booking['booking_time_end'],
+                                    bookingRate: booking['booking_rate'],
+                                    bookingLat: booking['lat'],
+                                    bookingLong: booking['long'],
+                                    bookingNote: booking['booking_note'] ??
+                                        'Unavailable Note.',
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(7.5),
+                                          color: Colors.grey[50]),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 5, horizontal: 10),
+                                      child: Text(
+                                        booking['booking_order_id'],
+                                        style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.normal,
+                                            color: Colors.grey.shade600),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Container(
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(7.5)),
+                                        color: getBookingStatus(
+                                            booking['booking_status'])['color'],
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 2.5),
+                                      child: Text(
+                                          getBookingStatus(
+                                                  booking['booking_status'])[
+                                              'text'],
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                            color: getBookingStatus(
+                                                    booking['booking_status'])[
+                                                'textColor'],
+                                          )),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 5),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 75,
+                                        child: Text(
+                                          "RM ${booking['booking_rate']}",
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.orange[700]),
+                                        ),
+                                      ),
+                                      Text(
+                                        booking['servicetype_name'],
+                                        style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey[600]),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        DateFormat('d MMMM yyyy').format(
+                                            DateTime.parse(
+                                                booking['booking_date'])),
+                                        style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.grey[800],
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Text(
+                                        '${formatTime(booking['booking_time_start'])} - ${formatTime(booking['booking_time_end'])}',
+                                        style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.grey[800],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-
                         );
                       },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(7.5),
-                                    color: Colors.grey[50]),
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 10),
-                                child: Text(
-                                  booking['booking_order_id'],
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.grey.shade600),
-                                ),
-                              ),
-                              Spacer(),
-                              Container(
-                                width: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(7.5)),
-                                  color: getBookingStatus(
-                                      booking['booking_status'])['color'],
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 2.5),
-                                child: Text(
-                                    getBookingStatus(
-                                        booking['booking_status'])['text'],
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 11,
-                                      color: getBookingStatus(
-                                              booking['booking_status'])[
-                                          'textColor'],
-                                    )),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 5),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 75,
-                                  child: Text(
-                                    "RM ${booking['booking_rate']}",
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.orange[700]),
-                                  ),
-                                ),
-                                Text(
-                                  booking['servicetype_name'],
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[600]),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              children: [
-                                Text(
-                                  DateFormat('d MMMM yyyy').format(
-                                      DateTime.parse(booking['booking_date'])),
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.grey[800],
-                                  ),
-                                ),
-                                Spacer(),
-                                Text(
-                                  '${formatTime(booking['booking_time_start'])} - ${formatTime(booking['booking_time_end'])}',
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.grey[800],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
           ],
         ),
       ),

@@ -700,6 +700,18 @@ class _DashboardState extends State<Dashboard> {
                                 ],
                               ),
                             ),
+                            SizedBox(width: 10),
+                            ElevatedButton(
+                              onPressed: () {  },
+                              child: Text(
+                                'Cancelled Booking',
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey.shade600),
+                              ),
+                            ),
                           ],
                         ),
                       ),

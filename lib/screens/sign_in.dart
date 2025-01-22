@@ -13,7 +13,7 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  bool obscurePassword = true; // Manage password visibility
+  bool obscurePassword = true; 
 
   void togglePasswordVisibility() {
     setState(() {
@@ -100,7 +100,6 @@ class _SignInState extends State<SignIn> {
 
       if (data['statusCode'] == 200) {
         final token = data['data']['token'];
-
         await taskerAuth.saveToken(token);
         Navigator.pushReplacementNamed(context, '/home');
       } else {

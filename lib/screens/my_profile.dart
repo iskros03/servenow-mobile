@@ -22,7 +22,6 @@ class _MyProfileState extends State<MyProfile> {
 
   TextEditingController firstnameController = TextEditingController();
   TextEditingController lastnameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   TextEditingController oldPasswordController = TextEditingController();
@@ -31,6 +30,7 @@ class _MyProfileState extends State<MyProfile> {
   TextEditingController icController = TextEditingController();
   String? birthdate; // Birthdate
   String? photo; // Photo
+  String? email;
 
   // Address
   TextEditingController addressLineOneController = TextEditingController();
@@ -111,7 +111,7 @@ class _MyProfileState extends State<MyProfile> {
       lastnameController.text = data[0]['tasker_lastname'];
       mobileController.text = data[0]['tasker_phoneno'];
       photo = data[0]['tasker_photo'];
-      emailController.text = data[0]['email'];
+      email = data[0]['email'];
       bioController.text = data[0]['tasker_bio'];
       icController.text = data[0]['tasker_icno'];
       birthdate = data[0]['tasker_dob'];
@@ -147,7 +147,6 @@ class _MyProfileState extends State<MyProfile> {
 
   void _saveProfile() async {
     String icNumber = icController.text.trim();
-    String email = emailController.text.trim();
 
     if (icNumber.length != 12) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -169,25 +168,7 @@ class _MyProfileState extends State<MyProfile> {
       return;
     }
 
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegex.hasMatch(email)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Center(
-              child: Text(
-            'Please enter a valid email address.',
-            style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 13,
-                fontWeight: FontWeight.normal,
-                color: Colors.white),
-          )),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 3),
-        ),
-      );
-      return;
-    }
+ 
 
     // Prepare the updated data
     final updatedData = {
@@ -195,7 +176,7 @@ class _MyProfileState extends State<MyProfile> {
       'tasker_lastname': lastnameController.text.trim(),
       'tasker_phoneno': mobileController.text.trim(),
       'tasker_photo': photo,
-      'email': emailController.text.trim(),
+      'email': email,
       'tasker_bio': bioController.text,
       'tasker_icno': icNumber, // Use the validated IC number
       'tasker_dob': birthdate,
@@ -209,19 +190,19 @@ class _MyProfileState extends State<MyProfile> {
     try {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Color.fromRGBO(24, 52, 92, 1),
+          backgroundColor: Colors.grey.shade200,
           content: Center(
             child: Text(
-              'Saving profile...',
+              'Loading...',
               style: TextStyle(
                 fontFamily: 'Inter',
-                color: Colors.white,
-                fontSize: 13,
+                color: Colors.grey.shade800,
                 fontWeight: FontWeight.normal,
+                fontSize: 13,
               ),
             ),
           ),
-          duration: Duration(seconds: 1),
+          duration: Duration(seconds: 3),
         ),
       );
 
@@ -324,7 +305,6 @@ class _MyProfileState extends State<MyProfile> {
   void dispose() {
     firstnameController.dispose();
     lastnameController.dispose();
-    emailController.dispose();
     mobileController.dispose();
     icController.removeListener(() {});
     icController.dispose();
@@ -353,7 +333,7 @@ class _MyProfileState extends State<MyProfile> {
             style: TextStyle(
                 color: Colors.white,
                 fontFamily: 'Inter',
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
@@ -400,7 +380,7 @@ class _MyProfileState extends State<MyProfile> {
                 style: TextStyle(
                   fontFamily: 'Inter',
                   color: Colors.orange[300],
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.normal,
                   fontSize: 14,
                 ),
               ),
@@ -483,6 +463,7 @@ class _MyProfileState extends State<MyProfile> {
                                     style: TextStyle(
                                         color: Colors.grey[800],
                                         fontSize: 12,
+                                        fontFamily: 'Inter',
                                         fontWeight: FontWeight.normal),
                                   ),
                                 ),
@@ -522,8 +503,43 @@ class _MyProfileState extends State<MyProfile> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    _buildTextField(
-                        'Email', emailController, 'Enter your email'),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(12),
+                            child: Text(
+                              'Email',
+                              style: TextStyle(
+                                  color: Colors.grey[800],
+                                  fontFamily: 'Inter',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12.5),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              border: Border.all(color: Colors.grey.shade100),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              '$email',
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 14,
+                                  color: Colors.grey[500]),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(height: 10),
                     _buildTextField(
                       'Mobile',

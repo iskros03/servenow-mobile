@@ -145,7 +145,7 @@ class _AddServiceState extends State<AddService> {
               style: TextStyle(
                 fontFamily: 'Inter',
                 color: Colors.orange.shade300,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.normal,
                 fontSize: 13,
               ),
             ),

@@ -320,7 +320,7 @@ class _ManageServiceState extends State<ManageService> {
               style: TextStyle(
                 fontFamily: 'Inter',
                 color: Colors.orange[300],
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.normal,
                 fontSize: 14,
               ),
             ),

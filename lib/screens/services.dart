@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:servenow_mobile/screens/add_service.dart';
 import 'package:servenow_mobile/screens/manage_service.dart';
 import 'package:servenow_mobile/services/tasker_service.dart';
-import 'package:servenow_mobile/widgets/custom_text_field.dart';
 
 class Services extends StatefulWidget {
   final bool showLeadingIcon;
@@ -150,10 +149,7 @@ class _ServicesState extends State<Services> {
                 Row(
                   children: [
                     Expanded(
-                      child: CustomTextField(
-                        controller: searchController,
-                        labelText: 'Search any service..',
-                      ),
+                      child: SizedBox.shrink(),
                     ),
                     SizedBox(width: 10),
                     IconButton(
@@ -213,7 +209,7 @@ class _ServicesState extends State<Services> {
                             "You have not enrolled in any service.",
                             style: TextStyle(
                               fontFamily: 'Inter',
-                              fontSize: 16,
+                              fontSize: 13,
                               fontWeight: FontWeight.normal,
                               color: Colors.grey[800],
                             ),
